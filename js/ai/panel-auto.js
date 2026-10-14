@@ -66,12 +66,20 @@
   }
 
   const cache = new Map();
+  function imgSignature(img) {
+    const src = (img._element && img._element.src) || '';
+    if (!src) return '0';
+    const len = src.length;
+    if (len <= 64) return len + ':' + src;
+    const mid = len >> 1;
+    return len + ':' + src.slice(0, 20) + ':' + src.slice(mid, mid + 20) + ':' + src.slice(-20);
+  }
   function pageKey() {
     if (typeof canvas === 'undefined') return '';
     const img = canvas.getObjects().find(o => o.type === 'image' && !o.autoSwap && !o.panelLayer);
     if (!img) return '';
     const id = typeof getCanvasGUID === 'function' ? getCanvasGUID() : 'page';
-    return id + ':' + img.width + 'x' + img.height + ':' + ((img._element && img._element.src) || '').length;
+    return id + ':' + img.width + 'x' + img.height + ':' + imgSignature(img);
   }
   function loadImg(src) { return new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; }); }
 

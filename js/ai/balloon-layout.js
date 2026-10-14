@@ -146,8 +146,8 @@
         const { g, t } = list[k]; n++;
         const meta = Object.assign({}, g.balloon, { order: n, speaker: sp[k] });
         delete meta.id; delete meta.role; delete meta.w; delete meta.h; delete meta.rect; delete meta.tip;
-        c.remove(g);
         build({ tb: t || null }, s, meta);   // new outline (the tail may turn); the user's text object is kept and moved
+        c.remove(g);
         occupied.push(s); placed.push(Object.assign({ panel: pi, panelRect: panels[pi] }, s));
       });
     }

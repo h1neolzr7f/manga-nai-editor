@@ -373,6 +373,10 @@ nameTextArea.value=layer.text;
 
 
 function calculateCenter(layer) {
+if(layer&&typeof layer.getCenterPoint==="function"){
+var pt=layer.getCenterPoint();
+if(pt&&isFinite(pt.x)&&isFinite(pt.y))return {centerX:pt.x,centerY:pt.y};
+}
 const centerX=layer.left+(layer.width/2)*layer.scaleX;
 const centerY=layer.top+(layer.height/2)*layer.scaleY;
 return {centerX,centerY};

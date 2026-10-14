@@ -393,13 +393,15 @@ async function chengeCanvasByGuid(guid,saveCurrent=false){
 if(window.NaiPageLoading||window.NaiHistoryLoading)return false;
 if(!btmProjectsMap.has(guid))return false;
 var currentGuid=typeof getCanvasGUID==="function"?getCanvasGUID():(typeof canvas!=="undefined"&&canvas?canvas.canvasGuid:null);
+var hasObjects=typeof getObjectCount==="function"?getObjectCount()>0:(typeof canvas!=="undefined"&&canvas&&typeof canvas.getObjects==="function"?canvas.getObjects().length>0:false);
+var shouldSave=saveCurrent&&(stateStack.length>=btmSaveStateThreshold||hasObjects);
 if(currentGuid&&currentGuid===guid){
-if(saveCurrent&&stateStack.length>=btmSaveStateThreshold)await btmSaveProjectFile(null,false);
+if(shouldSave)await btmSaveProjectFile(null,false);
 return true;
 }
 window.NaiPageLoading=true;
 try{
-if(saveCurrent&&stateStack.length>=btmSaveStateThreshold)await btmSaveProjectFile();
+if(shouldSave)await btmSaveProjectFile();
 const projectData=btmProjectsMap.get(guid);
 if(!projectData||!projectData.blob)return false;
 return await loadLz4BlobProjectFile(projectData.blob,guid,true);

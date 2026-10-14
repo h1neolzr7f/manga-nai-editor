@@ -228,7 +228,7 @@
 
   function chineseNumber(text) {
     if(/^\d+$/.test(text))return Number(text);
-    const digits={一:1,二:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9};
+    const digits={一:1,二:2,两:2,兩:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9};
     if(text==='十')return 10;
     if(text.includes('十')){
       const parts=text.split('十');
@@ -248,7 +248,7 @@
     };
     const prompt=instruction.trim().slice(0,3000);
     const matches=[];
-    const pattern=/第([一二三四五六七八九十\d]{1,5})\s*(?:格|个?分镜|幅)|\bpanel\s*#?\s*(\d{1,2})\b/gi;
+    const pattern=/第([一二两兩三四五六七八九十\d]{1,5})\s*(?:格|个?分镜|幅)|\bpanel\s*#?\s*(\d{1,2})\b/gi;
     for(const hit of prompt.matchAll(pattern)) {
       const value=hit[2]?Number(hit[2]):chineseNumber(hit[1]);
       if(!Number.isInteger(value)||value<1)return {

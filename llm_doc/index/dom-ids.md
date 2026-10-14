@@ -253,7 +253,7 @@
 | `j` | index.html:96 | index.html:96, js/svg/manga-panels-image-vertical.js:23 |
 | `k` | index.html:96 | index.html:96, js/core/command-history.js:169, js/svg/manga-panels-image-vertical.js:25, js/ui/beginner-guide.js:313, js/ui/third/ag-psd/ag-psd.js:5528, scripts/command-history-e2e.cjs:84 |
 | `knifeModeButton` | index.html:762 | js/sidebar/panel/knife/knife-mode.js:10, js/ui/util/mode-manager.js:200 |
-| `knifePanelSpaceSize` | index.html:768 | js/project-management.js:201, js/sidebar/panel/knife/knife-split-engine.js:371, scripts/audit/round5-canvas-audit-repro.cjs:45 |
+| `knifePanelSpaceSize` | index.html:768 | js/project-management.js:201, js/sidebar/panel/knife/knife-split-engine.js:379, scripts/audit/round5-canvas-audit-repro.cjs:45 |
 | `layer-content` | index.html:2158 | js/layer/layer-management.js:128 |
 | `layer-panel` | index.html:2149 | js/project-management.js:678, js/shortcut.js:68, js/sidebar/panel/panel-manager.js:637 |
 | `layerSelectPageButton` | index.html:2152 | js/ui/beginner-guide.js:509 |
@@ -379,20 +379,20 @@
 | `novelaiApiKeyToggle` | index.html:2330 | js/ai/ai-settings.js:133, js/ui/service-settings.js:213 |
 | `novelaiApiUrl` | index.html:2319 | js/ai/ai-settings.js:180, js/ai/provider/novelai-provider.js:24, js/project-management.js:209, js/ui/service-settings.js:207, scripts/novice-task-e2e.cjs:1754 |
 | `novelaiApiUrlDefaultUrl` | index.html:2320 | js/ai/ai-settings.js:178, js/ui/service-settings.js:209 |
-| `novelaiCfgRescale` | index.html:2383 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:320, js/project-management.js:217 |
+| `novelaiCfgRescale` | index.html:2383 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:329, js/project-management.js:217 |
 | `novelaiConcurrency` | index.html:2454 | js/ai/ai-management.js:6, js/ai/ai-settings.js:196, js/project-management.js:220 |
 | `novelaiDashboard` | index.html:2320 | js/ai/ai-settings.js:182, js/ui/service-settings.js:209 |
-| `novelaiI2INoise` | index.html:2393 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:357, js/project-management.js:219 |
-| `novelaiI2IStrength` | index.html:2388 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:356, js/project-management.js:218 |
+| `novelaiI2INoise` | index.html:2393 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:366, js/project-management.js:219 |
+| `novelaiI2IStrength` | index.html:2388 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:365, js/project-management.js:218 |
 | `novelaiModel` | index.html:2342 | js/ai/ai-settings.js:191, js/ai/nai-engine.js:12, js/ai/provider/novelai-provider.js:46, js/project-management.js:212, js/ui/service-settings.js:216, scripts/task-page-continuity-test.cjs:13 |
-| `novelaiQualityToggle` | index.html:2398 | js/ai/ai-settings.js:196, js/ai/nai-engine.js:16, js/ai/provider/novelai-provider.js:302, js/project-management.js:245, js/ui/task-launcher.js:622, scripts/task-page-continuity-test.cjs:13 |
+| `novelaiQualityToggle` | index.html:2398 | js/ai/ai-settings.js:196, js/ai/nai-engine.js:16, js/ai/provider/novelai-provider.js:309, js/project-management.js:245, js/ui/task-launcher.js:622, scripts/task-page-continuity-test.cjs:13 |
 | `novelaiRememberToken` | index.html:2335 | js/project-management.js:331, js/ui/beginner-guide.js:409, js/ui/service-settings.js:211 |
-| `novelaiSM` | index.html:2403 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:313, js/project-management.js:246 |
-| `novelaiSMDyn` | index.html:2403 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:314, js/project-management.js:247 |
-| `novelaiSampler` | index.html:2356 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:308, js/project-management.js:213 |
-| `novelaiScale` | index.html:2373 | js/ai/ai-settings.js:196, js/ai/prompt-assist.js:135, js/ai/provider/novelai-provider.js:307, js/project-management.js:215 |
-| `novelaiSteps` | index.html:2368 | js/ai/ai-settings.js:196, js/ai/prompt-assist.js:135, js/ai/provider/novelai-provider.js:309, js/project-management.js:214, scripts/nai-real-acceptance.cjs:105 |
-| `novelaiUcPreset` | index.html:2378 | js/ai/ai-settings.js:196, js/ai/nai-engine.js:15, js/ai/provider/novelai-provider.js:311, js/project-management.js:216, js/ui/task-launcher.js:622, scripts/task-page-continuity-test.cjs:13 |
+| `novelaiSM` | index.html:2403 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:322, js/project-management.js:246 |
+| `novelaiSMDyn` | index.html:2403 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:323, js/project-management.js:247 |
+| `novelaiSampler` | index.html:2356 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:317, js/project-management.js:213 |
+| `novelaiScale` | index.html:2373 | js/ai/ai-settings.js:196, js/ai/prompt-assist.js:135, js/ai/provider/novelai-provider.js:316, js/project-management.js:215 |
+| `novelaiSteps` | index.html:2368 | js/ai/ai-settings.js:196, js/ai/prompt-assist.js:135, js/ai/provider/novelai-provider.js:318, js/project-management.js:214, scripts/nai-real-acceptance.cjs:105 |
+| `novelaiUcPreset` | index.html:2378 | js/ai/ai-settings.js:196, js/ai/nai-engine.js:15, js/ai/provider/novelai-provider.js:320, js/project-management.js:216, js/ui/task-launcher.js:622, scripts/task-page-continuity-test.cjs:13 |
 | `novelaiUseLocalProxy` | index.html:2324 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:30, js/project-management.js:210, js/ui/service-settings.js:208, scripts/nai-real-acceptance.cjs:104 |
 | `onePanelGenerateNumber` | index.html:1115 | js/ai/prompt/auto/auto-generation.js:4, js/project-management.js:291, js/ui/third/base-translation/base-ja.js:37, js/ui/third/i18next.js:74 |
 | `opacity-control` | index.html:1953 | js/ui/control/common-control-management.js:3 |
@@ -693,12 +693,12 @@
 | `blendImageListBody` | js/layer/blend/blend.js:414 |
 | `blendModes` | js/layer/blend/blend.js:227 |
 | `blendSelectedInfo` | js/layer/blend/blend.js:207 |
-| `btm-dialog-cancel` | js/ui/bottom-bar.js:533 |
-| `btm-dialog-submit` | js/ui/bottom-bar.js:534 |
+| `btm-dialog-cancel` | js/ui/bottom-bar.js:535 |
+| `btm-dialog-submit` | js/ui/bottom-bar.js:536 |
 | `btm-image-container .btm-image` | js/ui/task-launcher.js:729, scripts/novice-task-e2e.cjs:1396 |
 | `btm-image-container > *` | scripts/novice-task-e2e.cjs:384 |
 | `btm-image-container button` | scripts/novice-task-e2e.cjs:573 |
-| `btmPageRestoreBar` | js/ui/bottom-bar.js:458 |
+| `btmPageRestoreBar` | js/ui/bottom-bar.js:460 |
 | `canvas-area .area-header` | js/ai/gpt-region-editor.js:1639, js/ai/manga-character-bible-ui.js:183, js/ai/manga-page-structure-ui.js:346, js/ai/manga-smart-text-editor.js:537, js/ui/task-launcher.js:71 |
 | `charLibAutoRef` | js/ai/character-library.js:182, scripts/character-library-e2e.cjs:136 |
 | `charLibBible` | js/ai/character-library.js:181 |
@@ -914,9 +914,9 @@
 | `paMetaClose` | js/ai/prompt-assist.js:128 |
 | `paMetaSnip` | js/ai/prompt-assist.js:139 |
 | `paSnippetList` | js/ai/prompt-assist.js:145 |
-| `panelAutoApply` | js/ai/panel-auto.js:120 |
-| `panelAutoCancel` | js/ai/panel-auto.js:123 |
-| `panelAutoCount` | js/ai/panel-auto.js:120 |
+| `panelAutoApply` | js/ai/panel-auto.js:128 |
+| `panelAutoCancel` | js/ai/panel-auto.js:131 |
+| `panelAutoCount` | js/ai/panel-auto.js:128 |
 | `pen-tool-buttons [data-brush]` | js/sidebar/pen/pen-tools.js:676 |
 | `privacyToggle` | js/ui/task-launcher.js:104 |
 | `promptRun` | js/ui/ai/auto-prompt-ui.js:128 |

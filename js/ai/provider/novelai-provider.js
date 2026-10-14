@@ -201,12 +201,19 @@ targetHeight=Math.max(64,raisedHeight);
 }
 }
 if(targetHeight<minEdge&&targetWidth<maxEdge){
-raisedHeight=minEdge;
-raisedWidth=this._round64(raisedHeight*aspect);
-if(raisedWidth*raisedHeight<=maxPixels&&raisedWidth<=maxEdge){
-targetHeight=raisedHeight;
-targetWidth=Math.max(64,raisedWidth);
+var raisedHeight2=minEdge;
+var raisedWidth2=this._round64(raisedHeight2*aspect);
+if(raisedWidth2*raisedHeight2<=maxPixels&&raisedWidth2<=maxEdge){
+targetHeight=raisedHeight2;
+targetWidth=Math.max(64,raisedWidth2);
 }
+}
+if(targetWidth<minEdge&&targetHeight>=minEdge){
+targetWidth=minEdge;
+targetHeight=Math.max(minEdge,Math.min(maxEdge,this._round64(Math.floor(maxPixels/targetWidth))));
+}else if(targetHeight<minEdge&&targetWidth>=minEdge){
+targetHeight=minEdge;
+targetWidth=Math.max(minEdge,Math.min(maxEdge,this._round64(Math.floor(maxPixels/targetHeight))));
 }
 return {width:targetWidth,height:targetHeight};
 }
@@ -300,6 +307,8 @@ directorPlan:director.plan
 }
 _buildParameters(base,type,extra){
 var qualityToggle=$('novelaiQualityToggle');
+var modelId=String(this.getModel()||'');
+var isV4Plus=/^nai-diffusion-[45]/.test(modelId);
 var params={
 params_version:3,
 width:base.width,
@@ -308,7 +317,7 @@ scale:this._getParamNumber('novelaiScale',base.cfg_scale,1,30),
 sampler:$('novelaiSampler')&&$('novelaiSampler').value?$('novelaiSampler').value:'k_euler_ancestral',
 steps:this._getParamInt('novelaiSteps',base.steps,1,NovelAIProvider.FREE_MAX_STEPS),
 n_samples:1,
-ucPreset:this._getParamInt('novelaiUcPreset',2,0,4),
+ucPreset:this._getParamInt('novelaiUcPreset',2,0,3),
 qualityToggle:qualityToggle?qualityToggle.checked:true,
 sm:$('novelaiSM')&&$('novelaiSM').checked,
 sm_dyn:$('novelaiSMDyn')&&$('novelaiSMDyn').checked,
@@ -319,7 +328,7 @@ legacy:false,
 add_original_image:false,
 cfg_rescale:this._getParamNumber('novelaiCfgRescale',0,0,1),
 uncond_scale:1,
-noise_schedule:this.getModel().indexOf('nai-diffusion-4')===0?'karras':'native',
+noise_schedule:isV4Plus?'karras':'native',
 seed:base.seed,
 negative_prompt:base.negative_prompt,
 legacy_uc:false,
@@ -334,7 +343,7 @@ reference_strength_multiple:[],
 deliberate_euler_ancestral_bug:false,
 prefer_brownian:true
 };
-if(this.getModel().indexOf('nai-diffusion-4')===0){
+if(isV4Plus){
 params.v4_prompt={
 caption:{
 base_caption:base.prompt,

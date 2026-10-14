@@ -75,12 +75,15 @@ renderLayerToCanvas:function(targetCanvas,layer,scaleFactor,left,top){
 var ctx=targetCanvas.getContext('2d');
 var originalClipPath=layer.clipPath;
 layer.clipPath=null;
+try{
 ctx.fillStyle='white';
 ctx.fillRect(0,0,targetCanvas.width,targetCanvas.height);
 ctx.scale(scaleFactor,scaleFactor);
 ctx.translate(-left,-top);
 layer.render(ctx);
+}finally{
 layer.clipPath=originalClipPath;
+}
 }
 };
 

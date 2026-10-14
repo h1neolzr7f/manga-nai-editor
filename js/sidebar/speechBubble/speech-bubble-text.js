@@ -221,7 +221,7 @@ strokeWidth: parseInt(fontStrokeWidth),
 textAlign: "center",
 originX: "center",
 originY: "center",
-height: rectWidth*scaleWidth,
+height: rectHeight*scaleHeight,
 selectable: true,
 movable: false,
 hasControls: false,
@@ -429,9 +429,10 @@ function speechBubbleTextChaged(textObj){
 if (isSpeechBubbleText(textObj)) {
 let newSettings=mainSpeechBubbleObjectResize(textObj);
 const svgObj=textObj.targetObject;
-
+if (newSettings&&svgObj) {
 svgObj.set(newSettings);
 updateShapeMetrics(svgObj);
+}
 }
 }
 

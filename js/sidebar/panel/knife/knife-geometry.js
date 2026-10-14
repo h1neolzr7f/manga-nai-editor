@@ -11,13 +11,29 @@
  * @returns {boolean}
  */
 function isInsidePolygon(point,polygon) {
-var scaleX=polygon.scaleX;
-var scaleY=polygon.scaleY;
+var scaleX=polygon.scaleX||1;
+var scaleY=polygon.scaleY||1;
 
-var offsetX=polygon.left;
-var offsetY=polygon.top;
+var offsetX=polygon.left||0;
+var offsetY=polygon.top||0;
 var pointX=point.x,
 pointY=point.y;
+
+if (polygon.angle && typeof fabric!=="undefined" && fabric.util && typeof polygon.calcTransformMatrix==="function" && polygon.pathOffset) {
+var inv=fabric.util.invertTransform(polygon.calcTransformMatrix());
+var localPt=fabric.util.transformPoint({x:point.x,y:point.y},inv);
+var rawVertices=polygon.points||[];
+var insideRot=false;
+for (var ri=0,rj=rawVertices.length-1;ri<rawVertices.length;rj=ri++) {
+var vxI=rawVertices[ri].x-polygon.pathOffset.x;
+var vyI=rawVertices[ri].y-polygon.pathOffset.y;
+var vxJ=rawVertices[rj].x-polygon.pathOffset.x;
+var vyJ=rawVertices[rj].y-polygon.pathOffset.y;
+var hitRot=(vyI>localPt.y)!==(vyJ>localPt.y)&&localPt.x<((vxJ-vxI)*(localPt.y-vyI))/(vyJ-vyI)+vxI;
+if (hitRot) insideRot=!insideRot;
+}
+return insideRot;
+}
 
 var inside=false;
 var vertices=polygon.points;
@@ -254,6 +270,15 @@ ySum+=(y0+y1)*a;
 }
 
 signedArea*=0.5;
+if (!isFinite(signedArea)||Math.abs(signedArea)<1e-6) {
+if (!polygon||!polygon.length) return {x: 0,y: 0};
+let avgX=0,avgY=0;
+for (let i=0;i<polygon.length;i++) {
+avgX+=polygon[i].x;
+avgY+=polygon[i].y;
+}
+return {x: avgX/polygon.length,y: avgY/polygon.length};
+}
 xSum/=6*signedArea;
 ySum/=6*signedArea;
 

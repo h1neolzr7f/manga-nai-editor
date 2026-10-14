@@ -28,7 +28,7 @@
 | .mjs | 2 |
 | .ps1 | 4 |
 | .py | 49 |
-| シンボル | 11895 |
+| シンボル | 11917 |
 | DOM id 定義 | 636 |
 | script 読み込み | 249 |
 | stylesheet 読み込み | 43 |
@@ -116,7 +116,7 @@
 | `NaiLocalToolsClient` | js/local-tools/local-tools-client.js:96 |
 | `NaiLocalToolsDefaultUrl` | js/local-tools/local-tools-client.js:97 |
 | `NaiMangaPageSize` | js/core/manga-page-size.js:239 |
-| `NaiPageLoading` | js/canvas-manager.js:1041, js/canvas-manager.js:1045, js/core/compression/project-compression.js:96, js/sidebar/panel/panel-template.js:10, js/sidebar/panel/panel-template.js:58, js/ui/bottom-bar.js:400, js/ui/bottom-bar.js:410, js/ui/bottom-bar.js:540, js/ui/bottom-bar.js:549, js/ui/psd-io.js:138 |
+| `NaiPageLoading` | js/canvas-manager.js:1041, js/canvas-manager.js:1045, js/core/compression/project-compression.js:96, js/sidebar/panel/panel-template.js:10, js/sidebar/panel/panel-template.js:58, js/ui/bottom-bar.js:402, js/ui/bottom-bar.js:412, js/ui/bottom-bar.js:542, js/ui/bottom-bar.js:551, js/ui/psd-io.js:138 |
 | `NaiPageStudio` | js/sidebar/page/page-studio.js:605 |
 | `NaiPanelPipelineReview` | js/ai/panel-pipeline-review.js:208 |
 | `NaiPngBitDepth` | js/core/util/png-bit-depth.js:563 |
@@ -129,13 +129,13 @@
 | `NaiVisualStudio` | js/ui/visual-studio.js:491 |
 | `NovelAICompositionDirector` | js/ai/prompt/novelai-composition-director.js:1216 |
 | `PANEL_LAYOUT_TEMPLATES` | js/panel/layout-templates.js:385 |
-| `PanelAuto` | js/ai/panel-auto.js:155 |
+| `PanelAuto` | js/ai/panel-auto.js:163 |
 | `PromptAssist` | js/ai/prompt-assist.js:212 |
 | `PromptAssistCore` | js/ai/prompt-assist-core.js:124 |
 | `PromptHelperImages` | js/ui/prompt-helper-images.js:53 |
 | `PsdIO` | js/ui/psd-io.js:192 |
 | `SamClickSelect` | js/ai/sam-click-select.js:242 |
-| `ScriptPageCore` | js/ai/script-page-core.js:92 |
+| `ScriptPageCore` | js/ai/script-page-core.js:88 |
 | `TestRunner` | js/core/debug.js:403 |
 | `__autoSwapPrefetch` | js/ai/auto-swap.js:726, js/ai/auto-swap.js:728 |
 | `__lastScript` | js/ui/task-launcher.js:555 |
@@ -204,7 +204,7 @@
 | scripts/novice-task-e2e.cjs | 1801 | Novice full-task acceptance (docs/GROK_BOT_FINAL_DELIVERY.md §4): a new user, no docs, real Chromium, |
 | scripts/gpt-browser-acceptance.cjs | 1326 | Real headless Chromium acceptance test against the actual HTML/Fabric runtime. |
 | js/ai/prompt/novelai-composition-director.js | 1217 |  |
-| 99_server.py | 1196 |  |
+| 99_server.py | 1206 |  |
 | js/simulator/simulator-studio.js | 1110 | 模拟器启动页与各类型单开工作区 |
 | js/canvas-manager.js | 1075 | exported aspectRatio, changeView, forcedAdjustCanvasSize, initResizeCanvas, inputImageFile, resizeCanvas, resizeCanvasToObject |
 | js/dashboard/dashboard-ui.js | 1058 | exported openDashboardModal |

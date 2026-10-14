@@ -549,6 +549,12 @@ def _safe_nai_size(width, height):
         if raised_width * raised_height <= max_pixels and raised_width <= max_edge:
             safe_height = raised_height
             safe_width = max(64, raised_width)
+    if safe_width < min_edge and safe_height >= min_edge:
+        safe_width = min_edge
+        safe_height = max(min_edge, min(max_edge, _round64(max_pixels // safe_width)))
+    elif safe_height < min_edge and safe_width >= min_edge:
+        safe_height = min_edge
+        safe_width = max(min_edge, min(max_edge, _round64(max_pixels // safe_height)))
     return {'width': int(safe_width), 'height': int(safe_height)}
 
 def _normalize_novelai_body(body):
@@ -574,6 +580,10 @@ def _normalize_novelai_body(body):
     return json.dumps(data, ensure_ascii=False).encode('utf-8')
 
 def _start_tool_job(kind, token, args):
+    if len(TOOL_JOBS) > 50:
+        done_ids = [jid for jid, j in list(TOOL_JOBS.items()) if j.get('status') in ('completed', 'failed')]
+        for jid in done_ids[:-20]:
+            TOOL_JOBS.pop(jid, None)
     job_id = uuid.uuid4().hex[:12]
     TOOL_JOBS[job_id] = {
         'id': job_id,

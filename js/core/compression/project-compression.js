@@ -213,6 +213,8 @@ for (const file of bufferFileLz4List) {
 let projectFileList=await lz4Compressor.unLz4FilesByBuffer(file.data.buffer);
 const previewBlobBuffer=projectFileList.find(file=>file.name==="preview-image.jpeg");
 
+let previewImageUrl="";
+if (previewBlobBuffer&&previewBlobBuffer.data) {
 const isBase64=new TextDecoder().decode(previewBlobBuffer.data.slice(0,30)).startsWith('data:image/jpeg;base64,');
 
 let previewBlob;
@@ -228,7 +230,7 @@ previewBlob=new Blob([uint8Array],{type: 'image/jpeg'});
 previewBlob=new Blob([previewBlobBuffer.data],{type: 'image/jpeg'});
 }
 
-const previewImageUrl=URL.createObjectURL(previewBlob);
+previewImageUrl=URL.createObjectURL(previewBlob);
 
 const reader=new FileReader();
 reader.onload=function() {
@@ -237,6 +239,7 @@ reader.readAsText(previewBlob);
 
 const binaryReader=new FileReader();
 binaryReader.readAsArrayBuffer(previewBlob);
+}
 
 const jsonBufferFiles=projectFileList.filter(f=>
 f.name.startsWith('state_')&&f.name.endsWith('.json')

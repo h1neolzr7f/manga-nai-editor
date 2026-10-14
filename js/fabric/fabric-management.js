@@ -176,6 +176,9 @@ updateTextControls(event.selected[0]);
 function moveSettings(img,poly) {
 eventLogger.trace('moveSettings');
 eventLogger.traceWithStack('moveSettings');
+if(typeof img.removeClipPathListeners==='function'){
+img.removeClipPathListeners();
+}
 img.perPixelTargetFind=true;
 updateClipPath(img,poly);
 

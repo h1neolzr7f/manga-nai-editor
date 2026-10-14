@@ -7,7 +7,7 @@
 
 | ファイル | 行数 | 用途 |
 |---------|------|------|
-| 99_server.py | 1196 |  |
+| 99_server.py | 1206 |  |
 | css/common.css | 224 |  |
 | css/components.css | 350 |  |
 | css/controls-mini.css | 568 |  |
@@ -92,7 +92,7 @@
 | js/ai/nai-engine.js | 110 | NovelAI engine (1.6): one queue (NovelAI allows one generation at a time per account), retries on 429/5xx, |
 | js/ai/nai-status-format.js | 25 | Human-readable NovelAI subscription status for the "检查 NAI" toast. |
 | js/ai/novelai-only-mode.js | 132 |  |
-| js/ai/panel-auto.js | 156 | Automatic panel detection (local, CPU, rule-based): the existing white-gutter XY-cut |
+| js/ai/panel-auto.js | 164 | Automatic panel detection (local, CPU, rule-based): the existing white-gutter XY-cut |
 | js/ai/panel-pipeline-review.js | 220 | exported markPanelAutoOk |
 | js/ai/prompt-assist-core.js | 129 | Prompt assist core (1.6, optional): offline Danbooru tag index + NAI V4/V4.5 prompt rules + LLM polish template. |
 | js/ai/prompt-assist.js | 213 | Prompt assist (1.6, optional, off by default): offline Danbooru tag autocomplete/validation for NovelAI prompt boxes, |
@@ -105,7 +105,7 @@
 | js/ai/prompt/director-safety.js | 29 | Director (third-party LLM gateway) credential safety. |
 | js/ai/prompt/novelai-composition-director.js | 1217 |  |
 | js/ai/provider/ai-provider.js | 53 | exported AIProvider |
-| js/ai/provider/novelai-provider.js | 594 | NovelAI provider: direct browser call to the official image API. |
+| js/ai/provider/novelai-provider.js | 603 | NovelAI provider: direct browser call to the official image API. |
 | js/ai/provider/provider-registry.js | 101 | exported providerRegistry |
 | js/ai/queue/generation-task-manager.js | 341 | exported applyGeneratedImageToOriginalPage, getAiTask, getAiTasksForLayer, isAiTaskCancelled, isPageChanged, registerAiTask, registerGenerationTask, removeAiTask, updateAiTaskCancelInfo, updateAiTaskStatus |
 | js/ai/queue/spinner.js | 104 | exported createSpinner, removeSpinner, renderAiTaskIndicators, setCurrentAiTask |
@@ -113,7 +113,7 @@
 | js/ai/role/ai-roles.js | 35 | exported hasNotRole, roles |
 | js/ai/role/role-assignment-ui.js | 79 | exported roleAssignmentUI |
 | js/ai/sam-click-select.js | 244 | 智能点选 (SAM 2.1 tiny, local, CPU): click on a character/object → 3 candidate shapes (small → large) |
-| js/ai/script-page-core.js | 93 | 2.0 #4 script -> page (LLM-free). Paste a script in almost any everyday format; it is split into pages, |
+| js/ai/script-page-core.js | 89 | 2.0 #4 script -> page (LLM-free). Paste a script in almost any everyday format; it is split into pages, |
 | js/ai/ui/ai-ui-util.js | 9 | exported updateWorkflowType |
 | js/ai/ui/unified-settings-window.js | 49 | exported unifiedSettingsWindow |
 | js/assets/asset-blob-store.js | 70 |  |
@@ -133,7 +133,7 @@
 | js/core/auto-save.js | 286 | exported AutoSaveManager |
 | js/core/command-history.js | 185 | global commonProperties |
 | js/core/compression/lz4.js | 226 |  |
-| js/core/compression/project-compression.js | 389 | exported btmSaveProjectFile, loadLz4BlobProjectFile, multiLoadLz4, multiLoadZip, openFirstLoadedPageIfCanvasEmpty, processZip, rewriteLz4BlobGuid |
+| js/core/compression/project-compression.js | 392 | exported btmSaveProjectFile, loadLz4BlobProjectFile, multiLoadLz4, multiLoadZip, openFirstLoadedPageIfCanvasEmpty, processZip, rewriteLz4BlobGuid |
 | js/core/debug.js | 403 | exported DEBUG_FLAGS |
 | js/core/font/font-dropdown.js | 299 |  |
 | js/core/font/font-manager-core.js | 747 | exported fontClassName, fontInit |
@@ -150,7 +150,7 @@
 | js/core/util/array-buffer-utils.js | 54 | exported ArrayBufferUtils |
 | js/core/util/fabric-text-focus.js | 83 | fabric の IText / Textbox は、入力用の 1px の textarea を |
 | js/core/util/fabric-util.js | 836 | exported avtive, copy, createGUIDMap, deepCopy, fitImageToCanvas, getCanvasGUID, getCenterXByFabricObject, getCenterYByFabricObject, getImageObjectList, getLastObject, getObjectCount, getObjectList, getPointAtDistance, getRandomPanel, haveClipPath, initMessage, isGroup, isHorizontalText, isLayerPreview, isLine, isPanelType, isPath, isShapes, isSpeechBubbleSVG, isSpeechBubbleText, isText, isVerticalText, removeClipPath, removeGUID, replaceGuids, setGUID |
-| js/core/util/html-canvas-util.js | 92 | exported createClippedCanvas, createOffscreenCanvas, createScaledCanvas, enhanceDarkRegionsCPU, findNonTransparentBounds, renderLayerToCanvas |
+| js/core/util/html-canvas-util.js | 95 | exported createClippedCanvas, createOffscreenCanvas, createScaledCanvas, enhanceDarkRegionsCPU, findNonTransparentBounds, renderLayerToCanvas |
 | js/core/util/image-analyzer-util.js | 122 | exported createGrid, findLargestRectangle |
 | js/core/util/image-util.js | 855 | exported blobUrlToDataUrl, clipCopy, createCanvasFromFabricImage, cropAndDownload, cropImage, enhanceDarkImage, estimateExportSize, exportCanvasDataURL, exportDataUrlByteLength, flipHorizontally, flipVertically, formatByteSize, getCropAndDownloadLink, getCropAndDownloadLinkByMultiplier, getHeight, getLink, getWidth, hexToRgba, imageObject2Base64ImageEffectKeep, imageObject2DataURL, imageObject2DataURLByCrop, imgFile2webpFile, normalizeExportQuality, resolveExportBackground, resolveExportBitDepth, resolveExportFormat, resolveExportMultiplier, resolveExportMultiplierForDpi, rgbToHex, rgbaToHex, sendHtmlCanvas2FabricCanvas |
 | js/core/util/js-util.js | 21 | exported generateRandomInt, getRandomNumber |
@@ -162,12 +162,12 @@
 | js/dashboard/performance-storage.js | 608 | パフォーマンス統計のlocalforage永続化 |
 | js/dashboard/prompt-frequency-storage.js | 195 | exported PromptFrequencyStorage |
 | js/db/user-font-repository.js | 84 | exported fmFontRepository |
-| js/fabric/fabric-management.js | 712 | exported lastActiveObjectState, moveSettings |
+| js/fabric/fabric-management.js | 715 | exported lastActiveObjectState, moveSettings |
 | js/layer/blend/blend.js | 697 | exported addFillLayer, addGradientLayer, handleBlend |
 | js/layer/floating-window-management.js | 81 | exported isNotVisibleFloatingWindow, makeDraggable |
 | js/layer/image-history-management.js | 341 | exported confirmAllRemove, convertImageMapBlobUrls, initImageHistory, jumpToHistoryIndex, lastRedo, redo, removeByNotSave, saveStateByListener, setNotSave, setSave, undo |
 | js/layer/layer-button.js | 97 | exported putActionBarSeparator, putActionButton, putDeleteButton, putMoveLockButton, putRembgButton, putViewButton |
-| js/layer/layer-management.js | 549 | exported LayersDown, LayersUp, calculateCenter, highlightClear, removeLayer |
+| js/layer/layer-management.js | 553 | exported LayersDown, LayersUp, calculateCenter, highlightClear, removeLayer |
 | js/local-tools/background-removal-client.js | 545 |  |
 | js/local-tools/cutout-presets.js | 107 |  |
 | js/local-tools/local-tools-client.js | 98 |  |
@@ -181,11 +181,11 @@
 | js/sidebar/effect/effect-manager.js | 228 | exported switchMangaEffect |
 | js/sidebar/page/page-studio.js | 627 |  |
 | js/sidebar/panel/knife/knife-constants.js | 56 | exported KNIFE_CONSTANTS |
-| js/sidebar/panel/knife/knife-geometry.js | 261 | exported calculateIntersection, calculatePolygonCentroid, getIntersectionByDistance, getPolygonAtPoint, isHorizontal, isSplitPoint, removeDuplicates |
+| js/sidebar/panel/knife/knife-geometry.js | 286 | exported calculateIntersection, calculatePolygonCentroid, getIntersectionByDistance, getPolygonAtPoint, isHorizontal, isSplitPoint, removeDuplicates |
 | js/sidebar/panel/knife/knife-index.js | 20 | knife-index.js |
 | js/sidebar/panel/knife/knife-line-renderer.js | 175 | exported drawLine |
-| js/sidebar/panel/knife/knife-mode.js | 81 | knife-mode.js |
-| js/sidebar/panel/knife/knife-split-engine.js | 514 | exported blindSplitPanel, guidedSplitPanel |
+| js/sidebar/panel/knife/knife-mode.js | 86 | knife-mode.js |
+| js/sidebar/panel/knife/knife-split-engine.js | 522 | exported blindSplitPanel, guidedSplitPanel |
 | js/sidebar/panel/knife/knife-state.js | 16 | exported currentKnifeLine, currentKnifeObject, knifeAssistAngle, knifeLineAnimationId, knifeLineDashOffset, startKnifeX, startKnifeY |
 | js/sidebar/panel/panel-manager.js | 742 | exported Edit, changePanelFillColor, changePanelOpacity, changePanelStrokeColor, changePanelStrokeWidth, initialPutImage, isWithin, loadSVGPlusReset, panelAllChange, replaceImageObject, setPanelValue |
 | js/sidebar/panel/panel-template.js | 411 | exported addHeart, addHexagon, addPentagon, addSquare, addStar, addTallRect, addTriangle, addWideRect, ensurePanelForKnife |
@@ -204,7 +204,7 @@
 | js/sidebar/sidebar.js | 119 | exported switchTemplateOrientation |
 | js/sidebar/speechBubble/speech-bubble-effect.js | 305 | exported getSpeechBubbleTextFill, lazyLoadSvgData |
 | js/sidebar/speechBubble/speech-bubble-freehand.js | 894 | exported activePoint, clearJSTSGeometry, createJSTSPolygon, createSpeechBubble, deletePoint, freehandBubbleTextChanged, isDrawing, isNearStartPoint, lastRenderTime, mergeOverlappingShapes, processPoints, sbFreehandTextChange, selectedObject, updateFreehandBubblePositions, updateJSTSGeometry, updateShape, updateTemporaryShapes |
-| js/sidebar/speechBubble/speech-bubble-text.js | 452 | exported createSpeechBubbleMetrics, customSpeechBubbleAllRelocation, parseSvg, sbTextChange, textFrameScaling, updateObjectPositions |
+| js/sidebar/speechBubble/speech-bubble-text.js | 453 | exported createSpeechBubbleMetrics, customSpeechBubbleAllRelocation, parseSvg, sbTextChange, textFrameScaling, updateObjectPositions |
 | js/sidebar/text/custom/custom-text-util.js | 33 | exported baseStylesDefault, createFilterElement, getFirstNCharsDefault |
 | js/sidebar/text/custom/optimized-aurora-text.js | 128 | exported t2_aurora_updateAll |
 | js/sidebar/text/custom/optimized-broken-text.js | 138 | exported t2_broken_updateAll |
@@ -258,7 +258,7 @@
 | js/svg/speechbubble.js | 51 | exported SpeechBubble |
 | js/ui/ai/auto-prompt-ui.js | 179 |  |
 | js/ui/beginner-guide.js | 535 |  |
-| js/ui/bottom-bar.js | 552 | {guid, { imageLink, blob }} blob is lz4 |
+| js/ui/bottom-bar.js | 554 | {guid, { imageLink, blob }} blob is lz4 |
 | js/ui/canvas-object-menu.js | 712 | Canvas object right-click context menu |
 | js/ui/control/common-control-management.js | 61 | exported updateControls |
 | js/ui/control/glfx-control.js | 457 | exported glfxAddEvent, glfxApplyNoReset |

@@ -68,12 +68,17 @@ canvas.selection=!isKnifeMode;
 
 canvas.forEachObject(function (obj) {
 if (isKnifeMode) {
+if (obj._preKnifeSelectable===undefined) {
+obj._preKnifeSelectable=obj.selectable;
+}
 obj.set({
 selectable: false,
 });
 } else {
+var restoreSelectable=obj._preKnifeSelectable!==undefined?obj._preKnifeSelectable:!(obj.type==="rect"&&obj.targetObject&&obj.excludeFromLayerPanel);
+delete obj._preKnifeSelectable;
 obj.set({
-selectable: true,
+selectable: restoreSelectable,
 });
 }
 });

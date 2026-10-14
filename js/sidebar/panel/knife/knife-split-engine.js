@@ -346,9 +346,17 @@ var area2=polygon2.width*polygon2.height;
 var largerPolygon=area1>=area2?polygon1:polygon2;
 childImages.forEach(function(img){
 img.clipPath=null;
-var imgCenterX=img.left+(img.width*img.scaleX)/2;
-var imgCenterY=img.top+(img.height*img.scaleY)/2;
-putImageInFrame(img,imgCenterX,imgCenterY,false,true,true,largerPolygon);
+var imgCenter=typeof img.getCenterPoint==="function"?img.getCenterPoint():null;
+var imgCenterX=imgCenter?imgCenter.x:img.left+(img.width*img.scaleX)/2;
+var imgCenterY=imgCenter?imgCenter.y:img.top+(img.height*img.scaleY)/2;
+var targetPoly=largerPolygon;
+if(typeof isInsidePolygon==="function"){
+var in1=isInsidePolygon({x:imgCenterX,y:imgCenterY},polygon1);
+var in2=isInsidePolygon({x:imgCenterX,y:imgCenterY},polygon2);
+if(in1&&!in2)targetPoly=polygon1;
+else if(in2&&!in1)targetPoly=polygon2;
+}
+putImageInFrame(img,imgCenterX,imgCenterY,false,true,true,targetPoly);
 });
 }
 
