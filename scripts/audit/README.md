@@ -1,0 +1,91 @@
+# 审查复现工具
+
+基线：v1.6.1 / `ca9572d`。这些脚本通过生产函数、实际捆绑codec与可控制的DOM/网络/模型依赖**复现缺陷**。31个诊断/补证脚本exit=0表示缺陷已按预期出现，不是产品通过验收。另一个[基础扫描工具](scan-source-integrity.py)exit=0表示其语法/直接资源/图像格式检查通过，不能混淆。
+
+从仓库根目录执行，Node.js 22+（仓库CI用24）、Python 3.10+；后端图像用例需要同一Python环境的Pillow，可使用本项目AI环境。无需API Key、付费接口或模型下载。临时HTTP只监听loopback，文件测试放临时目录。
+
+```bash
+node scripts/audit/editor-audit-repro.cjs
+node scripts/audit/ancillary-audit-repro.cjs
+node scripts/audit/expanded_frontend_repro.cjs
+node scripts/audit/psd-zip-audit-repro.cjs
+node scripts/audit/property-history-audit-repro.cjs
+node scripts/audit/image-edit-audit-repro.cjs
+node scripts/audit/round3-process-audit-repro.cjs
+python scripts/audit/backend-audit-round2.py
+node scripts/audit/round4-cutout-audit-repro.cjs
+node scripts/audit/round4-project-load-audit-repro.cjs
+node scripts/audit/round5-assets-audit-repro.cjs
+node scripts/audit/round5-canvas-audit-repro.cjs
+node scripts/audit/round5-export-audit-repro.cjs
+python scripts/audit/round5-ocr-audit-repro.py
+node scripts/audit/round5-prompt-plan-audit-repro.cjs
+node scripts/audit/round5-queue-cancel-audit-repro.cjs
+node scripts/audit/round5-sam-audit-repro.cjs
+node scripts/audit/round5-sidebar-audit-repro.cjs
+python scripts/audit/round5-startup-audit-repro.py
+node scripts/audit/round5-text-ui-audit-repro.cjs
+node scripts/audit/round6-editor-candidates-repro.cjs
+node scripts/audit/round6-font-audit-repro.cjs
+node scripts/audit/round6-foundation-audit-repro.cjs
+python scripts/audit/round6-gpt-proxy-controls.py
+node scripts/audit/round6-import-state-audit-repro.cjs
+node scripts/audit/round6-legacy-brush-repro.cjs
+node scripts/audit/round6-mode-lock-audit-repro.cjs
+node scripts/audit/round6-panel-cache-audit-repro.cjs
+node scripts/audit/round6-prompt-routing-audit-repro.cjs
+node scripts/audit/round6-simulator-audit-repro.cjs
+node scripts/audit/round6-ui-audit-repro.cjs
+node scripts/audit/round6-vertical-focus-audit-repro.cjs
+```
+
+第四/五轮的像素脚本额外需要 `@napi-rs/canvas`（测试依赖，正常 Node 模块解析可找到它即可）及 Pillow；SAM缓存用例还需 NumPy，启动用例需要支持--dry-run的pip（22.2+）。不执行神经网络推理；启动用例只启动临时loopback sidecar和禁联网pip构建依赖fixture，不安装torch。
+
+JS脚本默认读取当前工作目录，可用MANGA_AUDIT_ROOT指定待审仓库。Python按脚本所在仓库定位。不要对包含个人图像/凭证的浏览器会话执行这些fixture；它们不需要真实浏览器会话。
+
+| 脚本 | 覆盖 |
+| --- | --- |
+| editor-audit-repro | 当前缩略图、复制页、恢复删除、自动保存并发/失败/页序 |
+| ancillary-audit-repro | 复制图层GUID、模拟器比例/分页、隐私DOM |
+| expanded_frontend_repro | AI Fill重入/跨页/旧会话、角色卡与引用、会员缓存、聊天替换、seed0 |
+| psd-zip-audit-repro | PSD opacity/文字/分组/AI位置/背景、旧ZIP平铺与DEFLATE |
+| property-history-audit-repro | 字体属性/翻转与历史、自动保存 |
+| image-edit-audit-repro | 油漆桶属性/层序、变换坐标 |
+| round3-process-audit-repro | 五句speaker合并、多行适配、尾巴索引、事件过滤、重置资产索引 |
+| round4-cutout-audit-repro | 裁切坐标、浏览器选项、异步跨页、服务端alpha，以及17/26/39补充 |
+| round4-project-load-audit-repro | 合法JSON但错误结构的工程导入失败后，旧历史/图片/尺寸/提示词未回滚；含语法错误保护对照 |
+| [round5-assets-audit-repro.cjs](round5-assets-audit-repro.cjs) | 素材索引提交/导入/文件碰撞/孤blob |
+| [round5-canvas-audit-repro.cjs](round5-canvas-audit-repro.cjs) | 混合偏移、画笔buffer、滤镜竞态、切分与回滚 |
+| [round5-export-audit-repro.cjs](round5-export-audit-repro.cjs) | 辅助框污染、导出异常、长图污染 |
+| [round5-ocr-audit-repro.py](round5-ocr-audit-repro.py) | 重复字、横排读序、竖排方向 |
+| [round5-prompt-plan-audit-repro.cjs](round5-prompt-plan-audit-repro.cjs) | 旧角色卡、40页计划、权重补全 |
+| [round5-queue-cancel-audit-repro.cjs](round5-queue-cancel-audit-repro.cjs) | running取消、两套NAI队列 |
+| [round5-sam-audit-repro.cjs](round5-sam-audit-repro.cjs) | 抽样哈希碰撞、精确mask桥接丢失 |
+| [round5-sidebar-audit-repro.cjs](round5-sidebar-audit-repro.cjs) | 超采样坐标、集中线重复、辉光参数 |
+| [round5-startup-audit-repro.py](round5-startup-audit-repro.py) | 隔离构建CPU源、路径引号、端口合同 |
+| [round5-text-ui-audit-repro.cjs](round5-text-ui-audit-repro.cjs) | 边线遮盖、字幕字号/跨页、LaMa取消/旧批准 |
+| backend-audit-round2 | 旧batch端口/重复生成、JPEG嵌入、长文件名、下载竞态、字体、SVG提供行为 |
+
+并非每条审查记录都有保留下来的独立脚本。部分首轮检查以临时fixture执行，报告已经注明验证方式；不要声称本目录覆盖全部问题。
+
+函数/像素替代依赖不代表真实浏览器、真实Windows安装或真实生成质量通过。SVG用例只确认原文存储与HTTP提供，不验证浏览器脚本执行。修复后把相应反向诊断改为正确行为回归，并按[交接入口](../../docs/AUDIT_AND_HANDOFF.md)完成验收记录。
+
+
+基础扫描：`python scripts/audit/scan-source-integrity.py`（只读，不执行模型或联网）。详见[逐文件覆盖](../../docs/dev/audit/2026-10-13-coverage.md)。
+
+第六轮工具含义：`round6-gpt-proxy-controls.py`是正常合同对照，exit=0表示受控生成/参考图合同通过；`scan-source-integrity.py`是基础扫描。其余31个诊断/补证工具exit=0表示报告所列缺陷成功复现或对照完成，仍不是修复。
+
+| 第六轮脚本 | 范围 |
+| --- | --- |
+| [round6-editor-candidates-repro.cjs](round6-editor-candidates-repro.cjs) | 气泡合并对白丢失；89/38补证、噪点/Spray边界 |
+| [round6-font-audit-repro.cjs](round6-font-audit-repro.cjs) | 字体保存/卸载失败、runtime卸载候选 |
+| [round6-foundation-audit-repro.cjs](round6-foundation-audit-repro.cjs) | 依赖重试、统计并发、错周、历史streak与辅助合同 |
+| [round6-gpt-proxy-controls.py](round6-gpt-proxy-controls.py) | 正常自定义模型/尺寸/主图+3参考合同，不是缺陷诊断 |
+| [round6-import-state-audit-repro.cjs](round6-import-state-audit-repro.cjs) | 导入元数据序列化/恢复与隐藏/选择 |
+| [round6-legacy-brush-repro.cjs](round6-legacy-brush-repro.cjs) | 真实Fabric旧笔刷提交与79补证，23预设 |
+| [round6-mode-lock-audit-repro.cjs](round6-mode-lock-audit-repro.cjs) | 临时工具模式恢复覆盖用户图层锁 |
+| [round6-panel-cache-audit-repro.cjs](round6-panel-cache-audit-repro.cjs) | 同长度PNG更新后的旧分格/旧图片缓存 |
+| [round6-prompt-routing-audit-repro.cjs](round6-prompt-routing-audit-repro.cjs) | 正负字段/字面替换、导演旧响应、草稿开关 |
+| [round6-simulator-audit-repro.cjs](round6-simulator-audit-repro.cjs) | 真实Fabric聊天坐标、图片/头像、回读/Studio/播放 |
+| [round6-ui-audit-repro.cjs](round6-ui-audit-repro.cjs) | 共享ctx擦底、底页跨页、I2I预检、服务测试/侧栏 |
+| [round6-vertical-focus-audit-repro.cjs](round6-vertical-focus-audit-repro.cjs) | Delete/IME同步、共享RTL键表、高亮索引与Escape候选 |
