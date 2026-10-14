@@ -5,7 +5,7 @@
 - 定義: index.html / html 配下の `id="..."`
 - 参照: `$('id')` / `getElementById('id')` / `querySelector('#id')` と、定義済み id と一致する文字列リトラル
   （`['a','b'].forEach(function(id){$(id);})` のような動的参照を抽うため。js と html インライン script が対象）
-- 定義 636 件 / 参照 906 件
+- 定義 636 件 / 参照 907 件
 
 ## id → 定義と参照
 
@@ -40,7 +40,7 @@
 | `ToneNoiseButton` | index.html:1884 |  |
 | `ToneRainButton` | index.html:1892 |  |
 | `ToneSnowButton` | index.html:1888 |  |
-| `a` | index.html:63 | index.html:72, js/ai/manga-character-bible-ui.js:151, js/ai/manga-page-structure-ui.js:338, js/ai/panel-pipeline-review.js:151, js/assets/asset-pack.js:8, js/core/compression/lz4.js:207, js/core/util/image-util.js:658, js/dashboard/dashboard-ui.js:968, js/local-tools/background-removal-client.js:494, js/project-management.js:43, js/sidebar/pen/pen-tools.js:638, js/simulator/chat-controller.js:302, js/simulator/longshot-exporter.js:29, js/simulator/simulator-controller.js:100, js/simulator/story-composer-controller.js:264, js/svg/manga-panels-image-vertical.js:3, js/ui/imagePromptHelper/image-prompt-helper.js:119, js/ui/psd-io.js:101, js/ui/task-launcher.js:817, js/ui/third/ag-psd/ag-psd.js:7332, scripts/audit/round6-simulator-audit-repro.cjs:41, scripts/auto-swap-session-test.cjs:16, scripts/auto-swap-test.cjs:38, scripts/history-labels-test.cjs:6, scripts/manga-bubble-detector-test.cjs:42, scripts/model-progress-test.cjs:8, scripts/nai-engine-core-test.cjs:43, scripts/novelai-readable-error-test.cjs:35, scripts/service-request-test.cjs:41, scripts/simulator-timeline-smoke-test.cjs:7, scripts/task-page-continuity-test.cjs:29 |
+| `a` | index.html:63 | index.html:72, js/ai/manga-character-bible-ui.js:151, js/ai/manga-page-structure-ui.js:338, js/ai/panel-pipeline-review.js:151, js/assets/asset-pack.js:8, js/core/compression/lz4.js:207, js/core/util/image-util.js:658, js/dashboard/dashboard-ui.js:968, js/local-tools/background-removal-client.js:494, js/project-management.js:43, js/sidebar/pen/pen-tools.js:638, js/simulator/chat-controller.js:302, js/simulator/longshot-exporter.js:29, js/simulator/simulator-controller.js:100, js/simulator/story-composer-controller.js:264, js/svg/manga-panels-image-vertical.js:3, js/ui/imagePromptHelper/image-prompt-helper.js:119, js/ui/psd-io.js:101, js/ui/task-launcher.js:867, js/ui/third/ag-psd/ag-psd.js:7332, scripts/audit/round6-simulator-audit-repro.cjs:41, scripts/auto-swap-session-test.cjs:16, scripts/auto-swap-test.cjs:38, scripts/history-labels-test.cjs:6, scripts/manga-bubble-detector-test.cjs:42, scripts/model-progress-test.cjs:8, scripts/nai-engine-core-test.cjs:43, scripts/novelai-readable-error-test.cjs:35, scripts/service-request-test.cjs:41, scripts/simulator-timeline-smoke-test.cjs:7, scripts/task-page-continuity-test.cjs:29 |
 | `add` | index.html:788 | js/ai/manga-lama-inpaint-ui.js:9, js/ai/prompt-assist-core.js:119, js/ai/prompt-assist.js:200, js/core/svg/google-icon-names.js:12, js/layer/blend/blend.js:3, js/ui/third/base-translation/base-de.js:147, js/ui/third/base-translation/base-en.js:152, js/ui/third/base-translation/base-es.js:147, js/ui/third/base-translation/base-fr.js:147, js/ui/third/base-translation/base-ja.js:152, js/ui/third/base-translation/base-ko.js:147, js/ui/third/base-translation/base-ru.js:147, js/ui/third/base-translation/base-zh.js:153, scripts/prompt-assist-core-test.cjs:31, scripts/tone-target-apply-test.cjs:14 |
 | `addHeart` | index.html:892 | js/ui/visual-studio.js:478 |
 | `addHexagon` | index.html:884 | js/ui/visual-studio.js:478 |
@@ -385,14 +385,14 @@
 | `novelaiI2INoise` | index.html:2393 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:366, js/project-management.js:219 |
 | `novelaiI2IStrength` | index.html:2388 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:365, js/project-management.js:218 |
 | `novelaiModel` | index.html:2342 | js/ai/ai-settings.js:191, js/ai/nai-engine.js:12, js/ai/provider/novelai-provider.js:46, js/project-management.js:212, js/ui/service-settings.js:216, scripts/task-page-continuity-test.cjs:13 |
-| `novelaiQualityToggle` | index.html:2398 | js/ai/ai-settings.js:196, js/ai/nai-engine.js:16, js/ai/provider/novelai-provider.js:309, js/project-management.js:245, js/ui/task-launcher.js:677, scripts/task-page-continuity-test.cjs:13 |
+| `novelaiQualityToggle` | index.html:2398 | js/ai/ai-settings.js:196, js/ai/nai-engine.js:16, js/ai/provider/novelai-provider.js:309, js/project-management.js:245, js/ui/task-launcher.js:694, scripts/task-page-continuity-test.cjs:13 |
 | `novelaiRememberToken` | index.html:2335 | js/project-management.js:331, js/ui/beginner-guide.js:409, js/ui/service-settings.js:211 |
 | `novelaiSM` | index.html:2403 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:322, js/project-management.js:246 |
 | `novelaiSMDyn` | index.html:2403 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:323, js/project-management.js:247 |
 | `novelaiSampler` | index.html:2356 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:317, js/project-management.js:213 |
 | `novelaiScale` | index.html:2373 | js/ai/ai-settings.js:196, js/ai/prompt-assist.js:135, js/ai/provider/novelai-provider.js:316, js/project-management.js:215 |
 | `novelaiSteps` | index.html:2368 | js/ai/ai-settings.js:196, js/ai/prompt-assist.js:135, js/ai/provider/novelai-provider.js:318, js/project-management.js:214, scripts/nai-real-acceptance.cjs:105 |
-| `novelaiUcPreset` | index.html:2378 | js/ai/ai-settings.js:196, js/ai/nai-engine.js:15, js/ai/provider/novelai-provider.js:320, js/project-management.js:216, js/ui/task-launcher.js:677, scripts/task-page-continuity-test.cjs:13 |
+| `novelaiUcPreset` | index.html:2378 | js/ai/ai-settings.js:196, js/ai/nai-engine.js:15, js/ai/provider/novelai-provider.js:320, js/project-management.js:216, js/ui/task-launcher.js:694, scripts/task-page-continuity-test.cjs:13 |
 | `novelaiUseLocalProxy` | index.html:2324 | js/ai/ai-settings.js:196, js/ai/provider/novelai-provider.js:30, js/project-management.js:210, js/ui/service-settings.js:208, scripts/nai-real-acceptance.cjs:104 |
 | `onePanelGenerateNumber` | index.html:1115 | js/ai/prompt/auto/auto-generation.js:4, js/project-management.js:291, js/ui/third/base-translation/base-ja.js:37, js/ui/third/i18next.js:74 |
 | `opacity-control` | index.html:1953 | js/ui/control/common-control-management.js:3 |
@@ -695,7 +695,7 @@
 | `blendSelectedInfo` | js/layer/blend/blend.js:207 |
 | `btm-dialog-cancel` | js/ui/bottom-bar.js:538 |
 | `btm-dialog-submit` | js/ui/bottom-bar.js:539 |
-| `btm-image-container .btm-image` | js/ui/task-launcher.js:791, scripts/novice-task-e2e.cjs:1396 |
+| `btm-image-container .btm-image` | js/ui/task-launcher.js:841, scripts/novice-task-e2e.cjs:1396 |
 | `btm-image-container > *` | scripts/novice-task-e2e.cjs:384 |
 | `btm-image-container button` | scripts/novice-task-e2e.cjs:573 |
 | `btmPageRestoreBar` | js/ui/bottom-bar.js:463 |
@@ -831,16 +831,16 @@
 | `mangaGptChangeOnly` | scripts/gpt-browser-acceptance.cjs:325 |
 | `mangaGptCompare` | scripts/novice-task-e2e.cjs:252, scripts/ux-shots-v2.cjs:53, scripts/ux-shots-v3.cjs:54 |
 | `mangaGptGenerate` | scripts/full-feature-e2e.cjs:436, scripts/gpt-browser-acceptance.cjs:227, scripts/gpt-real-api-acceptance.cjs:292, scripts/novice-task-e2e.cjs:981 |
-| `mangaGptKey` | js/ai/ai-fill.js:193, js/ui/service-settings.js:20, js/ui/task-launcher.js:675, scripts/auto-swap-real.cjs:48 |
+| `mangaGptKey` | js/ai/ai-fill.js:193, js/ui/service-settings.js:20, js/ui/task-launcher.js:692, scripts/auto-swap-real.cjs:48 |
 | `mangaGptMode` | scripts/gpt-browser-acceptance.cjs:1040 |
-| `mangaGptModel` | js/ai/ai-fill.js:264, js/ui/service-settings.js:20, js/ui/task-launcher.js:676, scripts/auto-swap-real.cjs:48, scripts/gpt-browser-acceptance.cjs:271, scripts/novice-task-e2e.cjs:1773 |
+| `mangaGptModel` | js/ai/ai-fill.js:264, js/ui/service-settings.js:20, js/ui/task-launcher.js:693, scripts/auto-swap-real.cjs:48, scripts/gpt-browser-acceptance.cjs:271, scripts/novice-task-e2e.cjs:1773 |
 | `mangaGptModelPreset` | js/ui/service-settings.js:54, scripts/gpt-browser-acceptance.cjs:271, scripts/novice-task-e2e.cjs:1758 |
 | `mangaGptOpen` | scripts/gpt-browser-acceptance.cjs:1302, scripts/novice-task-e2e.cjs:189 |
 | `mangaGptPanel` | js/ui/service-settings.js:295, js/ui/task-launcher.js:289, scripts/comic-dogfood.cjs:80, scripts/full-feature-e2e.cjs:388, scripts/gpt-browser-acceptance.cjs:305, scripts/novice-task-e2e.cjs:1079 |
 | `mangaGptPanel .manga-gpt-group` | scripts/novice-task-e2e.cjs:1196 |
 | `mangaGptPanel .manga-gpt-opt` | scripts/novice-task-e2e.cjs:1197 |
 | `mangaGptPreview` | scripts/gpt-browser-acceptance.cjs:433, scripts/novice-task-e2e.cjs:252 |
-| `mangaGptPrompt` | js/ui/task-launcher.js:775, scripts/comic-dogfood.cjs:80, scripts/full-feature-e2e.cjs:381, scripts/gpt-browser-acceptance.cjs:1039 |
+| `mangaGptPrompt` | js/ui/task-launcher.js:825, scripts/comic-dogfood.cjs:80, scripts/full-feature-e2e.cjs:381, scripts/gpt-browser-acceptance.cjs:1039 |
 | `mangaGptReferenceList` | scripts/full-feature-e2e.cjs:381, scripts/gpt-browser-acceptance.cjs:1251 |
 | `mangaGptReferences` | scripts/novice-task-e2e.cjs:1182 |
 | `mangaGptReferencesPick` | scripts/novice-task-e2e.cjs:1182 |
@@ -852,7 +852,7 @@
 | `mangaGptSubtitle` | scripts/gpt-browser-acceptance.cjs:484 |
 | `mangaGptTaskHead` | js/ui/task-launcher.js:183 |
 | `mangaGptTaskHead li` | scripts/novice-task-e2e.cjs:1157 |
-| `mangaGptUrl` | js/ai/ai-fill.js:284, js/ui/service-settings.js:20, js/ui/task-launcher.js:529, scripts/ai-fill-e2e.cjs:51, scripts/auto-swap-real.cjs:48, scripts/novice-task-e2e.cjs:1364 |
+| `mangaGptUrl` | js/ai/ai-fill.js:284, js/ui/service-settings.js:20, js/ui/task-launcher.js:532, scripts/ai-fill-e2e.cjs:51, scripts/auto-swap-real.cjs:48, scripts/novice-task-e2e.cjs:1364 |
 | `mangaLamaConfirm` | js/ai/manga-lama-inpaint-ui.js:108, scripts/full-feature-e2e.cjs:335, scripts/gpt-browser-acceptance.cjs:903, scripts/manga-real-ui-acceptance.cjs:97, scripts/novice-task-e2e.cjs:514 |
 | `mangaLamaGenerate` | js/ai/manga-lama-inpaint-ui.js:328, scripts/full-feature-e2e.cjs:331, scripts/gpt-browser-acceptance.cjs:983, scripts/manga-real-ui-acceptance.cjs:93, scripts/novice-task-e2e.cjs:506 |
 | `mangaLamaKeepSfx` | js/ai/manga-lama-inpaint-ui.js:207 |
@@ -962,42 +962,43 @@
 | `taskBar, #taskQuickBar, .manga-gpt-panel, #taskMoreMenu` | scripts/ux-shots-v3.cjs:67 |
 | `taskBtn-page` | scripts/script-page-e2e.cjs:58 |
 | `taskCommands` | js/core/command-history.js:172 |
-| `taskExportAll` | js/ui/task-launcher.js:802, scripts/novice-task-e2e.cjs:1440 |
+| `taskExportAll` | js/ui/task-launcher.js:852, scripts/novice-task-e2e.cjs:1440 |
 | `taskHome` | js/ui/task-launcher.js:150, scripts/novice-task-e2e.cjs:1139 |
 | `taskLayerStatus` | js/ui/task-launcher.js:364, scripts/novice-task-e2e.cjs:1532, scripts/ux-shots-v2.cjs:82 |
 | `taskMoreMenu` | js/core/command-history.js:172, scripts/novice-task-e2e.cjs:1222 |
-| `taskPage3` | js/ui/task-launcher.js:520 |
-| `taskPage4` | js/ui/task-launcher.js:522 |
-| `taskPageCancel` | js/ui/task-launcher.js:532 |
-| `taskPageCopy06Prompt` | js/ui/task-launcher.js:488 |
-| `taskPageCost` | js/ui/task-launcher.js:592 |
-| `taskPageEdit` | js/ui/task-launcher.js:621 |
-| `taskPageEngineCost` | js/ui/task-launcher.js:592, scripts/nai-route-e2e.cjs:78 |
-| `taskPageEngines [data-eng]` | js/ui/task-launcher.js:586 |
-| `taskPageGo` | js/ui/task-launcher.js:525, scripts/comic-dogfood.cjs:125, scripts/novice-task-e2e.cjs:1390, scripts/script-page-e2e.cjs:78, scripts/ux-shots-v2.cjs:93 |
+| `taskPage06Direct` | js/ui/task-launcher.js:490 |
+| `taskPage3` | js/ui/task-launcher.js:523 |
+| `taskPage4` | js/ui/task-launcher.js:525 |
+| `taskPageCancel` | js/ui/task-launcher.js:535 |
+| `taskPageCopy06Prompt` | js/ui/task-launcher.js:489 |
+| `taskPageCost` | js/ui/task-launcher.js:595 |
+| `taskPageEdit` | js/ui/task-launcher.js:638 |
+| `taskPageEngineCost` | js/ui/task-launcher.js:595, scripts/nai-route-e2e.cjs:78 |
+| `taskPageEngines [data-eng]` | js/ui/task-launcher.js:589 |
+| `taskPageGo` | js/ui/task-launcher.js:528, scripts/comic-dogfood.cjs:125, scripts/novice-task-e2e.cjs:1390, scripts/script-page-e2e.cjs:78, scripts/ux-shots-v2.cjs:93 |
 | `taskPageLabel` | js/ui/task-launcher.js:121 |
-| `taskPageLayoutCode` | js/ui/task-launcher.js:475 |
-| `taskPageNewSeries` | js/ui/task-launcher.js:526 |
+| `taskPageLayoutCode` | js/ui/task-launcher.js:476 |
+| `taskPageNewSeries` | js/ui/task-launcher.js:529 |
 | `taskPageNext` | js/ui/task-launcher.js:126 |
-| `taskPagePanels` | js/ui/task-launcher.js:620 |
-| `taskPagePanels [data-cast-choices]` | js/ui/task-launcher.js:576 |
-| `taskPagePanels [data-cast-mode]` | js/ui/task-launcher.js:562 |
-| `taskPagePanels [data-cast-role]` | js/ui/task-launcher.js:561 |
-| `taskPagePanels [data-cast-summary]` | js/ui/task-launcher.js:572 |
-| `taskPagePanels [data-line]` | js/ui/task-launcher.js:493 |
-| `taskPagePanels [data-scene]` | js/ui/task-launcher.js:492 |
+| `taskPagePanels` | js/ui/task-launcher.js:637 |
+| `taskPagePanels [data-cast-choices]` | js/ui/task-launcher.js:579 |
+| `taskPagePanels [data-cast-mode]` | js/ui/task-launcher.js:565 |
+| `taskPagePanels [data-cast-role]` | js/ui/task-launcher.js:564 |
+| `taskPagePanels [data-cast-summary]` | js/ui/task-launcher.js:575 |
+| `taskPagePanels [data-line]` | js/ui/task-launcher.js:496 |
+| `taskPagePanels [data-scene]` | js/ui/task-launcher.js:495 |
 | `taskPagePanels fieldset` | scripts/script-page-e2e.cjs:70 |
 | `taskPagePrev` | js/ui/task-launcher.js:126 |
-| `taskPageSeedLock` | js/ui/task-launcher.js:527 |
-| `taskPageStatus` | js/ui/task-launcher.js:646, scripts/comic-dogfood.cjs:125, scripts/nai-route-e2e.cjs:80, scripts/novice-task-e2e.cjs:1390, scripts/script-page-e2e.cjs:78, scripts/ux-shots-v2.cjs:93 |
-| `taskPageStyle` | js/ai/prompt-assist.js:147, js/ui/task-launcher.js:502 |
+| `taskPageSeedLock` | js/ui/task-launcher.js:530 |
+| `taskPageStatus` | js/ui/task-launcher.js:663, scripts/comic-dogfood.cjs:125, scripts/nai-route-e2e.cjs:80, scripts/novice-task-e2e.cjs:1390, scripts/script-page-e2e.cjs:78, scripts/ux-shots-v2.cjs:93 |
+| `taskPageStyle` | js/ai/prompt-assist.js:147, js/ui/task-launcher.js:505 |
 | `taskQuickBar` | scripts/novice-task-e2e.cjs:1221 |
-| `taskScript` | js/ui/task-launcher.js:530 |
-| `taskScriptInfo` | js/ui/task-launcher.js:601 |
-| `taskScriptNext` | js/ui/task-launcher.js:531 |
-| `taskScriptSplit` | js/ui/task-launcher.js:530 |
-| `taskWizardBody` | js/ui/task-launcher.js:533 |
-| `taskWizardBody [data-panels]` | js/ui/task-launcher.js:619 |
+| `taskScript` | js/ui/task-launcher.js:533 |
+| `taskScriptInfo` | js/ui/task-launcher.js:606 |
+| `taskScriptNext` | js/ui/task-launcher.js:534 |
+| `taskScriptSplit` | js/ui/task-launcher.js:533 |
+| `taskWizardBody` | js/ui/task-launcher.js:536 |
+| `taskWizardBody [data-panels]` | js/ui/task-launcher.js:636 |
 | `taskWizardCard` | js/ui/task-launcher.js:230, scripts/comic-dogfood.cjs:80 |
 | `taskWizardClose` | js/ui/task-launcher.js:237 |
 | `testCanvas` | js/core/font/font-manager-core.js:608 |
@@ -1121,7 +1122,7 @@
 - js/ui/prompt-manager.js : `new-negative-prompt1-new`, `new-negative-prompt2-new`, `new-negative-prompt3-new`, `new-prompt1-new`, `new-prompt2-new`, `new-prompt3-new`, `old-negative-prompt1-old`, `old-negative-prompt2-old`, `old-negative-prompt3-old`, `old-prompt1-old`, `old-prompt2-old`, `old-prompt3-old`
 - js/ui/psd-io.js : `a`, `imageInput`, `projectLoad`, `psdExport`
 - js/ui/service-settings.js : `cutoutServiceUrl`, `mangaGptKey`, `mangaGptModel`, `mangaGptModelPreset`, `mangaGptPanel`, `mangaGptServiceSummary`, `mangaGptUrl`, `mangaImportTaggerUrl`, `mangaImportUseTaggerProxy`, `naiDirectorApiKey`, `naiDirectorApiKeyToggle`, `naiDirectorApiUrl`, `naiDirectorTestApi`, `naiDirectorUseApi`, `naiDirectorUseProxy`, `novelaiApiKey`, `novelaiApiKeyToggle`, `novelaiApiUrl`, `novelaiApiUrlDefaultUrl`, `novelaiDashboard`, `novelaiModel`, `novelaiRememberToken`, `novelaiUseLocalProxy`, `svcCutoutTest`, `svcDirectorTest`, `svcDone`, `svcGptRemember`, `svcGptTest`, `svcGptUrlPreset`, `svcHint`, `svcLocalTest`, `svcNaiAdvanced`, `svcNaiTest`, `svcTaggerTest`, `unifiedSettingsOverlay .us-conn-table`, `usOpenServiceSettings`, `usTokenPointer`
-- js/ui/task-launcher.js : `a`, `auto-generate-area`, `btm-image-container .btm-image`, `canvas-area`, `canvas-area .area-header`, `cutout-area`, `imageInput`, `manga-tone-area`, `mangaGptKey`, `mangaGptModel`, `mangaGptPanel`, `mangaGptPrompt`, `mangaGptServiceSummary`, `mangaGptTaskHead`, `mangaGptUrl`, `mangaSmartTextPanel`, `mode-toggle`, `novelaiApiKey`, `novelaiQualityToggle`, `novelaiUcPreset`, `privacyToggle`, `projectLoad`, `projectSave`, `prompt-manager-area`, `ps-tools-area`, `redo`, `shape-area`, `sidebar > .icon-wrapper`, `sidebar [data-target="auto-generate-area"]`, `sidebarMore`, `simulator-chat-area`, `svg-container-template`, `taskAdvanced`, `taskBar`, `taskExportAll`, `taskHome`, `taskLayerStatus`, `taskPage3`, `taskPage4`, `taskPageCancel`, `taskPageCopy06Prompt`, `taskPageCost`, `taskPageEdit`, `taskPageEngineCost`, `taskPageEngines [data-eng]`, `taskPageGo`, `taskPageLabel`, `taskPageLayoutCode`, `taskPageNewSeries`, `taskPageNext`, `taskPagePanels`, `taskPagePanels [data-cast-choices]`, `taskPagePanels [data-cast-mode]`, `taskPagePanels [data-cast-role]`, `taskPagePanels [data-cast-summary]`, `taskPagePanels [data-line]`, `taskPagePanels [data-scene]`, `taskPagePrev`, `taskPageSeedLock`, `taskPageStatus`, `taskPageStyle`, `taskScript`, `taskScriptInfo`, `taskScriptNext`, `taskScriptSplit`, `taskWizardBody`, `taskWizardBody [data-panels]`, `taskWizardCard`, `taskWizardClose`, `uiModeToggle`, `undo`
+- js/ui/task-launcher.js : `a`, `auto-generate-area`, `btm-image-container .btm-image`, `canvas-area`, `canvas-area .area-header`, `cutout-area`, `imageInput`, `manga-tone-area`, `mangaGptKey`, `mangaGptModel`, `mangaGptPanel`, `mangaGptPrompt`, `mangaGptServiceSummary`, `mangaGptTaskHead`, `mangaGptUrl`, `mangaSmartTextPanel`, `mode-toggle`, `novelaiApiKey`, `novelaiQualityToggle`, `novelaiUcPreset`, `privacyToggle`, `projectLoad`, `projectSave`, `prompt-manager-area`, `ps-tools-area`, `redo`, `shape-area`, `sidebar > .icon-wrapper`, `sidebar [data-target="auto-generate-area"]`, `sidebarMore`, `simulator-chat-area`, `svg-container-template`, `taskAdvanced`, `taskBar`, `taskExportAll`, `taskHome`, `taskLayerStatus`, `taskPage06Direct`, `taskPage3`, `taskPage4`, `taskPageCancel`, `taskPageCopy06Prompt`, `taskPageCost`, `taskPageEdit`, `taskPageEngineCost`, `taskPageEngines [data-eng]`, `taskPageGo`, `taskPageLabel`, `taskPageLayoutCode`, `taskPageNewSeries`, `taskPageNext`, `taskPagePanels`, `taskPagePanels [data-cast-choices]`, `taskPagePanels [data-cast-mode]`, `taskPagePanels [data-cast-role]`, `taskPagePanels [data-cast-summary]`, `taskPagePanels [data-line]`, `taskPagePanels [data-scene]`, `taskPagePrev`, `taskPageSeedLock`, `taskPageStatus`, `taskPageStyle`, `taskScript`, `taskScriptInfo`, `taskScriptNext`, `taskScriptSplit`, `taskWizardBody`, `taskWizardBody [data-panels]`, `taskWizardCard`, `taskWizardClose`, `uiModeToggle`, `undo`
 - js/ui/third/ag-psd/ag-psd.js : `a`, `k`
 - js/ui/third/base-translation/base-de.js : `add`, `blend`, `clearMode`, `customPanelSizeX`, `customPanelSizeY`, `cutChangeRate`, `imageCopy`, `imageDownload`, `marginFromPanel`, `multiPageGenerate`, `outputBitDepth`, `outputBitDepthHint`, `outputImageEstimate`, `outputImageFormat`, `outputImageQuality`, `pageCount`, `panelOpacity`, `projectLoad`, `projectSave`, `redo`, `settingsSave`, `shortcutPage`, `simStudioBack`, `simStudioClose`, `simStudioPlay`, `simStudioPlayNext`, `simStudioPlayPrev`, `simStudioTitle`, `simulatorChatMessages`, `simulatorChatParticipants`, `simulatorChatTheme`, `undo`, `verticalRandomPanelCount`, `zoomFit`, `zoomIn`, `zoomOut`
 - js/ui/third/base-translation/base-en.js : `add`, `blend`, `clearMode`, `customPanelSizeX`, `customPanelSizeY`, `cutChangeRate`, `imageCopy`, `imageDownload`, `marginFromPanel`, `multiPageGenerate`, `outputBitDepth`, `outputBitDepthHint`, `outputImageEstimate`, `outputImageFormat`, `outputImageQuality`, `pageCount`, `panelOpacity`, `projectLoad`, `projectSave`, `redo`, `settingsSave`, `shortcutPage`, `simStudioBack`, `simStudioClose`, `simStudioPlay`, `simStudioPlayNext`, `simStudioPlayPrev`, `simStudioTitle`, `simulatorChatMessages`, `simulatorChatParticipants`, `simulatorChatTheme`, `undo`, `verticalRandomPanelCount`, `zoomFit`, `zoomIn`, `zoomOut`

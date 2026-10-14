@@ -292,7 +292,14 @@
 
     // Layer 1: Global style, colour mode, medium, text language
     const baseStyle = String(s.style || 'monochrome, greyscale, manga lineart, delicate lineart, comic').trim().replace(/\.$/, '');
-    const langTag = s.textLanguage ? String(s.textLanguage).trim() : (hasDialogue ? 'speech bubbles, english text' : 'no text');
+    const allDialogueText = panels
+      .map(p => normalizePanelLines(p).map(l => l.text).join(''))
+      .join('');
+    const hasCjkDialogue = /[\u4e00-\u9fff]/.test(allDialogueText);
+    const defaultLangTag = hasDialogue
+      ? (hasCjkDialogue ? 'speech bubbles, chinese text, vertical text' : 'speech bubbles, english text')
+      : 'no text';
+    const langTag = s.textLanguage ? String(s.textLanguage).trim() : defaultLangTag;
     const layer1 = baseStyle + (langTag ? ', ' + langTag : '') + '.';
 
     // Layer 2: Exact frame count, geometry, borders, reading order
@@ -318,7 +325,8 @@
     for (let i = 0; i < layout.panelCount; i++) {
       const p = panels[i] || {};
       const slot = (p.position ? String(p.position).toUpperCase().replace(/_/g, '-') : layout.slots[i]) || ('FRAME ' + (i + 1));
-      const visual = String(p.visual_en || p.scene || p.visual_zh || 'character in scene').trim().replace(/\.$/, '');
+      const rawVisual = String(p.visual_en || p.scene || p.visual_zh || 'character in scene').trim().replace(/\.$/, '');
+      const visual = expandSceneToEnglishTags(rawVisual);
       const rawLines = normalizePanelLines(p);
       let bubbleInstr = '';
       if (!rawLines.length) {
@@ -374,6 +382,52 @@
     };
   }
 
+  const CN_SCENE_LEXICON = Object.freeze([
+    [/特写|面部特写|脸部特写/g, 'close-up'],
+    [/大特写|眼部特写/g, 'extreme close-up'],
+    [/中景|半身/g, 'medium shot, cowboy shot'],
+    [/全景|远景|大远景/g, 'wide shot, establishing shot'],
+    [/俯视|俯拍|高机位/g, 'from above, high angle'],
+    [/仰视|仰拍|低机位/g, 'from below, low angle'],
+    [/背影|从背后/g, 'from behind, back view'],
+    [/侧脸|侧面/g, 'profile, from side'],
+    [/斜切|倾斜镜头/g, 'dutch angle'],
+    [/速度线/g, 'speed lines, motion lines'],
+    [/冲击线|集中线/g, 'emphasis lines'],
+    [/清晨|早晨/g, 'morning light'],
+    [/黄昏|夕阳|傍晚/g, 'sunset, golden hour'],
+    [/夜晚|深夜|夜里/g, 'night, dark background'],
+    [/雨天|下雨|暴雨/g, 'rain, wet'],
+    [/车站|站台/g, 'train station, platform'],
+    [/列车|电车|车厢/g, 'train, train interior'],
+    [/教室/g, 'classroom'],
+    [/走廊/g, 'hallway, corridor'],
+    [/街道|街头/g, 'street, city street'],
+    [/屋顶|天台/g, 'rooftop'],
+    [/转身|回头/g, 'turning around, looking back'],
+    [/奔跑|跑向/g, 'running'],
+    [/微笑|笑了/g, 'smile'],
+    [/惊讶|震惊/g, 'surprised, wide eyes'],
+    [/严肃|凝重/g, 'serious expression'],
+    [/流泪|哭泣/g, 'tears, crying'],
+    [/握紧|抓紧/g, 'clenched hand, gripping tightly'],
+    [/递给|伸出手/g, 'reaching out, holding out']
+  ]);
+
+  function expandSceneToEnglishTags(sceneText) {
+    const raw = String(sceneText || '').trim().replace(/\.$/, '');
+    if (!raw) return 'character in scene';
+    if (!/[\u4e00-\u9fff]/.test(raw)) return raw;
+    const matched = [];
+    CN_SCENE_LEXICON.forEach(pair => {
+      if (pair[0].test(raw)) {
+        pair[0].lastIndex = 0;
+        if (matched.indexOf(pair[1]) < 0) matched.push(pair[1]);
+      }
+    });
+    return matched.length ? (matched.join(', ') + ' (' + raw + ')') : raw;
+  }
+
   function normalizePanelLines(p) {
     if (!p) return [];
     if (Array.isArray(p.lines)) {
@@ -411,7 +465,7 @@
         removed.push(tag);
         return false;
       }
-      if (o.hasDialogue && (low === 'text' || low === 'speech bubble' || low === 'speech bubbles' || low === 'english text' || low === 'dialogue')) {
+      if (o.hasDialogue && (low === 'text' || low === 'speech bubble' || low === 'speech bubbles' || low === 'english text' || low === 'chinese text' || low === 'vertical text' || low === 'dialogue')) {
         removed.push(tag);
         return false;
       }
@@ -664,6 +718,7 @@
     getLayout,
     listLayouts,
     buildLayoutPolygons,
+    expandSceneToEnglishTags,
     compileWholePagePrompt,
     reconcileWholePageNegative,
     auditSixPageRhythm,

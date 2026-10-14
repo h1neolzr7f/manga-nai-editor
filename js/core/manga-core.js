@@ -278,6 +278,69 @@
       when: () => MangaCore.pages.count() > 0,
       run: () => BatchQueue.clearBadges()
     });
+    root.Commands.register({
+      id: 'batch.auditHandbookRhythm',
+      label: '按《创作手册》审查多页版式节奏与台词容量',
+      group: '批处理',
+      keywords: 'handbook rhythm audit 节奏 版式 审稿 手册 R1 A1 X1',
+      when: () => MangaCore.pages.count() > 0 && !!root.MangaProductionHandbook,
+      run: async () => {
+        const guids = MangaCore.pages.listGuids();
+        const originGuid = MangaCore.pages.getCurrentGuid();
+        if (!guids.length || !root.MangaProductionHandbook) return;
+        const collected = [];
+        guids.forEach((guid, idx) => {
+          BatchQueue.enqueue({
+            guid,
+            title: '采集第 ' + (idx + 1) + ' 页版式与台词',
+            queuedLabel: '待审稿',
+            runningLabel: '审稿中…',
+            doneLabel: '已采集',
+            async run() {
+              await MangaCore.pages.switchTo(guid, true);
+              const objs = MangaCore.layers.getObjects();
+              const panels = objs.filter(o => o && o.isPanel);
+              const texts = objs
+                .filter(o => o && (o.type === 'textbox' || o.type === 'i-text' || o.type === 'vertical-textbox') && String(o.text || '').trim())
+                .map(o => String(o.text || '').trim());
+              const pCount = panels.length || 1;
+              const code = pCount === 1 ? 'S' : pCount === 2 ? 'R1' : pCount >= 4 ? 'R2' : 'A1';
+              collected.push({
+                guid,
+                page_id: 'p' + String(idx + 1).padStart(3, '0'),
+                layoutCode: code,
+                panels: [{ line: texts.join(' / ') }]
+              });
+            }
+          });
+        });
+        BatchQueue.enqueue({
+          title: '汇总《创作手册》节奏审稿结果',
+          async run() {
+            if (originGuid) await MangaCore.pages.switchTo(originGuid, true);
+            const report = root.MangaProductionHandbook.auditSixPageRhythm(collected);
+            const issuePages = new Set();
+            report.issues.forEach(iss => (iss.pages || []).forEach(pid => issuePages.add(pid)));
+            collected.forEach(item => {
+              if (issuePages.has(item.page_id)) {
+                BatchQueue.setPageStatus(item.guid, 'error', '需调整(' + item.layoutCode + ')');
+              } else {
+                BatchQueue.setPageStatus(item.guid, 'done', '合格(' + item.layoutCode + ')');
+              }
+            });
+            if (typeof root.createToast === 'function') {
+              root.createToast(
+                '《创作手册》多页审稿',
+                report.ok
+                  ? '全部 ' + collected.length + ' 页版式节奏与气泡字数均符合规范！'
+                  : '发现 ' + report.issues.length + ' 项节奏/字数提醒：' + report.issues[0].message,
+                4200
+              );
+            }
+          }
+        });
+      }
+    });
     return true;
   }
 

@@ -61,11 +61,19 @@
     const action = opts.action || 'generate';
     const size = sizeFor(opts.width || 1024, opts.height || 1024);
     const uc = UC_PRESETS[opts.ucPreset == null ? 0 : opts.ucPreset] || UC_PRESETS[0];
-    const prompt = opts.quality === false ? String(opts.prompt || '').trim() : joinTags(opts.prompt, QUALITY_TAGS);
+    const promptStr = String(opts.prompt || '');
+    const wantsText = !!(opts.allowText || /(?:^|[\s,])(?:text\s*:|speech bubbles?|chinese text|english text)/i.test(promptStr));
+    const wantsMultiPanel = !!(opts.allowMultiPanel || /\b(?:frame ONLY|bordered frames|two-by-two grid|multiple panels)\b/i.test(promptStr));
+    const qualityAppend = opts.quality === false ? '' : (wantsText ? 'very aesthetic, masterpiece' : QUALITY_TAGS);
+    const prompt = opts.quality === false ? promptStr.trim() : joinTags(opts.prompt, qualityAppend);
     // Page generation opts in to retaining its explicit manga style. Only preset defaults
     // are reconciled; a user's own negative prompt is never silently changed.
-    const styleTags = opts.preservePositiveStyle ? String(opts.prompt || '').split(',').map(t => t.trim().toLowerCase()) : [];
-    const presetText = uc.text.split(',').map(t => t.trim()).filter(t => !(['screentone', 'halftone'].includes(t) && styleTags.includes(t))).join(', ');
+    const styleTags = opts.preservePositiveStyle ? promptStr.split(',').map(t => t.trim().toLowerCase()) : [];
+    const presetText = uc.text.split(',').map(t => t.trim()).filter(t => {
+      if (['screentone', 'halftone'].includes(t) && styleTags.includes(t)) return false;
+      if (wantsMultiPanel && t === 'multiple views') return false;
+      return true;
+    }).join(', ');
     const negative = joinTags(presetText, opts.negative, opts.safeMode ? 'nsfw' : '');
     const chars = (opts.characters || []).filter(c => c && String(c.prompt || '').trim()).slice(0, 6);
     const useCoords = chars.some(c => c.center);

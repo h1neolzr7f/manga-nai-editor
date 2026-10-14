@@ -63,6 +63,33 @@ assert(!compiled.negativePrompt.includes('text'), 'Dialogue page must strip "tex
 assert(compiled.removedNegativeConflicts.includes('multiple panels'));
 assert(compiled.removedNegativeConflicts.includes('text'));
 
+// NAI V5 Native Chinese Dialogue Auto-Detection in 06 Whole-Page Compiler
+const compiledZh = H.compileWholePagePrompt({
+  layoutCode: 'R1',
+  style: 'monochrome, greyscale, manga lineart',
+  panels: [
+    { scene: '特写：深夜车站，小雪转身微笑', line: '小雪：今天一定要赶上末班车！' },
+    { scene: '远景：列车进站', line: '' }
+  ]
+});
+assert(compiledZh.prompt.includes('speech bubbles, chinese text, vertical text.'), 'Chinese dialogue should auto-select native chinese vertical text tags for NAI V5');
+assert(compiledZh.prompt.includes('close-up, night, dark background, train station, platform, turning around, looking back, smile'), 'Chinese camera/scene terms should auto-expand to Danbooru English tags');
+assert(compiledZh.prompt.includes('Text: 今天一定要赶上末班车！'));
+
+// NaiEngineCore payload preserves text & multi-panel for 06 Whole-Page prompts (no "no text" quality collision, no "multiple views" UC collision)
+vm.runInContext(fs.readFileSync(path.join(__dirname, '../js/ai/nai-engine-core.js'), 'utf8'), ctx);
+const payload06 = ctx.NaiEngineCore.payload({
+  model: 'nai-diffusion-5-full',
+  prompt: compiledZh.prompt,
+  width: 832,
+  height: 1216,
+  quality: true,
+  ucPreset: 0,
+  preservePositiveStyle: true
+});
+assert(!/\bno text\b/i.test(payload06.input), '06 prompt with dialogue must not have "no text" appended by qualityToggle');
+assert(!/\bmultiple views\b/i.test(payload06.parameters.negative_prompt), '06 multi-panel prompt must strip "multiple views" from UC preset');
+
 // 3. Six-Page Rhythm & Visual Signature Auditor (§5.3)
 const badPages = [
   { page_id: 'p001', visual_signature: ['A1', 'bottom', 'wide', 'left-to-right', 'medium', 'setup'], panels: [{ line: '短句' }] },

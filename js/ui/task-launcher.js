@@ -469,6 +469,7 @@ body.innerHTML='<div class="svc-row" role="radiogroup" aria-label="格子数">'+
 '<p class="ui-muted" id="taskPageCost"></p>'+
 '<p class="ui-muted" id="taskPageReferences">每格「出场人物」可指定角色或选空镜。自动承接只按文字推断，请核对每格人物名单。角色档案的外观与标签会作为文字约束；当前整页 NovelAI 路径不发送角色参考图片，仍需逐格检查一致性。</p>'+
 '<div class="svc-row"><button type="button" class="ui-btn ui-btn-primary" id="taskPageGo" disabled>生成整页</button>'+
+'<label class="ui-muted" title="06 整页直出：用 1 次 NovelAI (832×1216) 直接画完本页所有分格与原生气泡文字（NAI V5 原生中文字直出）"><input type="checkbox" id="taskPage06Direct"> 06 整页直出（1 次出全页+原生字）</label>'+
 '<button type="button" class="ui-btn ui-btn-ghost" id="taskPageCopy06Prompt" title="按《创作手册》6.2 节生成六层整页 Prompt（含 FRAME ONLY 与末尾唯一 Text: 块）">六层整页 Prompt</button>'+
 '<button type="button" class="ui-btn" id="taskPageCancel" hidden>停止</button></div>'+
 '<p id="taskPageStatus" role="status" class="ui-muted"></p>';
@@ -486,6 +487,8 @@ choosePanels(def.panelCount);
 });
 }
 var copy06Btn=$('taskPageCopy06Prompt');
+var direct06Toggle=$('taskPage06Direct');
+if(direct06Toggle)direct06Toggle.addEventListener('change',updatePageCost);
 if(copy06Btn){
 copy06Btn.addEventListener('click',function(){
 if(!window.MangaProductionHandbook)return;
@@ -590,11 +593,13 @@ updatePageCost();
 }
 function updatePageCost(){
 var n=document.querySelectorAll('#taskPagePanels [data-scene]').length,c=$('taskPageEngineCost'),t=$('taskPageCost');
+var isDirect06=!!($('taskPage06Direct')&&$('taskPage06Direct').checked);
+var reqCount=isDirect06?1:n;
 if(c){c.textContent='';c.dataset.free='';}
-if(t&&n)t.textContent=(pageEngine==='nai'?'会调用 NovelAI '+n+' 次（每格一次，按格子比例出图，一张一张排队）。':'会调用 GPT 图像 '+n+' 次（每格一次）。')+'生成的每一格、气泡和文字都是独立图层，可单独修改或撤销。';
+if(t&&n)t.textContent=isDirect06?(pageEngine==='nai'?'06 整页直出模式：只调用 NovelAI 1 次（832×1216 免费额度内），直接画出全页分格、气泡与原生中文字。':'06 整页直出模式：只调用 GPT 图像 1 次，直接画出全页分格与文字。'):((pageEngine==='nai'?'会调用 NovelAI '+n+' 次（每格一次，按格子比例出图，一张一张排队）。':'会调用 GPT 图像 '+n+' 次（每格一次）。')+'生成的每一格、气泡和文字都是独立图层，可单独修改或撤销。');
 if(pageEngine!=='nai'||!c||!window.NaiEngine)return;
 if(!NaiEngine.configured()){c.textContent='NovelAI 还没配置：点「生成整页」会打开「服务设置」。';return;}
-NaiEngine.costText({width:3,height:4},Math.max(1,n)).then(function(r){c.textContent=(n?n+' 格 · ':'每格 · ')+r.text.replace(/ · \d+×\d+/,'');c.dataset.free=String(r.free);});
+NaiEngine.costText({width:3,height:4},Math.max(1,reqCount)).then(function(r){c.textContent=(isDirect06?'06 整页 1 次 · ':(n?n+' 格 · ':'每格 · '))+r.text.replace(/ · \d+×\d+/,'');c.dataset.free=String(r.free);});
 }
 var scriptQueue=[];
 function applyScript(text){
@@ -605,7 +610,19 @@ if(!r.stats.panels){info.textContent='没读到内容。每格写一行画面，
 info.classList.remove('is-error');
 scriptQueue=r.pages.slice(1);
 fillScriptPage(r.pages[0]);
-info.textContent='拆好了：'+r.stats.pages+' 页、'+r.stats.panels+' 格、'+r.stats.lines+' 句对白。'+(r.pages.length>1?'这一页先做第 1 页，做完点「下一页剧本」。':'')+(r.warnings.length?' 注意：'+r.warnings.join(' '):'');
+var rhythmMsg='';
+if(window.MangaProductionHandbook&&r.pages.length>=1){
+var auditInput=r.pages.map(function(pg,idx){
+var pCount=pg.panels.length;
+var code=pCount===1?'S':pCount===2?'R1':pCount===4?(idx%2===0?'R2':'A3'):(idx%3===0?'A1':idx%3===1?'A2':'X1');
+return {page_id:'p'+String(idx+1).padStart(3,'0'),layoutCode:code,panels:pg.panels.map(function(p){var w=ScriptPageCore.toWizard(p);return {scene:w.scene,line:w.line};})};
+});
+var audit=window.MangaProductionHandbook.auditSixPageRhythm(auditInput);
+if(!audit.ok){
+rhythmMsg=' 【手册审稿提醒：'+audit.issues.map(function(x){return x.message;}).slice(0,2).join('；')+'】';
+}
+}
+info.textContent='拆好了：'+r.stats.pages+' 页、'+r.stats.panels+' 格、'+r.stats.lines+' 句对白。'+(r.pages.length>1?'这一页先做第 1 页，做完点「下一页剧本」。':'')+(r.warnings.length?' 注意：'+r.warnings.join(' '):'')+rhythmMsg;
 window.__lastScript=r;
 }
 function fillScriptPage(pg){
@@ -711,6 +728,39 @@ rects=readingSorted(rects);
 }
 // the whole generated page is ONE history step: one Ctrl+Z takes it all back
 if(typeof changeDoNotSaveHistory==='function'){changeDoNotSaveHistory();job.historyPaused=true;}
+var isDirect06=!!($('taskPage06Direct')&&$('taskPage06Direct').checked&&window.MangaProductionHandbook);
+if(isDirect06){
+var directCode=chosenLayoutCode||(scenes.length===2?'R1':scenes.length===4?'R2':scenes.length===1?'S':'A1');
+var uniqueDirectCast=[];
+casts.forEach(function(list){(list||[]).forEach(function(c){if(c&&uniqueDirectCast.indexOf(c)<0)uniqueDirectCast.push(c);});});
+var compiled06=window.MangaProductionHandbook.compileWholePagePrompt({
+layoutCode:directCode,
+style:style,
+cast:uniqueDirectCast.map(function(c){return {name:c.name,description:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}),
+panels:scenes.map(function(sc,idx){return {scene:sc,line:lines[idx]||''};})
+});
+var fullPanel=makePanel({left:0,top:0,width:W,height:H,points:[{x:0,y:0},{x:W,y:0},{x:W,y:H},{x:0,y:H}]},1);
+canvas.add(fullPanel);job.panels=[fullPanel];canvas.renderAll();
+status('正在按 06 六层架构直出整页（版式 '+compiled06.layoutCode+'，832×1216 单次生成全页分格与原生文字）…');
+job.ctl=new AbortController();
+var directChars=uniqueDirectCast.map(function(c){return {prompt:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}).filter(function(c){return c.prompt;});
+var directData=engine==='nai'?await NaiEngine.run(Object.assign({},settings,{prompt:compiled06.prompt,characters:directChars,width:832,height:1216,allowText:compiled06.textBlockCount>0,allowMultiPanel:compiled06.panelCount>1,seed:lockSeed==null?undefined:lockSeed}),job.ctl.signal,status):
+await ServiceRequest.request('gpt','/gpt-image-proxy',{signal:job.ctl.signal,timeoutMs:300000,headers:key?{Authorization:'Bearer '+key}:{},body:{operation:'generate',baseUrl:gptUrl,model:gptModel,size:'1024x1536',prompt:compiled06.prompt}});
+if(!current())return;
+var directImg=await loadFabricImage(directData.image);
+if(!current())return;
+directImg.name='06整页直出('+compiled06.layoutCode+')';if(directData.seed!=null){directImg.naiSeed=directData.seed;directImg.tempSeed=directData.seed;directImg.tempPrompt=compiled06.prompt;}
+putImageInFrame(directImg,W/2,H/2,true,false,true,fullPanel);
+canvas.renderAll();
+if(typeof updateLayerPanel==='function')updateLayerPanel();
+if(job.historyPaused&&typeof changeDoSaveHistory==='function'){changeDoSaveHistory();job.historyPaused=false;}
+if(typeof saveStateByManual==='function')saveStateByManual();
+if(typeof btmSaveProjectFile==='function'){try{await btmSaveProjectFile(null,false);}catch(e){/* best-effort */}}
+if(!sameTarget())return;
+try{localStorage.setItem('mnai.page.cast',JSON.stringify(previous.map(function(c){return c.id;})));}catch(error){/* session only */}
+collapseForm();status('06 整页直出完成（版式 '+compiled06.layoutCode+'，含模型原生气泡与文字；如需精修局部文字可用「改字幕」任务）。');markStep(3,true);
+return;
+}
 var panels=rects.map(function(r,i){var p=makePanel(r,i+1);canvas.add(p);return p;});
 job.panels=panels;
 canvas.renderAll();
