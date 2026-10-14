@@ -62,14 +62,14 @@
 | html/TermsOfService/terms-of-service.html | 120 |  |
 | html/common.css | 343 |  |
 | html/functionList.html | 321 |  |
-| index.html | 3099 |  |
+| index.html | 3100 |  |
 | js/ai/ai-fill-core.js | 99 | AI 填充 (2.0 #2) pure helpers: mask geometry, soft edges, prompt, layer metadata. No DOM. |
 | js/ai/ai-fill.js | 406 | AI 填充 (2.0 #2): paint / smart-select an area + one sentence -> up to 3 candidates -> chosen one becomes a |
 | js/ai/ai-management.js | 115 | exported I2I, T2I, apiHeartbeat, clearAllQueues, existsWaitQueue |
 | js/ai/ai-settings.js | 428 |  |
 | js/ai/auto-swap.js | 736 | 换角色 — character swap in place. |
 | js/ai/balloon-layout-core.js | 131 | 2.0 #3 reading order + automatic speech-balloon placement (pure, unit-tested; CPU, no model needed). |
-| js/ai/balloon-layout.js | 196 | 2.0 #3 browser side: automatic dialogue balloons (avoid faces + busy art, manga reading order, tails toward |
+| js/ai/balloon-layout.js | 200 | 2.0 #3 browser side: automatic dialogue balloons (avoid faces + busy art, manga reading order, tails toward |
 | js/ai/character-library.js | 227 | Character library 2.0 (#1): recognise library characters on the page, score consistency, feed GPT edits. |
 | js/ai/director/scene-plan-controller.js | 66 |  |
 | js/ai/director/scene-plan-schema.js | 19 |  |
@@ -140,6 +140,7 @@
 | js/core/global-error-handler.js | 17 | グローバルエラーハンドラ（未キャッチのエラーとPromise rejectionを検知） |
 | js/core/history-labels.js | 56 | 2.0 history: name an undo step by diffing two saved canvas states (pure, unit-tested). |
 | js/core/logger.js | 198 | exported _dbgFabric, _dbgLogger, autoSaveLogger, canvasLogger, compressionLogger, dashboardLogger, dashboardPerfLogger, dashboardTagLogger, dbLogger, delegatorLogger, effectLogger, errorHandlerLogger, eventLogger, focusTrapLogger, fontLogger, freehandBubbleLogger, generationTaskLogger, imageLogger, layerLogger, logger, panelLogger, perfLogger, projectLogger, raLogger, registryLogger, serviceLogger, simulatorStudioLogger, spinnerLogger, textLogger, tutorialLogger, uiLogger, workflowLogger |
+| js/core/manga-core.js | 298 | Unified MangaCore namespace facade & non-blocking multi-page BatchQueue. |
 | js/core/manga-page-size.js | 266 |  |
 | js/core/service/service-request.js | 98 | One request/error layer for every backend service (GPT relay, NovelAI, local OCR/LaMa, cutout): |
 | js/core/service/worker-register.js | 116 | exported clearCache |
@@ -165,7 +166,7 @@
 | js/fabric/fabric-management.js | 715 | exported lastActiveObjectState, moveSettings |
 | js/layer/blend/blend.js | 697 | exported addFillLayer, addGradientLayer, handleBlend |
 | js/layer/floating-window-management.js | 81 | exported isNotVisibleFloatingWindow, makeDraggable |
-| js/layer/image-history-management.js | 341 | exported confirmAllRemove, convertImageMapBlobUrls, initImageHistory, jumpToHistoryIndex, lastRedo, redo, removeByNotSave, saveStateByListener, setNotSave, setSave, undo |
+| js/layer/image-history-management.js | 426 | exported confirmAllRemove, convertImageMapBlobUrls, initImageHistory, jumpToHistoryIndex, lastRedo, redo, removeByNotSave, saveStateByListener, setNotSave, setSave, undo |
 | js/layer/layer-button.js | 97 | exported putActionBarSeparator, putActionButton, putDeleteButton, putMoveLockButton, putRembgButton, putViewButton |
 | js/layer/layer-management.js | 553 | exported LayersDown, LayersUp, calculateCenter, highlightClear, removeLayer |
 | js/local-tools/background-removal-client.js | 545 |  |
@@ -220,7 +221,7 @@
 | js/sidebar/text/text-2-manager.js | 395 | exported switchText2 |
 | js/sidebar/text/text-effect.js | 302 | exported alignText, changeFontSize, changeOutlineTextColor, changeStrokeWidthSize, changeTextBgColor, changeTextColor, createTextbox, toggleBoldWithUI, updateTextControls |
 | js/sidebar/text/vertical-text.js | 37 |  |
-| js/sidebar/text/vertical-textbox.js | 584 |  |
+| js/sidebar/text/vertical-textbox.js | 624 |  |
 | js/sidebar/tone/focusline.js | 230 | exported addFCEventListener, focusLineEnd, focusLineStart, lines |
 | js/sidebar/tone/rain-tone.js | 107 | exported addRainToneEventListener, rainToneEnd, rainToneStart |
 | js/sidebar/tone/snow-tone.js | 182 | exported addSnowToneEventListener, snowToneEnd, snowToneStart |
@@ -258,7 +259,7 @@
 | js/svg/speechbubble.js | 51 | exported SpeechBubble |
 | js/ui/ai/auto-prompt-ui.js | 179 |  |
 | js/ui/beginner-guide.js | 535 |  |
-| js/ui/bottom-bar.js | 554 | {guid, { imageLink, blob }} blob is lz4 |
+| js/ui/bottom-bar.js | 557 | {guid, { imageLink, blob }} blob is lz4 |
 | js/ui/canvas-object-menu.js | 712 | Canvas object right-click context menu |
 | js/ui/control/common-control-management.js | 61 | exported updateControls |
 | js/ui/control/glfx-control.js | 457 | exported glfxAddEvent, glfxApplyNoReset |
@@ -289,7 +290,7 @@
 | js/ui/third/tippy.js | 95 | exported addTooltipByElement, setLanguage |
 | js/ui/toast.js | 119 | exported checkActiveImage, createToast |
 | js/ui/tutorial.js | 445 |  |
-| js/ui/util/cjk-break.js | 29 | Kinsoku line breaking for short CJK dialogue: closing punctuation (。，！？…」 etc.) never starts a line |
+| js/ui/util/cjk-break.js | 75 | Kinsoku line breaking for short CJK dialogue: closing punctuation (。，！？…」 etc.) never starts a line |
 | js/ui/util/event-delegator.js | 94 | event-delegator.js - document-level event delegation utility |
 | js/ui/util/focus-trap.js | 85 | focus-trap.js - モーダル用フォーカストラップユーティリティ |
 | js/ui/util/mode-change.js | 167 | exported MODE_PEN_CIRCLE, MODE_PEN_CRAYON, MODE_PEN_CUSTOM, MODE_PEN_ERASER, MODE_PEN_HLINE, MODE_PEN_INK, MODE_PEN_MARKER, MODE_PEN_MOSAIC, MODE_PEN_OUTLINE, MODE_PEN_PENCIL, MODE_PEN_TEXTURE, MODE_PEN_VLINE, completeCrop, getCssValue, hideCanvasHelpText, isKnifeDrawing, isKnifeMode, isMosaicBrushActive, nowPencil, startCutoutRegionMode |
@@ -362,7 +363,7 @@
 | scripts/character-library-e2e.cjs | 153 | 2.0 #1 character library, novice flow in a real browser. |
 | scripts/character-library-test.py | 91 |  |
 | scripts/check-translations.cjs | 227 | Translation key validation script - compares keys across all languages in i18next resources |
-| scripts/cjk-break-test.cjs | 14 |  |
+| scripts/cjk-break-test.cjs | 29 |  |
 | scripts/comic-dogfood.cjs | 181 | Dogfood: make a short 4-page manga only through the editor UI (mouse/keyboard, like a beginner), |
 | scripts/command-history-e2e.cjs | 94 | 2.0 command layer + history panel: labelled steps with thumbnails, jump back, palette (Ctrl+K) search/run. |
 | scripts/custom-brush-smoke-test.cjs | 44 |  |
@@ -384,7 +385,7 @@
 | scripts/gpt-real-api-acceptance.cjs | 367 | OPT-IN, BILLABLE real-API acceptance for the GPT region editor (never part of npm test / CI). |
 | scripts/gpt-region-editor-smoke-test.cjs | 387 | Offline UI smoke test: verifies the standalone editor parses and maps CSS pixels. |
 | scripts/history-labels-test.cjs | 24 |  |
-| scripts/history-panel-regression-test.cjs | 216 |  |
+| scripts/history-panel-regression-test.cjs | 281 |  |
 | scripts/image-export-integration-test.cjs | 324 | 位深度と画素プレビューの統合テスト。 |
 | scripts/image-export-smoke-test.cjs | 433 |  |
 | scripts/image2-interface-smoke-test.cjs | 23 |  |

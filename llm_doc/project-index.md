@@ -24,13 +24,13 @@
 | .cjs | 121 |
 | .css | 42 |
 | .html | 10 |
-| .js | 236 |
+| .js | 237 |
 | .mjs | 2 |
 | .ps1 | 4 |
 | .py | 49 |
-| シンボル | 11917 |
+| シンボル | 11961 |
 | DOM id 定義 | 636 |
-| script 読み込み | 249 |
+| script 読み込み | 250 |
 | stylesheet 読み込み | 43 |
 
 ## 除外ディレクトリ
@@ -44,7 +44,7 @@
 | `AiFill` | js/ai/ai-fill.js:405 |
 | `AiFillCore` | js/ai/ai-fill-core.js:98 |
 | `AutoSwap` | js/ai/auto-swap.js:733 |
-| `BalloonLayout` | js/ai/balloon-layout.js:195 |
+| `BalloonLayout` | js/ai/balloon-layout.js:199 |
 | `BalloonLayoutCore` | js/ai/balloon-layout-core.js:130 |
 | `CharacterLibrary` | js/ai/character-library.js:226 |
 | `ComfyUIGuide` | js/ai/novelai-only-mode.js:121 |
@@ -52,9 +52,11 @@
 | `Commands` | js/core/command-history.js:184 |
 | `FilePick` | js/ui/file-pick.js:29 |
 | `HistoryLabels` | js/core/history-labels.js:55 |
+| `MangaBatchQueue` | js/core/manga-core.js:293 |
 | `MangaBubbleDetector` | js/ai/manga-bubble-detector.js:80 |
 | `MangaCharacterBibleCore` | js/ai/manga-character-bible-core.js:74 |
 | `MangaCharacterBibleUI` | js/ai/manga-character-bible-ui.js:222 |
+| `MangaCore` | js/core/manga-core.js:294 |
 | `MangaEditPlanner` | js/ai/manga-edit-planner.js:78 |
 | `MangaEditPlannerUI` | js/ai/manga-edit-planner-ui.js:125 |
 | `MangaGPTRegionEditor` | js/ai/gpt-region-editor.js:1836 |
@@ -106,7 +108,7 @@
 | `NaiEngine` | js/ai/nai-engine.js:109 |
 | `NaiEngineCore` | js/ai/nai-engine-core.js:136 |
 | `NaiFabricTextFocus` | js/core/util/fabric-text-focus.js:81 |
-| `NaiHistoryLoading` | js/layer/image-history-management.js:6, js/layer/image-history-management.js:218, js/layer/image-history-management.js:242, js/layer/image-history-management.js:247 |
+| `NaiHistoryLoading` | js/layer/image-history-management.js:6, js/layer/image-history-management.js:277, js/layer/image-history-management.js:294, js/layer/image-history-management.js:327, js/layer/image-history-management.js:332 |
 | `NaiImage2Client` | js/assets/image2-client.js:92 |
 | `NaiImage2Controller` | js/assets/image2-controller.js:16 |
 | `NaiImage2JobStore` | js/assets/image2-job-store.js:33 |
@@ -116,7 +118,7 @@
 | `NaiLocalToolsClient` | js/local-tools/local-tools-client.js:96 |
 | `NaiLocalToolsDefaultUrl` | js/local-tools/local-tools-client.js:97 |
 | `NaiMangaPageSize` | js/core/manga-page-size.js:239 |
-| `NaiPageLoading` | js/canvas-manager.js:1041, js/canvas-manager.js:1045, js/core/compression/project-compression.js:96, js/sidebar/panel/panel-template.js:10, js/sidebar/panel/panel-template.js:58, js/ui/bottom-bar.js:402, js/ui/bottom-bar.js:412, js/ui/bottom-bar.js:542, js/ui/bottom-bar.js:551, js/ui/psd-io.js:138 |
+| `NaiPageLoading` | js/canvas-manager.js:1041, js/canvas-manager.js:1045, js/core/compression/project-compression.js:96, js/sidebar/panel/panel-template.js:10, js/sidebar/panel/panel-template.js:58, js/ui/bottom-bar.js:405, js/ui/bottom-bar.js:415, js/ui/bottom-bar.js:545, js/ui/bottom-bar.js:554, js/ui/psd-io.js:138 |
 | `NaiPageStudio` | js/sidebar/page/page-studio.js:605 |
 | `NaiPanelPipelineReview` | js/ai/panel-pipeline-review.js:208 |
 | `NaiPngBitDepth` | js/core/util/png-bit-depth.js:563 |
@@ -198,7 +200,7 @@
 |---------|------|------|
 | js/ui/third/ag-psd/ag-psd.js | 21378 |  |
 | js/ui/third/i18next.js | 6071 | exported changeLanguage, getText, getTranslation |
-| index.html | 3099 |  |
+| index.html | 3100 |  |
 | js/ai/manga-importer.js | 2524 |  |
 | js/ai/gpt-region-editor.js | 1840 | Manga-NAI-GPT: isolated, non-destructive image editing surface. |
 | scripts/novice-task-e2e.cjs | 1801 | Novice full-task acceptance (docs/GROK_BOT_FINAL_DELIVERY.md §4): a new user, no docs, real Chromium, |

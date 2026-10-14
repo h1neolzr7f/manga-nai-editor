@@ -35,7 +35,7 @@ function environment() {
   context.fabric.Object.prototype.toObject = function() {};
   context.window = context;
   vm.createContext(context);
-  for (const file of ['js/layer/image-history-management.js', 'js/sidebar/panel/panel-manager.js', 'js/core/compression/project-compression.js', 'js/ui/bottom-bar.js', 'js/sidebar/panel/panel-template.js', 'js/ai/prompt/auto/auto-generation.js']) {
+  for (const file of ['js/layer/image-history-management.js', 'js/sidebar/panel/panel-manager.js', 'js/core/compression/project-compression.js', 'js/ui/bottom-bar.js', 'js/sidebar/panel/panel-template.js', 'js/ai/prompt/auto/auto-generation.js', 'js/core/manga-core.js']) {
     vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, {filename: file});
   }
   context.stateStack = [0, 1, 2].map(n => JSON.stringify({objects: [{name: String(n), selectable: false}], canvasGuid: 'page'}));
@@ -214,3 +214,68 @@ test('bulk generation aborts when the target page could not be loaded', async ()
   await assert.rejects(c.autoMultiGenerate(true), /页面/);
   assert.equal(panel.generated, false);
 });
+
+test('fast in-place delta history undo patches live objects without loadFromJSON and preserves active selection', async () => {
+  const {context: c, canvas, pending} = environment();
+  const liveObj = {
+    guid: 'obj-1',
+    type: 'textbox',
+    left: 120,
+    top: 80,
+    text: '修改后台词',
+    selectable: true,
+    set(values) { Object.assign(this, values); },
+    setCoords() { this.coordsUpdated = true; },
+    toObject() { return {guid: this.guid, type: this.type, left: this.left, top: this.top, text: this.text, selectable: this.selectable}; }
+  };
+  canvas.objects = [liveObj];
+  canvas.getActiveObject = () => canvas.active;
+  canvas.setActiveObject(liveObj);
+  c.resetEventHandlers = () => {};
+  c.stateStack = [
+    JSON.stringify({objects: [{guid: 'obj-1', type: 'textbox', left: 40, top: 30, text: '初始台词', selectable: true}], canvasGuid: 'page'}),
+    JSON.stringify({objects: [{guid: 'obj-1', type: 'textbox', left: 120, top: 80, text: '修改后台词', selectable: true}], canvasGuid: 'page'})
+  ];
+  c.currentStateIndex = 1;
+  await c.undo();
+  assert.equal(pending.length, 0, 'should patch in-place without queuing loadFromJSON');
+  assert.equal(liveObj.left, 40);
+  assert.equal(liveObj.top, 30);
+  assert.equal(liveObj.text, '初始台词');
+  assert.equal(canvas.active, liveObj, 'active selection preserved across fast undo');
+  assert.equal(c.currentStateIndex, 0);
+  assert.equal(c.NaiHistoryLoading, false);
+  assert.equal(c.isSaveHistory, true);
+});
+
+test('MangaCore facade and MangaBatchQueue process multi-page jobs sequentially with status transitions', async () => {
+  const {context: c, canvas} = environment();
+  assert.ok(c.MangaCore);
+  assert.ok(c.MangaBatchQueue);
+  assert.equal(c.MangaCore.canvas, canvas);
+  const transitions = [];
+  const unsub = c.MangaBatchQueue.subscribe(snap => {
+    if (snap.statuses['page-1']) transitions.push(snap.statuses['page-1'].status + ':' + snap.statuses['page-1'].label);
+  });
+  await new Promise(resolve => {
+    c.MangaBatchQueue.enqueue({
+      guid: 'page-1',
+      title: '测试批处理',
+      queuedLabel: '排队',
+      runningLabel: '运行',
+      doneLabel: '完成',
+      async run(ctx) {
+        ctx.setProgress('50%');
+        await new Promise(setImmediate);
+        resolve();
+      }
+    });
+  });
+  await new Promise(setImmediate);
+  unsub();
+  assert.equal(c.MangaBatchQueue.getPageStatus('page-1').status, 'done');
+  assert.equal(c.MangaBatchQueue.getPageStatus('page-1').label, '完成');
+  assert.ok(transitions.includes('running:50%'));
+  assert.ok(transitions.includes('done:完成'));
+});
+

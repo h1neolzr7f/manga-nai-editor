@@ -1,7 +1,8 @@
 const ROTATED_BRACKETS_REGX=/[\(\)\]\[\{\}\]]/;
 const SOURCE_BRACKETS_REGEX=/[\\/]/;
-const JP_BRACKETS=/[ー「」『』（）〔〕［］｛｝｟｠〈〉《》【】〖〗〘〙〚〛゛゜。、・゠＝…•‥◦﹅﹆]/;
-const JP_SPECIAL_BRACKETS=/[。、]/;
+const JP_BRACKETS=/[ー—―–「」『』（）〔〕［］｛｝｟｠〈〉《》【】〖〗〘〙〚〛゛゜。、・゠＝…•‥◦﹅﹆～〜]/;
+const JP_SPECIAL_BRACKETS=/[。、，．]/;
+const VERTICAL_PRESENTATION_MAP={'—':'︱','―':'︱','–':'︲','…':'︙','‥':'︰','（':'︵','）':'︶','〔':'︹','〕':'︺','【':'︻','】':'︼','《':'︽','》':'︾','〈':'︿','〉':'﹀','「':'﹁','」':'﹂','『':'﹃','』':'﹄','｛':'︷','｝':'︸','［':'﹇','］':'﹈'};
 const objectControls=fabric.Object.prototype.controls,controlsUtils=fabric.controlsUtils,scaleSkewStyleHandler=controlsUtils.scaleSkewCursorStyleHandler,{wrapWithFireEvent,wrapWithFixedAnchor,getLocalPoint}=controlsUtils;
 class VerticalTextbox extends fabric.IText{constructor(text,options){super(text,options);
 this._dimensionAffectingProps=this._dimensionAffectingProps.concat('height');
@@ -303,6 +304,12 @@ ctx.save();
 ctx.canvas.setAttribute('dir',isLtr?'ltr':'rtl');
 ctx.direction=isLtr?'ltr':'rtl';
 ctx.textAlign=isLtr?'left':'right';
+const mappedGlyph=VERTICAL_PRESENTATION_MAP[char];
+if(mappedGlyph){
+this._renderChar(method,ctx,lineIndex,charIndex,mappedGlyph,charLeft,charTop,0);
+ctx.restore();
+return;
+}
 if(JP_BRACKETS.test(char)){charTop+=this.lineHeight*this._fontSizeMult;
 charLeft-=this.lineHeight*this._fontSizeMult;
 const tx=charLeft-charbox.width/2,ty=charTop-charbox.height/2;
@@ -332,8 +339,41 @@ for(const prop in prevStyle){if(prevStyle[prop]!==thisStyle[prop]){return true}}
 return false};
 _renderChars(method,ctx,line,left,top,lineIndex){ctx.save();
 left+=1;
-for(var i=0,len=line.length-1;i<=len;i++){if(this._isRotatedChar(line[i])){this._renderRotatedChar(method,ctx,lineIndex,i,left,top)}else{this._renderCJKChar(method,ctx,lineIndex,i,left,top)}};
+for(var i=0,len=line.length-1;i<=len;i++){
+var ch=line[i],next=line[i+1],next2=line[i+2],prev=i>0?line[i-1]:null;
+if(this._isTateChuYokoPair(ch,next,prev,next2)){
+this._renderTateChuYokoPair(method,ctx,lineIndex,i,ch,next,left,top);
+i++;
+}else if(this._isRotatedChar(ch)){this._renderRotatedChar(method,ctx,lineIndex,i,left,top)}else{this._renderCJKChar(method,ctx,lineIndex,i,left,top)}};
 ctx.restore()};
+_isTateChuYokoPair(c,next,prev,next2){
+if(!c||!next)return false;
+if((c==='!'||c==='?'||c==='！'||c==='？')&&(next==='!'||next==='?'||next==='！'||next==='？')){
+var isBang=function(x){return x==='!'||x==='?'||x==='！'||x==='？';};
+return !isBang(prev)&&!isBang(next2);
+}
+if(/^[0-9]$/.test(c)&&/^[0-9]$/.test(next)){
+return !(/^[0-9]$/.test(prev||''))&&!(/^[0-9]$/.test(next2||''));
+}
+return false;
+};
+_renderTateChuYokoPair(method,ctx,lineIndex,charIndex,c1,c2,left,top){
+!this.__charBounds[lineIndex]&&this.measureLine(lineIndex);
+var charbox=this.__charBounds[lineIndex][charIndex];
+if(!charbox)return;
+var localLineHeight=this.getHeightOfLine(lineIndex);
+var cellCenterLeft=left-(localLineHeight/this.lineHeight)/2;
+var charTop=top+charbox.top+charbox.height/this.lineHeight;
+var norm1=c1==='！'?'!':c1==='？'?'?':c1;
+var norm2=c2==='！'?'!':c2==='？'?'?':c2;
+var halfOffset=this.fontSize*0.26;
+ctx.save();
+ctx.direction='ltr';
+ctx.textAlign='center';
+this._renderChar(method,ctx,lineIndex,charIndex,norm1,cellCenterLeft-halfOffset,charTop,0);
+this._renderChar(method,ctx,lineIndex,charIndex+1,norm2,cellCenterLeft+halfOffset,charTop,0);
+ctx.restore();
+};
 _isRotatedChar(char){return ROTATED_BRACKETS_REGX.test(char)};
 calcTextWidth(){let maxLineWidth=0;
 for(let i=0,len=this.textLines.length;i<len;i++){const lineWidth=this.getHeightOfLine(i);

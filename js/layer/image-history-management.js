@@ -210,15 +210,94 @@ window.NaiPageStudio.hydrateAll();
 }
 }
 
+const FAST_PATCH_SAFE_PROPS={
+left:true,top:true,scaleX:true,scaleY:true,angle:true,skewX:true,skewY:true,
+flipX:true,flipY:true,opacity:true,visible:true,selectable:true,evented:true,
+fill:true,stroke:true,strokeWidth:true,text:true,fontSize:true,fontFamily:true,
+fontWeight:true,fontStyle:true,textAlign:true,lineHeight:true,charSpacing:true,
+textBackgroundColor:true,underline:true,linethrough:true,overline:true,
+width:true,height:true,rx:true,ry:true,name:true
+};
+
+function canApplyFastHistoryPatch(liveObjects,targetObjects,allowPageLoad){
+if(allowPageLoad||!Array.isArray(liveObjects)||!Array.isArray(targetObjects))return false;
+if(liveObjects.length===0||liveObjects.length!==targetObjects.length)return false;
+for(let i=0;i<liveObjects.length;i++){
+const live=liveObjects[i],target=targetObjects[i];
+if(!live||!target||typeof live.set!=='function'||typeof live.toObject!=='function')return false;
+if(!live.guid||!target.guid||live.guid!==target.guid)return false;
+if(live.type!==target.type)return false;
+if(target.clipPath||live.clipPath||target.objects||live.objects)return false;
+if(live.type==='image'){
+const liveSrc=typeof live.getSrc==='function'?live.getSrc():live.src;
+if(liveSrc&&target.src&&liveSrc!==target.src)return false;
+}
+const liveSnap=live.toObject(typeof commonProperties!=='undefined'?commonProperties:[]);
+const keys=new Set(Object.keys(liveSnap).concat(Object.keys(target)));
+for(const key of keys){
+if(key==='version'||key==='src')continue;
+if(JSON.stringify(liveSnap[key])!==JSON.stringify(target[key])){
+if(!FAST_PATCH_SAFE_PROPS[key])return false;
+}
+}
+}
+return true;
+}
+
+function applyFastHistoryPatch(liveObjects,targetObjects){
+const activeGuid=canvas.getActiveObject&&canvas.getActiveObject()&&canvas.getActiveObject().guid;
+let nextActive=null;
+for(let i=0;i<liveObjects.length;i++){
+const live=liveObjects[i],target=targetObjects[i];
+const patch={};
+for(const key of Object.keys(target)){
+if(FAST_PATCH_SAFE_PROPS[key]&&target[key]!==undefined){
+patch[key]=target[key];
+}
+}
+live.set(patch);
+if(typeof live.initDimensions==='function'&&(patch.text!==undefined||patch.fontSize!==undefined||patch.fontFamily!==undefined)){
+try{live.initDimensions();}catch(_e){/* ignore */}
+}
+if(typeof live.setCoords==='function')live.setCoords();
+if(activeGuid&&live.guid===activeGuid)nextActive=live;
+}
+if(nextActive&&typeof canvas.setActiveObject==='function'){
+try{canvas.setActiveObject(nextActive);}catch(_e){/* ignore */}
+}
+}
+
 function restoreHistoryState(index,guid=null,allowPageLoad=false){
 if(window.NaiHistoryLoading||(window.NaiPageLoading&&!allowPageLoad))return false;
 if(!Number.isInteger(index)||index<0||index>=stateStack.length)return false;
+const activeBefore=canvas&&typeof canvas.getActiveObject==='function'?canvas.getActiveObject():null;
+const activeBeforeGuid=activeBefore&&activeBefore.guid?activeBefore.guid:null;
 const state=restoreImage(stateStack[index]);
 const wasSaving=isSaveHistory;
 window.NaiHistoryLoading=true;
 changeDoNotSaveHistory();
 return new Promise((resolve,reject)=>{
 try{
+const liveObjects=canvas&&typeof canvas.getObjects==='function'?canvas.getObjects():[];
+if(canApplyFastHistoryPatch(liveObjects,state.objects,allowPageLoad)){
+try{
+applyFastHistoryPatch(liveObjects,state.objects);
+currentStateIndex=index;
+reSetSpeechBubbleText();
+setCanvasGUID(guid||state.canvasGuid);
+hydratePageStudioAfterLoad();
+canvas.renderAll();
+updateLayerPanel();
+resetEventHandlers();
+customSpeechBubbleAllRelocation();
+isSaveHistory=wasSaving;
+window.NaiHistoryLoading=false;
+resolve(true);
+return;
+}catch(_fastErr){
+// Fallback to full loadFromJSON if in-place patch hits any edge case
+}
+}
 clearJSTSGeometry();
 canvas.loadFromJSON(state,function(){
 try{
@@ -230,6 +309,12 @@ if(canvasObj&&stateObj.selectable!==undefined)canvasObj.selectable=stateObj.sele
 reSetSpeechBubbleText();
 setCanvasGUID(guid||state.canvasGuid);
 hydratePageStudioAfterLoad();
+if(activeBeforeGuid&&typeof canvas.setActiveObject==='function'){
+const restoredActive=canvas.getObjects().find(o=>o&&o.guid===activeBeforeGuid&&o.selectable!==false);
+if(restoredActive){
+try{canvas.setActiveObject(restoredActive);}catch(_e){/* ignore */}
+}
+}
 canvas.renderAll();
 updateLayerPanel();
 resetEventHandlers();

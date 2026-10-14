@@ -97,7 +97,7 @@
 | `basePrompt_seed` | index.html:2224 | js/ai/prompt-assist.js:135, js/ai/prompt/base-event-listener.js:9, js/project-management.js:313 |
 | `basePrompt_width` | index.html:2213 | js/ai/prompt/base-event-listener.js:7, js/project-management.js:315 |
 | `beginnerToolHud` | index.html:2080 | js/ui/beginner-guide.js:21 |
-| `bg-color` | index.html:392 | js/ai/manga-importer.js:1701, js/canvas-manager.js:213, js/core/util/image-util.js:627, js/layer/image-history-management.js:285, js/project-management.js:202, js/sidebar/panel/panel-manager.js:277 |
+| `bg-color` | index.html:392 | js/ai/manga-importer.js:1701, js/canvas-manager.js:213, js/core/util/image-util.js:627, js/layer/image-history-management.js:370, js/project-management.js:202, js/sidebar/panel/panel-manager.js:277 |
 | `bgColorButton` | index.html:393 | js/canvas-manager.js:229 |
 | `bgColorSwatch` | index.html:395 | js/canvas-manager.js:249 |
 | `bgColorValue` | index.html:394 | js/canvas-manager.js:243 |
@@ -693,12 +693,12 @@
 | `blendImageListBody` | js/layer/blend/blend.js:414 |
 | `blendModes` | js/layer/blend/blend.js:227 |
 | `blendSelectedInfo` | js/layer/blend/blend.js:207 |
-| `btm-dialog-cancel` | js/ui/bottom-bar.js:535 |
-| `btm-dialog-submit` | js/ui/bottom-bar.js:536 |
+| `btm-dialog-cancel` | js/ui/bottom-bar.js:538 |
+| `btm-dialog-submit` | js/ui/bottom-bar.js:539 |
 | `btm-image-container .btm-image` | js/ui/task-launcher.js:729, scripts/novice-task-e2e.cjs:1396 |
 | `btm-image-container > *` | scripts/novice-task-e2e.cjs:384 |
 | `btm-image-container button` | scripts/novice-task-e2e.cjs:573 |
-| `btmPageRestoreBar` | js/ui/bottom-bar.js:460 |
+| `btmPageRestoreBar` | js/ui/bottom-bar.js:463 |
 | `canvas-area .area-header` | js/ai/gpt-region-editor.js:1639, js/ai/manga-character-bible-ui.js:183, js/ai/manga-page-structure-ui.js:346, js/ai/manga-smart-text-editor.js:537, js/ui/task-launcher.js:71 |
 | `charLibAutoRef` | js/ai/character-library.js:182, scripts/character-library-e2e.cjs:136 |
 | `charLibBible` | js/ai/character-library.js:181 |

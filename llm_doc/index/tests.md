@@ -73,7 +73,7 @@
 | `npm run test:assets` | `js/assets/asset-manifest.js`, `js/assets/asset-pack.js`, `js/assets/asset-scanner.js`, `js/assets/asset-store.js`, `js/assets/github-free-pack.js`, `js/assets/original-starter-pack.js`, `js/assets/site-ui-pack.js`, `js/simulator/site-ui-parts.js` |
 | `npm run test:brushes` | `js/sidebar/pen/brush-presets.js`, `js/sidebar/pen/custom-brush.js` |
 | `npm run test:cutout` | `js/local-tools/cutout-presets.js`, `js/local-tools/local-tools-client.js` |
-| `npm run test:editor-regressions` | `js/ai/prompt/auto/auto-generation.js`, `js/core/compression/project-compression.js`, `js/layer/image-history-management.js`, `js/sidebar/panel/panel-manager.js`, `js/sidebar/panel/panel-template.js`, `js/ui/bottom-bar.js` |
+| `npm run test:editor-regressions` | `js/ai/prompt/auto/auto-generation.js`, `js/core/compression/project-compression.js`, `js/core/manga-core.js`, `js/layer/image-history-management.js`, `js/sidebar/panel/panel-manager.js`, `js/sidebar/panel/panel-template.js`, `js/ui/bottom-bar.js` |
 | `npm run test:fabric-text-focus` | `js/core/util/fabric-text-focus.js` |
 | `npm run test:gpt-i18n` | `js/ai/gpt-region-editor.js`, `js/ui/third/i18next.js` |
 | `npm run test:image-export` | `js/canvas-manager.js`, `js/core/compression/project-compression.js`, `js/core/manga-page-size.js`, `js/core/util/image-util.js`, `js/project-management.js` |
@@ -203,6 +203,9 @@
 - file saves cannot erase redo
 - metadata hydration cannot create a fake undo edit
 - original
+- should patch in-place without queuing loadFromJSON
+- 初始台词
+- active selection preserved across fast undo
 
 ### `npm run test:fabric-text-focus`
 

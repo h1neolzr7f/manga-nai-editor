@@ -34,11 +34,15 @@
     return { W, H, energy, faces, facesAvailable };
   }
 
-  /** Measure one balloon: kinsoku lines, font size from the panel; returns size + a builder. */
+  /** Measure one balloon: kinsoku + inscribed-ellipse lines, font size from the panel; returns size + a builder. */
   function measure(text, rect) {
     const fontSize = Math.min(44, Math.max(20, Math.round(Math.min(rect.width || rect.w, rect.height || rect.h) * 0.06)));
     const n = Array.from(text).length, perLine = n <= 9 ? n : Math.ceil(Math.sqrt(n * 1.6));
-    const lines = root.CjkBreak ? root.CjkBreak.breakLines(text, perLine) : [text];
+    const lines = root.CjkBreak
+      ? (n >= 12 && typeof root.CjkBreak.breakElliptical === 'function'
+          ? root.CjkBreak.breakElliptical(text, perLine + 1)
+          : root.CjkBreak.breakLines(text, perLine))
+      : [text];
     const longest = Math.max.apply(null, lines.map(l => Array.from(l).length));
     const tb = new root.fabric.Textbox(lines.join('\n'), { width: longest * fontSize * 1.06, fontSize, textAlign: 'center', fill: '#111', splitByGrapheme: true,
       fontFamily: '"Noto Sans SC","Microsoft YaHei",sans-serif' });

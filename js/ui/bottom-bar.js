@@ -191,6 +191,9 @@ imageWrapper.appendChild(deleteBtn);
 imageWrapper.appendChild(addBtn);
 btmImageContainer.appendChild(imageWrapper);
 btmProjectsMap.set(guid,{imageLink,blob});
+if(window.MangaBatchQueue&&typeof window.MangaBatchQueue.renderPageBadge==='function'){
+window.MangaBatchQueue.renderPageBadge(guid);
+}
 }
 
 btmDrawer.style.display="block";
