@@ -4,7 +4,7 @@
 
 - 抽出対象: `root.X=` / `window.X=` / `globalThis.X=`、行頭の `function X` / `var X` / `let X` / `const X`
 - 抽出範囲: js / cjs / mjs と、html のインライン `<script>`（行番号は元ファイル基準）
-- 合計 11961 件 / ユニーク名 6474 件
+- 合計 11997 件 / ユニーク名 6494 件
 
 ## シンボル → 定義
 
@@ -182,7 +182,7 @@
 | `GPT_PRESETS` | var | js/ui/task-launcher.js:19 |
 | `GPT_SECRET` | var | js/ui/service-settings.js:6 |
 | `GPT_STORE` | var | js/ui/service-settings.js:5 |
-| `GPT_STYLE` | var | js/ui/task-launcher.js:529 |
+| `GPT_STYLE` | var | js/ui/task-launcher.js:583 |
 | `GPT_URL` | var | scripts/ai-fill-e2e.cjs:14 |
 | `GROUPS` | var | js/assets/asset-library-controller.js:12 |
 | `GUIDED_SPLIT_RATIO_CANDIDATES` | var | js/panel/layout-templates.js:27 |
@@ -190,6 +190,7 @@
 | `GZheader` | var | js/ui/third/ag-psd/ag-psd.js:14919 |
 | `GZheader` | function | js/ui/third/ag-psd/ag-psd.js:17813 |
 | `H` | var | scripts/history-labels-test.cjs:4 |
+| `H` | var | scripts/manga-production-handbook-test.cjs:9 |
 | `HASH` | var | js/ui/third/ag-psd/ag-psd.js:15876 |
 | `HASH_ZLIB` | var | js/ui/third/ag-psd/ag-psd.js:15872 |
 | `HCRC` | var | js/ui/third/ag-psd/ag-psd.js:18250 |
@@ -350,6 +351,7 @@
 | `MangaPageStructureUI` | global | js/ai/manga-page-structure-ui.js:390 |
 | `MangaPanelsImage_Landscape` | var | js/svg/manga-panels-image-landscape.js:2 |
 | `MangaPanelsImage_Vertical` | var | js/svg/manga-panels-image-vertical.js:2 |
+| `MangaProductionHandbook` | global | js/ai/manga-production-handbook.js:661 |
 | `MangaSmartTextCore` | global | js/ai/manga-smart-text-core.js:120 |
 | `MangaSmartTextEditor` | global | js/ai/manga-smart-text-editor.js:573 |
 | `MangaTextInkMask` | global | js/ai/manga-text-ink-mask.js:105 |
@@ -675,7 +677,7 @@
 | `VERTICAL_PUNCT_MAP` | var | js/ui/util/cjk-break.js:7 |
 | `VIA_LOCAL_PROXY` | var | js/core/service/service-request.js:5 |
 | `View` | function | js/sidebar/panel/panel-manager.js:658 |
-| `W` | var | js/ui/task-launcher.js:637 |
+| `W` | var | js/ui/task-launcher.js:692 |
 | `W` | var | scripts/ai-fill-core-test.cjs:5 |
 | `W` | var | scripts/balloon-layout-core-test.cjs:13 |
 | `W` | var | scripts/gpt-drift-regression-test.cjs:9 |
@@ -700,7 +702,7 @@
 | `__dirname` | var | scripts/novelai-batch-tools.mjs:8 |
 | `__exportStar` | var | js/ui/third/ag-psd/ag-psd.js:8370 |
 | `__filename` | var | scripts/novelai-batch-tools.mjs:7 |
-| `__lastScript` | global | js/ui/task-launcher.js:555 |
+| `__lastScript` | global | js/ui/task-launcher.js:609 |
 | `__naiBrushEvt` | global | js/ui/visual-studio.js:142 |
 | `__naiBrushRaf` | global | js/ui/visual-studio.js:144 |
 | `__naiBrushRaf` | global | js/ui/visual-studio.js:145 |
@@ -731,7 +733,7 @@
 | `a` | var | js/ui/imagePromptHelper/image-prompt-helper.js:119 |
 | `a` | var | js/ui/imagePromptHelper/image-prompt-helper.js:144 |
 | `a` | var | js/ui/task-launcher.js:386 |
-| `a` | var | js/ui/task-launcher.js:755 |
+| `a` | var | js/ui/task-launcher.js:817 |
 | `a` | var | js/ui/visual-ps-tools.js:42 |
 | `a` | var | js/ui/visual-ps-tools.js:50 |
 | `a` | var | js/ui/visual-ps-tools.js:58 |
@@ -742,7 +744,7 @@
 | `a5WidthInches` | var | js/core/util/image-util.js:412 |
 | `ab` | var | js/core/auto-save.js:235 |
 | `abortController` | var | js/ai/provider/novelai-provider.js:558 |
-| `absent` | var | js/ui/task-launcher.js:496 |
+| `absent` | var | js/ui/task-launcher.js:550 |
 | `ac` | var | js/ai/manga-importer.js:666 |
 | `ac` | var | js/ai/manga-importer.js:712 |
 | `ac` | var | js/ai/manga-importer.js:744 |
@@ -1097,7 +1099,7 @@
 | `applyPartInteraction` | function | js/simulator/extra-renderer-factory.js:80 |
 | `applyPreset` | function | js/sidebar/pen/custom-brush.js:67 |
 | `applyResult` | function | js/local-tools/background-removal-client.js:292 |
-| `applyScript` | function | js/ui/task-launcher.js:546 |
+| `applyScript` | function | js/ui/task-launcher.js:600 |
 | `applySelectedFilter` | function | js/ui/control/glfx-control.js:149 |
 | `applyShadow` | function | js/ui/visual-studio.js:210 |
 | `applyStory` | function | js/simulator/simulator-studio.js:843 |
@@ -1206,6 +1208,7 @@
 | `assert` | var | scripts/manga-model-request-test.cjs:2 |
 | `assert` | var | scripts/manga-page-size-smoke-test.cjs:1 |
 | `assert` | var | scripts/manga-page-structure-test.cjs:3 |
+| `assert` | var | scripts/manga-production-handbook-test.cjs:1 |
 | `assert` | var | scripts/manga-smart-text-test.cjs:1 |
 | `assert` | var | scripts/manga-text-ink-mask-test.cjs:2 |
 | `assert` | var | scripts/nai-engine-core-test.cjs:1 |
@@ -1252,6 +1255,8 @@
 | `attrs` | var | scripts/gen-project-index.cjs:273 |
 | `attrs` | var | scripts/gen-project-index.cjs:411 |
 | `attrs` | var | scripts/portability-smoke-test.cjs:15 |
+| `auditBad` | var | scripts/manga-production-handbook-test.cjs:75 |
+| `auditGood` | var | scripts/manga-production-handbook-test.cjs:91 |
 | `auto` | var | scripts/layout-smoke-test.cjs:48 |
 | `autoMultiGenerate` | global | js/ai/prompt/auto/auto-generation.js:104 |
 | `autoMultiPromptSet` | global | js/ai/prompt/auto/auto-prompt-util.js:800 |
@@ -1286,7 +1291,7 @@
 | `b` | var | js/ui/service-settings.js:299 |
 | `b` | var | js/ui/task-launcher.js:77 |
 | `b` | var | js/ui/task-launcher.js:338 |
-| `b` | var | js/ui/task-launcher.js:467 |
+| `b` | var | js/ui/task-launcher.js:521 |
 | `b` | var | js/ui/visual-ps-tools.js:193 |
 | `b` | var | scripts/audit/round3-process-audit-repro.cjs:8 |
 | `b1` | var | js/panel/layout-templates.js:233 |
@@ -1297,13 +1302,14 @@
 | `back` | var | js/simulator/simulator-studio.js:830 |
 | `back` | var | js/simulator/simulator-studio.js:1036 |
 | `back` | var | js/ui/task-launcher.js:199 |
-| `back` | var | js/ui/task-launcher.js:741 |
+| `back` | var | js/ui/task-launcher.js:803 |
 | `backDelete` | var | js/sidebar/text/vertical-textbox.js:146 |
 | `backSize` | var | js/sidebar/tone/snow-tone.js:125 |
 | `background` | var | js/core/util/png-bit-depth.js:529 |
 | `background` | var | js/simulator/renderers/visual-novel-renderer.js:86 |
 | `background` | var | scripts/audit/ancillary-audit-repro.cjs:15 |
 | `backgroundOf` | var | scripts/image-export-smoke-test.cjs:408 |
+| `badPages` | var | scripts/manga-production-handbook-test.cjs:67 |
 | `badge` | var | js/canvas-manager.js:53 |
 | `badge` | var | js/ui/beginner-guide.js:343 |
 | `badge` | var | js/ui/beginner-guide.js:391 |
@@ -1547,7 +1553,7 @@
 | `blob` | var | js/simulator/story-composer-controller.js:263 |
 | `blob` | var | js/ui/imagePromptHelper/image-prompt-helper.js:118 |
 | `blob` | var | js/ui/imagePromptHelper/image-prompt-helper.js:143 |
-| `blob` | var | js/ui/task-launcher.js:753 |
+| `blob` | var | js/ui/task-launcher.js:815 |
 | `blobBuffer` | var | js/core/debug.js:144 |
 | `blobStore` | var | js/assets/asset-store.js:165 |
 | `blobStore` | var | js/assets/asset-store.js:205 |
@@ -1657,8 +1663,8 @@
 | `box` | var | js/ui/service-settings.js:79 |
 | `box` | var | js/ui/service-settings.js:297 |
 | `box` | var | js/ui/task-launcher.js:374 |
-| `box` | var | js/ui/task-launcher.js:566 |
-| `box` | var | js/ui/task-launcher.js:585 |
+| `box` | var | js/ui/task-launcher.js:620 |
+| `box` | var | js/ui/task-launcher.js:639 |
 | `box` | var | js/ui/util/mode-change.js:48 |
 | `box` | var | js/ui/util/mode-change.js:53 |
 | `box` | var | js/ui/visual-ps-tools.js:560 |
@@ -2063,9 +2069,10 @@
 | `carried` | var | js/project-management.js:566 |
 | `cases` | var | scripts/cjk-break-test.cjs:5 |
 | `cases` | var | scripts/image-export-integration-test.cjs:193 |
-| `castSelections` | function | js/ui/task-launcher.js:506 |
-| `casts` | var | js/ui/task-launcher.js:517 |
-| `casts` | var | js/ui/task-launcher.js:634 |
+| `castSelections` | function | js/ui/task-launcher.js:560 |
+| `casts` | var | js/ui/task-launcher.js:496 |
+| `casts` | var | js/ui/task-launcher.js:571 |
+| `casts` | var | js/ui/task-launcher.js:689 |
 | `cat` | var | js/layer/blend/blend.js:243 |
 | `catData` | var | js/ui/imagePromptHelper/image-prompt-helper.js:273 |
 | `catData` | var | js/ui/imagePromptHelper/image-prompt-helper.js:281 |
@@ -2187,7 +2194,7 @@
 | `characters` | var | js/simulator/story-adapters.js:330 |
 | `characters` | var | js/simulator/story-engine.js:89 |
 | `characters` | var | js/simulator/story-engine.js:202 |
-| `characters` | var | js/ui/task-launcher.js:635 |
+| `characters` | var | js/ui/task-launcher.js:690 |
 | `charbox` | var | js/sidebar/text/vertical-textbox.js:302 |
 | `charbox` | var | js/sidebar/text/vertical-textbox.js:362 |
 | `chars` | var | js/sidebar/speechBubble/speech-bubble-freehand.js:868 |
@@ -2256,10 +2263,11 @@
 | `choices` | var | js/simulator/story-engine.js:69 |
 | `chooseCanvas` | function | js/ai/prompt/novelai-composition-director.js:491 |
 | `chooseMode` | function | js/ai/prompt/novelai-composition-director.js:514 |
-| `choosePanels` | function | js/ui/task-launcher.js:564 |
+| `choosePanels` | function | js/ui/task-launcher.js:618 |
 | `chord` | var | js/ui/util/cjk-break.js:47 |
 | `chosen` | var | js/ai/manga-importer.js:344 |
 | `chosen` | var | js/ui/service-settings.js:55 |
+| `chosenLayoutCode` | var | js/ui/task-launcher.js:701 |
 | `chroma` | var | js/local-tools/background-removal-client.js:102 |
 | `chunk` | var | js/core/util/png-bit-depth.js:503 |
 | `chunk` | function | scripts/png-bit-depth-smoke-test.cjs:25 |
@@ -2387,14 +2395,17 @@
 | `coData` | var | js/dashboard/prompt-frequency-storage.js:72 |
 | `coData` | var | js/dashboard/prompt-frequency-storage.js:98 |
 | `coOccurrence` | var | js/dashboard/performance-storage.js:546 |
+| `code` | var | js/ui/task-launcher.js:479 |
+| `code` | var | js/ui/task-launcher.js:499 |
 | `code` | var | js/ui/third/ag-psd/ag-psd.js:12499 |
 | `code` | var | js/ui/third/i18next.js:6014 |
 | `code` | var | scripts/remove-spaces.cjs:47 |
 | `codePointAt` | function | js/ui/third/ag-psd/ag-psd.js:12342 |
+| `codes` | var | scripts/manga-production-handbook-test.cjs:14 |
 | `col` | var | js/core/util/image-analyzer-util.js:65 |
 | `col` | var | js/simulator/renderers/image-board-renderer.js:54 |
 | `col` | var | js/simulator/story-to-manga.js:37 |
-| `collapseForm` | function | js/ui/task-launcher.js:583 |
+| `collapseForm` | function | js/ui/task-launcher.js:637 |
 | `collapseSidePanel` | function | js/ui/task-launcher.js:144 |
 | `collectAllKeys` | function | scripts/check-translations.cjs:75 |
 | `collectArmorSystemSections` | function | js/ai/prompt/novelai-composition-director.js:305 |
@@ -2449,6 +2460,8 @@
 | `commitExportPixelEdge` | function | js/canvas-manager.js:398 |
 | `commonProperties` | var | js/core/settings.js:72 |
 | `compareText` | function | scripts/gen-project-index.cjs:27 |
+| `compiled` | var | js/ui/task-launcher.js:500 |
+| `compiled` | var | scripts/manga-production-handbook-test.cjs:33 |
 | `completeCrop` | function | js/ui/util/mode-change.js:90 |
 | `component` | var | js/ai/manga-importer.js:1408 |
 | `components` | var | js/ai/manga-importer.js:448 |
@@ -2587,6 +2600,7 @@
 | `convertPixels` | function | js/core/util/png-bit-depth.js:412 |
 | `convertToSVG` | function | js/sidebar/tone/tone-manager.js:389 |
 | `converted` | var | js/core/util/png-bit-depth.js:536 |
+| `converted` | var | scripts/manga-production-handbook-test.cjs:109 |
 | `convexHull` | var | js/core/util/fabric-util.js:360 |
 | `coordCheckbox` | var | js/ui/control/information-control.js:3 |
 | `coordStr` | var | js/sidebar/panel/knife/knife-geometry.js:192 |
@@ -2598,6 +2612,7 @@
 | `copy` | var | js/ai/manga-importer.js:312 |
 | `copy` | var | js/ai/manga-importer.js:364 |
 | `copy` | function | js/core/util/fabric-util.js:142 |
+| `copy06Btn` | var | js/ui/task-launcher.js:488 |
 | `copyChannelToPixelData` | function | js/ui/third/ag-psd/ag-psd.js:10559 |
 | `copyChannelToRGBA` | function | js/ui/third/ag-psd/ag-psd.js:10895 |
 | `copyFiltered` | function | scripts/vendor-free-public-assets.cjs:68 |
@@ -2806,6 +2821,7 @@
 | `ctx` | var | scripts/cjk-break-test.cjs:3 |
 | `ctx` | var | scripts/manga-character-bible-test.cjs:3 |
 | `ctx` | var | scripts/manga-page-structure-test.cjs:8 |
+| `ctx` | var | scripts/manga-production-handbook-test.cjs:5 |
 | `ctx` | var | scripts/model-progress-test.cjs:3 |
 | `ctx` | var | scripts/panel-auto-test.cjs:3 |
 | `ctx` | var | scripts/tone-target-apply-test.cjs:11 |
@@ -2878,7 +2894,7 @@
 | `current` | var | js/ui/beginner-guide.js:128 |
 | `current` | var | js/ui/beginner-guide.js:232 |
 | `current` | var | js/ui/beginner-guide.js:269 |
-| `current` | function | js/ui/task-launcher.js:618 |
+| `current` | function | js/ui/task-launcher.js:673 |
 | `current` | var | js/ui/visual-ps-tools.js:30 |
 | `current` | var | js/ui/visual-studio.js:52 |
 | `current` | var | js/ui/visual-studio.js:63 |
@@ -3071,7 +3087,7 @@
 | `data` | var | js/simulator/site-ui-parts.js:151 |
 | `data` | var | js/ui/service-settings.js:100 |
 | `data` | var | js/ui/service-settings.js:112 |
-| `data` | var | js/ui/task-launcher.js:663 |
+| `data` | var | js/ui/task-launcher.js:725 |
 | `data` | var | js/ui/visual-ps-tools.js:342 |
 | `data` | var | scripts/gen-project-index.cjs:659 |
 | `data` | var | scripts/image-export-integration-test.cjs:96 |
@@ -3095,7 +3111,7 @@
 | `dataUrl` | var | js/local-tools/background-removal-client.js:230 |
 | `dataUrl` | var | js/local-tools/background-removal-client.js:367 |
 | `dataUrl` | var | scripts/image-export-integration-test.cjs:205 |
-| `dataUrlBytes` | function | js/ui/task-launcher.js:733 |
+| `dataUrlBytes` | function | js/ui/task-launcher.js:795 |
 | `dataUrlToBlob` | function | js/local-tools/background-removal-client.js:48 |
 | `date` | var | js/core/auto-save.js:161 |
 | `date` | var | js/core/util/image-util.js:648 |
@@ -3155,6 +3171,7 @@
 | `def` | var | js/simulator/simulator-studio.js:510 |
 | `def` | var | js/simulator/site-ui-parts.js:103 |
 | `def` | var | js/simulator/site-ui-parts.js:147 |
+| `def` | var | js/ui/task-launcher.js:483 |
 | `defaultChatScript` | function | js/simulator/simulator-studio.js:111 |
 | `defaultFont` | var | js/ui/third/ag-psd/ag-psd.js:11770 |
 | `defaultGridInfo` | var | js/ui/third/ag-psd/ag-psd.js:11835 |
@@ -3349,7 +3366,7 @@
 | `document` | var | scripts/audit/round6-simulator-audit-repro.cjs:8 |
 | `dom` | var | scripts/gen-project-index.cjs:649 |
 | `done` | var | js/ai/ai-settings.js:345 |
-| `done` | var | js/ui/task-launcher.js:655 |
+| `done` | var | js/ui/task-launcher.js:717 |
 | `dontShow` | var | js/ui/tutorial.js:268 |
 | `dontShow` | var | js/ui/tutorial.js:378 |
 | `dontShow` | var | js/ui/tutorial.js:386 |
@@ -3638,7 +3655,7 @@
 | `emit` | function | scripts/audit/round6-ui-audit-repro.cjs:10 |
 | `emoji` | var | js/core/logger.js:66 |
 | `empty` | var | js/simulator/story-composer-controller.js:64 |
-| `empty` | var | js/ui/task-launcher.js:608 |
+| `empty` | var | js/ui/task-launcher.js:663 |
 | `empty` | var | scripts/manga-text-ink-mask-test.cjs:58 |
 | `emptyHintActionsBound` | var | js/ui/beginner-guide.js:211 |
 | `emptyHintDismissed` | var | js/ui/beginner-guide.js:134 |
@@ -3688,7 +3705,7 @@
 | `engine` | function | js/simulator/story-adapters.js:4 |
 | `engine` | function | js/simulator/story-composer-controller.js:11 |
 | `engine` | function | js/simulator/story-to-manga.js:4 |
-| `engine` | var | js/ui/task-launcher.js:612 |
+| `engine` | var | js/ui/task-launcher.js:667 |
 | `engine` | var | scripts/story-engine-smoke-test.cjs:33 |
 | `engineData2_1` | var | js/ui/third/ag-psd/ag-psd.js:378 |
 | `engineData_1` | var | js/ui/third/ag-psd/ag-psd.js:376 |
@@ -3834,7 +3851,7 @@
 | `exportSelected` | function | js/simulator/chat-controller.js:296 |
 | `exportSelected` | function | js/simulator/simulator-controller.js:94 |
 | `exported` | var | js/simulator/story-composer-controller.js:334 |
-| `exporting` | var | js/ui/task-launcher.js:734 |
+| `exporting` | var | js/ui/task-launcher.js:796 |
 | `ext` | var | js/core/util/image-util.js:731 |
 | `ext` | var | scripts/gen-project-index.cjs:121 |
 | `ext` | var | scripts/gen-project-index.cjs:588 |
@@ -3874,7 +3891,7 @@
 | `extractZip` | function | scripts/vendor-free-public-assets.cjs:46 |
 | `extracted` | var | js/local-tools/background-removal-client.js:420 |
 | `exts` | var | scripts/gen-project-index.cjs:591 |
-| `f` | var | js/ui/task-launcher.js:569 |
+| `f` | var | js/ui/task-launcher.js:623 |
 | `f` | var | scripts/nai-status-format-test.cjs:6 |
 | `fab` | var | scripts/audit/round5-export-audit-repro.cjs:5 |
 | `fab` | var | scripts/audit/round6-import-state-audit-repro.cjs:13 |
@@ -4039,7 +4056,7 @@
 | `fillOpacity` | var | js/core/svg/google-icon-helper.js:182 |
 | `fillOptions` | function | js/ui/visual-studio.js:284 |
 | `fillPartStore` | function | js/simulator/simulator-studio.js:487 |
-| `fillScriptPage` | function | js/ui/task-launcher.js:557 |
+| `fillScriptPage` | function | js/ui/task-launcher.js:611 |
 | `fillSelect` | function | js/simulator/simulator-studio.js:305 |
 | `fillTemp` | var | js/ui/canvas-object-menu.js:187 |
 | `fillTemplates` | function | js/simulator/story-composer-controller.js:94 |
@@ -4395,6 +4412,7 @@
 | `fs` | var | scripts/manga-model-request-test.cjs:3 |
 | `fs` | var | scripts/manga-page-size-smoke-test.cjs:2 |
 | `fs` | var | scripts/manga-page-structure-test.cjs:5 |
+| `fs` | var | scripts/manga-production-handbook-test.cjs:3 |
 | `fs` | var | scripts/manga-real-ui-acceptance.cjs:8 |
 | `fs` | var | scripts/manga-smart-text-test.cjs:2 |
 | `fs` | var | scripts/manga-text-ink-mask-test.cjs:3 |
@@ -4686,7 +4704,7 @@
 | `getWriterBuffer` | function | js/ui/third/ag-psd/ag-psd.js:10960 |
 | `getWriterBufferNoCopy` | function | js/ui/third/ag-psd/ag-psd.js:10963 |
 | `gh` | var | js/simulator/simulator-studio.js:596 |
-| `gid` | var | js/ui/task-launcher.js:720 |
+| `gid` | var | js/ui/task-launcher.js:782 |
 | `girlA` | var | scripts/auto-swap-test.cjs:50 |
 | `girlB` | var | scripts/auto-swap-test.cjs:51 |
 | `gitSparse` | function | scripts/vendor-free-public-assets.cjs:91 |
@@ -4710,7 +4728,7 @@
 | `glow` | function | scripts/audit/round5-sidebar-audit-repro.cjs:25 |
 | `glyphs` | function | js/ui/util/cjk-break.js:13 |
 | `go` | var | js/ui/task-launcher.js:355 |
-| `goBtn` | var | js/ui/task-launcher.js:614 |
+| `goBtn` | var | js/ui/task-launcher.js:669 |
 | `goToNextManualReviewPanel` | function | js/ai/panel-pipeline-review.js:126 |
 | `goalProgress` | var | js/dashboard/performance-storage.js:543 |
 | `goals` | var | js/dashboard/dashboard-ui.js:895 |
@@ -4719,12 +4737,13 @@
 | `goals` | var | js/dashboard/performance-storage.js:542 |
 | `goldenRatio` | var | js/core/util/image-util.js:551 |
 | `good` | var | scripts/manga-bubble-detector-test.cjs:24 |
+| `goodPages` | var | scripts/manga-production-handbook-test.cjs:83 |
 | `gpifHTML` | var | js/ui/glfx-ui.js:2 |
 | `gpt` | var | js/ui/service-settings.js:182 |
-| `gptOk` | var | js/ui/task-launcher.js:628 |
+| `gptOk` | var | js/ui/task-launcher.js:683 |
 | `gptRemember` | function | js/ui/service-settings.js:18 |
 | `gptSource` | var | scripts/audit/round5-sam-audit-repro.cjs:15 |
-| `gptUrl` | var | js/ui/task-launcher.js:621 |
+| `gptUrl` | var | js/ui/task-launcher.js:676 |
 | `gr` | var | js/ui/service-settings.js:197 |
 | `grad` | var | js/core/util/image-util.js:64 |
 | `gradient` | var | js/layer/blend/blend.js:620 |
@@ -5220,8 +5239,8 @@
 | `ids` | var | js/simulator/chat-scene.js:78 |
 | `ids` | var | js/simulator/chat-scene.js:101 |
 | `ids` | var | js/simulator/story-engine.js:109 |
-| `ids` | var | js/ui/task-launcher.js:729 |
-| `ids` | var | js/ui/task-launcher.js:744 |
+| `ids` | var | js/ui/task-launcher.js:791 |
+| `ids` | var | js/ui/task-launcher.js:806 |
 | `ids` | var | scripts/gen-project-index.cjs:369 |
 | `idx` | var | js/ai/panel-pipeline-review.js:101 |
 | `idx` | var | js/ai/queue/task-queue.js:27 |
@@ -5316,8 +5335,8 @@
 | `img` | var | js/ui/control/glfx-control.js:91 |
 | `img` | var | js/ui/control/glfx-control.js:438 |
 | `img` | var | js/ui/imagePromptHelper/image-prompt-helper.js:686 |
-| `img` | var | js/ui/task-launcher.js:668 |
-| `img` | var | js/ui/task-launcher.js:780 |
+| `img` | var | js/ui/task-launcher.js:730 |
+| `img` | var | js/ui/task-launcher.js:842 |
 | `img` | var | js/ui/visual-ps-tools.js:453 |
 | `img` | var | js/ui/visual-ps-tools.js:525 |
 | `img` | var | scripts/history-labels-test.cjs:6 |
@@ -5399,13 +5418,13 @@
 | `info` | var | js/ai/queue/generation-task-manager.js:113 |
 | `info` | var | js/layer/blend/blend.js:207 |
 | `info` | var | js/layer/blend/blend.js:234 |
-| `info` | var | js/ui/task-launcher.js:547 |
+| `info` | var | js/ui/task-launcher.js:601 |
 | `info` | var | js/ui/visual-studio.js:354 |
 | `info` | var | scripts/release-packaging-test.cjs:11 |
 | `inheritPageMeta` | function | js/simulator/extra-renderer-factory.js:284 |
 | `init` | function | js/ai/prompt/auto/character-card-manager.js:521 |
 | `init` | function | js/ui/service-settings.js:374 |
-| `init` | function | js/ui/task-launcher.js:769 |
+| `init` | function | js/ui/task-launcher.js:831 |
 | `initImageHistory` | function | js/layer/image-history-management.js:394 |
 | `initMessage` | function | js/core/util/fabric-util.js:799 |
 | `initMessageText` | var | js/core/util/fabric-util.js:798 |
@@ -5784,7 +5803,7 @@
 | `iw` | var | js/ui/task-launcher.js:429 |
 | `ix` | var | scripts/prompt-assist-core-test.cjs:3 |
 | `job` | var | js/assets/image2-job-store.js:23 |
-| `job` | var | js/ui/task-launcher.js:615 |
+| `job` | var | js/ui/task-launcher.js:670 |
 | `jobId` | var | js/ai/ai-settings.js:316 |
 | `jobs` | var | scripts/image2-interface-smoke-test.cjs:11 |
 | `joined` | var | scripts/manga-page-structure-test.cjs:45 |
@@ -5850,7 +5869,7 @@
 | `key` | var | js/ui/service-settings.js:82 |
 | `key` | var | js/ui/service-settings.js:98 |
 | `key` | var | js/ui/service-settings.js:369 |
-| `key` | var | js/ui/task-launcher.js:620 |
+| `key` | var | js/ui/task-launcher.js:675 |
 | `key` | var | js/ui/visual-ps-tools.js:361 |
 | `key` | var | js/ui/visual-studio.js:114 |
 | `keyIsNai` | var | js/ai/prompt/novelai-composition-director.js:756 |
@@ -5960,7 +5979,7 @@
 | `lastInk` | var | js/ai/manga-importer.js:994 |
 | `lastLatinOnlyToastAt` | var | js/core/font/font-manager-core.js:5 |
 | `lastMonth` | var | js/dashboard/dashboard-ui.js:644 |
-| `lastPageSig` | var | js/ui/task-launcher.js:777 |
+| `lastPageSig` | var | js/ui/task-launcher.js:839 |
 | `lastPoint` | var | js/sidebar/speechBubble/speech-bubble-freehand.js:315 |
 | `lastRedo` | function | js/layer/image-history-management.js:351 |
 | `lastRenderTime` | var | js/sidebar/speechBubble/speech-bubble-freehand.js:31 |
@@ -6020,12 +6039,14 @@
 | `layout` | var | js/simulator/chat-renderer.js:186 |
 | `layout` | var | js/simulator/chat-renderer.js:345 |
 | `layout` | var | js/simulator/story-to-manga.js:156 |
-| `layout` | var | js/ui/task-launcher.js:624 |
+| `layout` | var | js/ui/task-launcher.js:679 |
 | `layout` | var | scripts/story-engine-smoke-test.cjs:111 |
 | `layoutCells` | function | js/simulator/story-to-manga.js:25 |
 | `layoutFor` | function | js/ai/director/scene-plan-service.js:7 |
 | `layoutOf` | function | js/simulator/chat-renderer.js:88 |
 | `layoutRects` | function | js/ui/task-launcher.js:427 |
+| `layoutSel` | var | js/ui/task-launcher.js:476 |
+| `layouts` | var | scripts/manga-production-handbook-test.cjs:12 |
 | `lazyLoadLandscapePanels` | function | js/sidebar/speechBubble/speech-bubble-effect.js:269 |
 | `lazyLoadSpeechBubbles` | function | js/sidebar/speechBubble/speech-bubble-effect.js:281 |
 | `lazyLoadSvgData` | function | js/sidebar/speechBubble/speech-bubble-effect.js:293 |
@@ -6097,12 +6118,13 @@
 | `level` | var | js/layer/layer-management.js:192 |
 | `lext` | var | js/ui/third/ag-psd/ag-psd.js:19807 |
 | `li` | var | js/project-management.js:623 |
-| `lib` | var | js/ui/task-launcher.js:515 |
-| `lib` | var | js/ui/task-launcher.js:521 |
-| `lib` | var | js/ui/task-launcher.js:631 |
+| `lib` | var | js/ui/task-launcher.js:495 |
+| `lib` | var | js/ui/task-launcher.js:569 |
+| `lib` | var | js/ui/task-launcher.js:575 |
+| `lib` | var | js/ui/task-launcher.js:686 |
 | `lib` | var | scripts/layout-smoke-test.cjs:8 |
 | `lib` | var | scripts/manga-character-bible-test.cjs:5 |
-| `libraryCharacters` | function | js/ui/task-launcher.js:502 |
+| `libraryCharacters` | function | js/ui/task-launcher.js:556 |
 | `limit` | var | js/core/manga-page-size.js:152 |
 | `limit` | var | js/simulator/longshot-exporter.js:12 |
 | `limitFrameLineSegments` | function | js/ai/manga-importer.js:1373 |
@@ -6171,7 +6193,8 @@
 | `lines` | var | js/sidebar/tone/focusline.js:63 |
 | `lines` | var | js/simulator/story-engine.js:201 |
 | `lines` | var | js/simulator/story-to-manga.js:75 |
-| `lines` | var | js/ui/task-launcher.js:606 |
+| `lines` | var | js/ui/task-launcher.js:493 |
+| `lines` | var | js/ui/task-launcher.js:661 |
 | `lines` | var | js/ui/util/cjk-break.js:37 |
 | `lines` | var | scripts/audit/round3-process-audit-repro.cjs:16 |
 | `lines` | var | scripts/gen-project-index.cjs:266 |
@@ -6248,7 +6271,7 @@
 | `loadCards` | function | js/ai/prompt/auto/character-card-manager.js:85 |
 | `loadChatSelected` | function | js/simulator/simulator-studio.js:763 |
 | `loadExample` | function | js/simulator/simulator-controller.js:33 |
-| `loadFabricImage` | function | js/ui/task-launcher.js:602 |
+| `loadFabricImage` | function | js/ui/task-launcher.js:657 |
 | `loadImage` | function | js/simulator/chat-renderer.js:14 |
 | `loadImage` | function | js/simulator/extra-renderer-factory.js:57 |
 | `loadImageElement` | function | js/ai/manga-importer.js:57 |
@@ -6306,7 +6329,7 @@
 | `localSettingsData` | var | js/project-management.js:161 |
 | `localStateStack` | var | js/ai/queue/generation-task-manager.js:207 |
 | `localToImage` | function | js/ui/visual-ps-tools.js:308 |
-| `lockSeed` | var | js/ui/task-launcher.js:623 |
+| `lockSeed` | var | js/ui/task-launcher.js:678 |
 | `locked` | var | scripts/audit/round6-mode-lock-audit-repro.cjs:4 |
 | `lockedClass` | var | js/dashboard/dashboard-ui.js:953 |
 | `log` | var | scripts/audit/editor-audit-repro.cjs:3 |
@@ -6346,7 +6369,7 @@
 | `luma` | var | js/ai/manga-importer.js:108 |
 | `luma` | function | js/core/util/png-bit-depth.js:406 |
 | `lws` | var | js/ui/canvas-object-menu.js:451 |
-| `lz4` | var | js/ui/task-launcher.js:751 |
+| `lz4` | var | js/ui/task-launcher.js:813 |
 | `lz4Blob` | var | js/core/compression/lz4.js:143 |
 | `lz4Blob` | var | js/core/compression/project-compression.js:200 |
 | `lz4Blob` | var | js/core/compression/project-compression.js:257 |
@@ -6389,7 +6412,7 @@
 | `makeMangaPanel` | function | js/simulator/story-to-manga.js:87 |
 | `makeNormalPanel` | function | js/ai/director/scene-plan-service.js:16 |
 | `makePageLayerHeader` | function | js/layer/layer-management.js:59 |
-| `makePanel` | function | js/ui/task-launcher.js:594 |
+| `makePanel` | function | js/ui/task-launcher.js:648 |
 | `makePrototype` | function | scripts/fabric-text-focus-smoke-test.cjs:17 |
 | `makeStoreCard` | function | js/simulator/simulator-studio.js:365 |
 | `makeTable` | var | js/ui/third/ag-psd/ag-psd.js:15707 |
@@ -6780,7 +6803,7 @@
 | `more` | var | js/sidebar/sidebar.js:32 |
 | `more` | var | js/ui/task-launcher.js:93 |
 | `more` | var | js/ui/task-launcher.js:135 |
-| `more` | var | js/ui/task-launcher.js:587 |
+| `more` | var | js/ui/task-launcher.js:641 |
 | `more` | var | js/ui/tutorial.js:162 |
 | `moreText` | var | js/dashboard/dashboard-ui.js:682 |
 | `moreWrap` | var | js/ui/task-launcher.js:92 |
@@ -6830,8 +6853,8 @@
 | `n` | var | js/sidebar/page/page-studio.js:79 |
 | `n` | var | js/sidebar/pen/fabric/brushes/stroke.js:40 |
 | `n` | var | js/ui/task-launcher.js:123 |
-| `n` | var | js/ui/task-launcher.js:466 |
-| `n` | var | js/ui/task-launcher.js:538 |
+| `n` | var | js/ui/task-launcher.js:520 |
+| `n` | var | js/ui/task-launcher.js:592 |
 | `n` | var | js/ui/util/cjk-break.js:35 |
 | `n` | var | js/ui/visual-ps-tools.js:354 |
 | `n` | var | scripts/auto-swap-test.cjs:45 |
@@ -6851,7 +6874,7 @@
 | `naiLastBatchAcceptanceSignature` | global | js/ai/prompt/auto/auto-prompt-util.js:203 |
 | `naiLastBatchDirectorSignature` | global | js/ai/prompt/auto/auto-prompt-util.js:732 |
 | `naiLayerPageFold` | var | js/layer/layer-management.js:4 |
-| `naiPrompt` | var | js/ui/task-launcher.js:661 |
+| `naiPrompt` | var | js/ui/task-launcher.js:723 |
 | `naiPsTool` | global | js/ui/visual-ps-tools.js:91 |
 | `naiSpacePan` | global | js/ui/beginner-guide.js:452 |
 | `naiSpacePan` | global | js/ui/beginner-guide.js:458 |
@@ -6874,7 +6897,7 @@
 | `nameSpan` | var | js/layer/blend/blend.js:436 |
 | `nameSpan` | var | js/ui/imagePromptHelper/image-prompt-helper.js:423 |
 | `nameTextArea` | var | js/layer/layer-management.js:204 |
-| `named` | var | js/ui/task-launcher.js:497 |
+| `named` | var | js/ui/task-launcher.js:551 |
 | `namedToText` | function | js/simulator/simulator-studio.js:175 |
 | `names` | var | js/simulator/simulator-studio.js:405 |
 | `names` | var | js/simulator/story-adapters.js:164 |
@@ -6947,7 +6970,7 @@
 | `newMap` | var | js/ui/bottom-bar.js:237 |
 | `newMap` | var | js/ui/bottom-bar.js:266 |
 | `newPage` | var | js/panel/random-cut.js:79 |
-| `newPageSeries` | function | js/ui/task-launcher.js:488 |
+| `newPageSeries` | function | js/ui/task-launcher.js:542 |
 | `newPoint` | var | js/ui/canvas-object-menu.js:625 |
 | `newPoints` | var | js/core/util/fabric-util.js:476 |
 | `newPoints` | var | js/sidebar/speechBubble/speech-bubble-freehand.js:331 |
@@ -7179,7 +7202,7 @@
 | `numberIsNaN` | function | js/ui/third/ag-psd/ag-psd.js:14415 |
 | `nx` | var | js/ai/manga-importer.js:168 |
 | `nx` | var | js/core/util/fabric-util.js:381 |
-| `nx` | var | js/ui/task-launcher.js:562 |
+| `nx` | var | js/ui/task-launcher.js:616 |
 | `ny` | var | js/ai/manga-importer.js:169 |
 | `ny` | var | js/core/util/fabric-util.js:382 |
 | `o` | var | js/fabric/fabric-management.js:449 |
@@ -7512,6 +7535,7 @@
 | `outputs` | var | scripts/gen-project-index.cjs:666 |
 | `outputs` | var | scripts/gen-project-index.cjs:682 |
 | `ovalLines` | var | scripts/cjk-break-test.cjs:23 |
+| `overPixel` | var | scripts/manga-production-handbook-test.cjs:104 |
 | `overallScaleX` | var | js/sidebar/panel/panel-manager.js:270 |
 | `overallScaleY` | var | js/sidebar/panel/panel-manager.js:271 |
 | `overhead` | var | js/core/util/image-util.js:548 |
@@ -7546,8 +7570,8 @@
 | `p` | var | js/ai/queue/task-queue.js:13 |
 | `p` | var | js/sidebar/sidebar-ui.js:14 |
 | `p` | var | js/ui/task-launcher.js:289 |
-| `p` | var | js/ui/task-launcher.js:595 |
-| `p` | var | js/ui/task-launcher.js:717 |
+| `p` | var | js/ui/task-launcher.js:650 |
+| `p` | var | js/ui/task-launcher.js:779 |
 | `p` | var | js/ui/visual-ps-tools.js:359 |
 | `p` | var | scripts/ai-fill-core-test.cjs:22 |
 | `p` | var | scripts/audit/ancillary-audit-repro.cjs:14 |
@@ -7612,11 +7636,11 @@
 | `pageBlobs` | var | js/core/auto-save.js:227 |
 | `pageBounds` | function | js/simulator/extra-renderer-factory.js:168 |
 | `pageBtn` | var | js/ui/beginner-guide.js:509 |
-| `pageCasts` | function | js/ui/task-launcher.js:510 |
+| `pageCasts` | function | js/ui/task-launcher.js:564 |
 | `pageCount` | var | js/assets/asset-library-controller.js:104 |
 | `pageCount` | var | js/panel/random-cut.js:71 |
 | `pageCount` | var | scripts/novice-task-e2e.cjs:114 |
-| `pageEngine` | var | js/ui/task-launcher.js:528 |
+| `pageEngine` | var | js/ui/task-launcher.js:582 |
 | `pageErrors` | var | scripts/gpt-browser-acceptance.cjs:39 |
 | `pageGuid` | var | js/ai/queue/generation-task-manager.js:161 |
 | `pageHasUserContent` | function | js/canvas-manager.js:167 |
@@ -7643,14 +7667,14 @@
 | `pageNumbers` | var | js/ui/bottom-bar.js:215 |
 | `pageObjects` | function | js/simulator/extra-renderer-factory.js:163 |
 | `pageOrder` | var | js/core/auto-save.js:88 |
-| `pageOrder` | function | js/ui/task-launcher.js:728 |
+| `pageOrder` | function | js/ui/task-launcher.js:790 |
 | `pagePrompt` | function | js/ui/task-launcher.js:435 |
-| `pageSeedLocked` | function | js/ui/task-launcher.js:481 |
-| `pageSeriesSeed` | function | js/ui/task-launcher.js:483 |
+| `pageSeedLocked` | function | js/ui/task-launcher.js:535 |
+| `pageSeriesSeed` | function | js/ui/task-launcher.js:537 |
 | `pageSize` | var | js/sidebar/panel/panel-manager.js:259 |
 | `pageSizeSource` | var | scripts/image-export-smoke-test.cjs:159 |
 | `pageSizeSrc` | var | scripts/layout-smoke-test.cjs:177 |
-| `pageStatus` | function | js/ui/task-launcher.js:592 |
+| `pageStatus` | function | js/ui/task-launcher.js:646 |
 | `pageText` | var | js/ui/bottom-bar.js:36 |
 | `pageType` | var | js/simulator/extra-renderer-factory.js:114 |
 | `pageView` | function | js/simulator/extra-renderer-factory.js:183 |
@@ -7728,7 +7752,7 @@
 | `panels` | var | js/sidebar/panel/panel-template.js:179 |
 | `panels` | var | js/sidebar/panel/panel-template.js:215 |
 | `panels` | var | js/simulator/story-to-manga.js:149 |
-| `panels` | var | js/ui/task-launcher.js:652 |
+| `panels` | var | js/ui/task-launcher.js:714 |
 | `panels` | var | js/ui/visual-studio.js:44 |
 | `panels` | var | scripts/manga-bubble-detector-test.cjs:21 |
 | `panning` | var | js/ui/beginner-guide.js:440 |
@@ -7858,6 +7882,7 @@
 | `parts` | var | scripts/png-bit-depth-smoke-test.cjs:85 |
 | `partsForMode` | function | js/simulator/simulator-studio.js:397 |
 | `pass` | var | scripts/canvas-view-drift-test.html:32 |
+| `passRubric` | var | scripts/manga-production-handbook-test.cjs:95 |
 | `passed` | var | js/core/debug.js:29 |
 | `passed` | var | js/core/debug.js:35 |
 | `passed` | var | js/core/debug.js:42 |
@@ -7906,6 +7931,7 @@
 | `path` | var | scripts/manga-import-smoke-test.cjs:2 |
 | `path` | var | scripts/manga-page-size-smoke-test.cjs:3 |
 | `path` | var | scripts/manga-page-structure-test.cjs:6 |
+| `path` | var | scripts/manga-production-handbook-test.cjs:4 |
 | `path` | var | scripts/manga-real-ui-acceptance.cjs:10 |
 | `path` | var | scripts/manga-smart-text-test.cjs:4 |
 | `path` | var | scripts/manga-text-ink-mask-test.cjs:5 |
@@ -8125,6 +8151,7 @@
 | `poly` | var | js/ui/visual-ps-tools.js:408 |
 | `poly1` | var | js/sidebar/panel/knife/knife-split-engine.js:476 |
 | `poly2` | var | js/sidebar/panel/knife/knife-split-engine.js:477 |
+| `polySpecs` | var | js/ui/task-launcher.js:704 |
 | `polygon` | var | js/core/util/fabric-util.js:359 |
 | `polygon` | var | js/sidebar/panel/panel-manager.js:321 |
 | `polygon` | var | js/sidebar/panel/panel-manager.js:589 |
@@ -8266,7 +8293,7 @@
 | `previous` | var | js/simulator/simulator-controller.js:59 |
 | `previous` | var | js/simulator/site-ui-parts.js:282 |
 | `previous` | var | js/simulator/story-composer-controller.js:212 |
-| `previous` | var | js/ui/task-launcher.js:511 |
+| `previous` | var | js/ui/task-launcher.js:565 |
 | `previous` | var | scripts/png-bit-depth-smoke-test.cjs:55 |
 | `previousGuid` | var | js/ui/bottom-bar.js:102 |
 | `previousImage` | var | js/ui/util/mode-change.js:117 |
@@ -8276,7 +8303,7 @@
 | `primaryOffsets` | var | js/sidebar/text/custom/optimized-shadow-text.js:21 |
 | `printScaleStyles` | var | js/ui/third/ag-psd/ag-psd.js:7512 |
 | `priority` | var | js/ai/manga-importer.js:341 |
-| `privacyOn` | function | js/ui/task-launcher.js:767 |
+| `privacyOn` | function | js/ui/task-launcher.js:829 |
 | `proMode` | function | scripts/full-feature-e2e.cjs:24 |
 | `proMode` | function | scripts/gpt-browser-acceptance.cjs:21 |
 | `proMode` | function | scripts/gpt-real-api-acceptance.cjs:25 |
@@ -8361,6 +8388,7 @@
 | `pt` | var | js/ui/visual-ps-tools.js:424 |
 | `pt` | var | js/ui/visual-ps-tools.js:475 |
 | `pt` | var | js/ui/visual-ps-tools.js:505 |
+| `pts` | var | js/ui/task-launcher.js:649 |
 | `pts` | var | js/ui/visual-ps-tools.js:40 |
 | `pts` | var | js/ui/visual-ps-tools.js:48 |
 | `pts` | var | js/ui/visual-ps-tools.js:56 |
@@ -8428,7 +8456,7 @@
 | `r` | var | js/ui/service-settings.js:150 |
 | `r` | var | js/ui/service-settings.js:340 |
 | `r` | var | js/ui/task-launcher.js:371 |
-| `r` | var | js/ui/task-launcher.js:549 |
+| `r` | var | js/ui/task-launcher.js:603 |
 | `r` | var | js/ui/visual-ps-tools.js:59 |
 | `r` | var | js/ui/visual-ps-tools.js:191 |
 | `r` | var | js/ui/visual-ps-tools.js:392 |
@@ -8712,7 +8740,6 @@
 | `rectY` | var | js/sidebar/speechBubble/speech-bubble-freehand.js:815 |
 | `rectY` | var | js/sidebar/speechBubble/speech-bubble-text.js:103 |
 | `rectY` | var | js/sidebar/speechBubble/speech-bubble-text.js:179 |
-| `rects` | var | js/ui/task-launcher.js:646 |
 | `red` | var | js/core/util/png-bit-depth.js:424 |
 | `redo` | function | js/layer/image-history-management.js:347 |
 | `redoB` | var | js/ui/task-launcher.js:84 |
@@ -8726,7 +8753,7 @@
 | `refresh` | function | js/ui/visual-studio.js:425 |
 | `refreshAiTaskIndicator` | function | js/ai/queue/generation-task-manager.js:88 |
 | `refreshBlendUI` | function | js/layer/blend/blend.js:461 |
-| `refreshCastChoices` | function | js/ui/task-launcher.js:520 |
+| `refreshCastChoices` | function | js/ui/task-launcher.js:574 |
 | `refreshNow` | function | js/ui/visual-studio.js:410 |
 | `refreshPresetSelect` | function | js/local-tools/background-removal-client.js:107 |
 | `refreshPreview` | function | js/simulator/simulator-studio.js:615 |
@@ -8743,7 +8770,7 @@
 | `register` | function | js/simulator/extra-renderer-factory.js:429 |
 | `register` | function | js/simulator/template-registry.js:26 |
 | `registerAiTask` | function | js/ai/queue/generation-task-manager.js:11 |
-| `registerHiddenTasks` | function | js/ui/task-launcher.js:763 |
+| `registerHiddenTasks` | function | js/ui/task-launcher.js:825 |
 | `registered` | var | js/assets/asset-store.js:190 |
 | `registered` | var | js/assets/image2-client.js:64 |
 | `registry` | var | js/simulator/chat-controller.js:236 |
@@ -9042,7 +9069,7 @@
 | `result` | var | js/simulator/scene-serializer.js:10 |
 | `result` | var | js/ui/ai/auto-prompt-ui.js:47 |
 | `result` | var | js/ui/imagePromptHelper/image-prompt-helper.js:242 |
-| `result` | var | js/ui/task-launcher.js:508 |
+| `result` | var | js/ui/task-launcher.js:562 |
 | `result` | var | js/ui/visual-studio.js:437 |
 | `result` | var | scripts/manga-text-ink-mask-test.cjs:34 |
 | `result` | var | scripts/remove-spaces.cjs:24 |
@@ -9113,7 +9140,7 @@
 | `roleHead` | var | js/ai/novelai-only-mode.js:46 |
 | `roleLabel` | var | js/ai/prompt/auto/character-card-manager.js:346 |
 | `roles` | var | js/ai/role/ai-roles.js:18 |
-| `roles` | var | js/ui/task-launcher.js:507 |
+| `roles` | var | js/ui/task-launcher.js:561 |
 | `rollback` | function | js/ai/director/scene-plan-service.js:67 |
 | `root` | var | js/ai/prompt/auto/character-card-manager.js:164 |
 | `root` | var | js/ai/prompt/auto/character-card-manager.js:176 |
@@ -9219,6 +9246,7 @@
 | `rows` | var | scripts/image-export-smoke-test.cjs:238 |
 | `rows` | var | scripts/image-export-smoke-test.cjs:332 |
 | `rows` | var | scripts/remove-dead-functions.cjs:8 |
+| `rulesTriggered` | var | scripts/manga-production-handbook-test.cjs:77 |
 | `run` | var | js/assets/image2-controller.js:8 |
 | `run` | var | js/local-tools/background-removal-client.js:480 |
 | `run` | function | scripts/audit/round5-canvas-audit-repro.cjs:10 |
@@ -9239,12 +9267,13 @@
 | `s` | var | js/sidebar/sidebar-ui.js:12 |
 | `s` | var | js/ui/service-settings.js:90 |
 | `s` | var | js/ui/service-settings.js:156 |
-| `s` | var | js/ui/task-launcher.js:705 |
+| `s` | var | js/ui/task-launcher.js:767 |
 | `s` | var | scripts/ai-fill-core-test.cjs:16 |
 | `s` | var | scripts/audit/ancillary-audit-repro.cjs:7 |
 | `s` | var | scripts/audit/image-edit-audit-repro.cjs:4 |
 | `s` | var | scripts/audit/round3-process-audit-repro.cjs:14 |
 | `s` | var | scripts/history-labels-test.cjs:5 |
+| `sPolys` | var | scripts/manga-production-handbook-test.cjs:29 |
 | `safe` | var | js/ai/manga-importer.js:1593 |
 | `safe` | var | js/ai/manga-importer.js:1607 |
 | `safe` | var | js/ai/manga-importer.js:1737 |
@@ -9266,8 +9295,8 @@
 | `samSource` | var | scripts/audit/round5-sam-audit-repro.cjs:8 |
 | `same` | function | js/ui/visual-ps-tools.js:355 |
 | `sameLayer` | var | js/ui/ai/auto-prompt-ui.js:64 |
-| `samePage` | function | js/ui/task-launcher.js:616 |
-| `sameTarget` | function | js/ui/task-launcher.js:617 |
+| `samePage` | function | js/ui/task-launcher.js:671 |
+| `sameTarget` | function | js/ui/task-launcher.js:672 |
 | `sample` | var | js/ai/prompt/novelai-composition-director.js:855 |
 | `samplePath` | var | scripts/asset-library-smoke-test.cjs:84 |
 | `samples` | var | js/core/util/image-util.js:549 |
@@ -9463,11 +9492,12 @@
 | `scene` | var | scripts/audit/round6-simulator-audit-repro.cjs:24 |
 | `scene` | var | scripts/layout-smoke-test.cjs:49 |
 | `scene` | var | scripts/simulator-chat-smoke-test.cjs:33 |
-| `sceneCast` | function | js/ui/task-launcher.js:493 |
+| `sceneCast` | function | js/ui/task-launcher.js:547 |
 | `sceneForGroup` | function | js/simulator/playback-controller.js:22 |
 | `scenePages` | var | js/ai/prompt/auto/auto-prompt-util.js:73 |
-| `scenes` | var | js/ui/task-launcher.js:516 |
-| `scenes` | var | js/ui/task-launcher.js:605 |
+| `scenes` | var | js/ui/task-launcher.js:492 |
+| `scenes` | var | js/ui/task-launcher.js:570 |
+| `scenes` | var | js/ui/task-launcher.js:660 |
 | `scenes` | var | scripts/simulator-chat-smoke-test.cjs:21 |
 | `scheduleExportSizeEstimate` | function | js/canvas-manager.js:629 |
 | `schedulePreview` | function | js/simulator/simulator-studio.js:630 |
@@ -9488,7 +9518,7 @@
 | `script` | var | scripts/nai-pipeline-credentials-test.cjs:7 |
 | `scriptEl` | var | js/simulator/simulator-studio.js:116 |
 | `scriptLines` | var | scripts/gen-project-index.cjs:123 |
-| `scriptQueue` | var | js/ui/task-launcher.js:545 |
+| `scriptQueue` | var | js/ui/task-launcher.js:599 |
 | `scripts` | var | scripts/gen-project-index.cjs:396 |
 | `scripts` | var | scripts/gen-project-index.cjs:494 |
 | `scripts` | var | scripts/no-duplicate-globals-test.cjs:9 |
@@ -9577,7 +9607,7 @@
 | `selected` | var | js/simulator/simulator-controller.js:4 |
 | `selected` | var | js/simulator/simulator-studio.js:327 |
 | `selected` | var | js/simulator/simulator-studio.js:804 |
-| `selected` | var | js/ui/task-launcher.js:523 |
+| `selected` | var | js/ui/task-launcher.js:577 |
 | `selected` | var | scripts/canvas-view-drift-test.html:29 |
 | `selectedAction` | var | js/local-tools/background-removal-client.js:371 |
 | `selectedAction` | var | js/local-tools/background-removal-client.js:427 |
@@ -9609,7 +9639,7 @@
 | `selectedValue` | var | js/sidebar/speechBubble/speech-bubble-text.js:198 |
 | `selectedValue` | var | js/sidebar/text/text-effect.js:171 |
 | `selectedValue` | var | js/sidebar/text/vertical-text.js:10 |
-| `selection` | var | js/ui/task-launcher.js:611 |
+| `selection` | var | js/ui/task-launcher.js:666 |
 | `selection` | var | scripts/gpt-region-editor-smoke-test.cjs:27 |
 | `self` | var | js/ai/provider/novelai-provider.js:85 |
 | `self` | var | js/assets/asset-store.js:27 |
@@ -9664,7 +9694,7 @@
 | `serializeTrackList` | function | js/ui/third/ag-psd/ag-psd.js:4997 |
 | `serializeVectorContent` | function | js/ui/third/ag-psd/ag-psd.js:5475 |
 | `serializer` | var | js/core/svg/google-icon-helper.js:204 |
-| `seriesSeed` | var | js/ui/task-launcher.js:482 |
+| `seriesSeed` | var | js/ui/task-launcher.js:536 |
 | `server` | var | js/core/service/service-request.js:41 |
 | `serverMessage` | function | js/core/service/service-request.js:7 |
 | `serviceLogger` | var | js/core/logger.js:181 |
@@ -9699,7 +9729,7 @@
 | `setMode` | function | js/ui/task-launcher.js:62 |
 | `setNameTextAreaProperties` | function | js/layer/layer-management.js:341 |
 | `setNotSave` | function | js/layer/image-history-management.js:23 |
-| `setPageEngine` | function | js/ui/task-launcher.js:530 |
+| `setPageEngine` | function | js/ui/task-launcher.js:584 |
 | `setPanelPipelineStatus` | function | js/ai/prompt/auto/auto-prompt-util.js:319 |
 | `setPanelPipelineStatus` | global | js/ai/prompt/auto/auto-prompt-util.js:816 |
 | `setPanelPipelineStatus` | function | js/ai/prompt/novelai-composition-director.js:1183 |
@@ -9707,7 +9737,7 @@
 | `setPanelValue` | function | js/sidebar/panel/panel-manager.js:545 |
 | `setPath` | function | js/simulator/simulator-studio.js:154 |
 | `setPreview` | function | js/local-tools/background-removal-client.js:186 |
-| `setPrivacy` | function | js/ui/task-launcher.js:768 |
+| `setPrivacy` | function | js/ui/task-launcher.js:830 |
 | `setRangeValue` | function | js/sidebar/text/text-effect.js:65 |
 | `setRoleAssignment` | function | js/ai/provider/provider-registry.js:46 |
 | `setSBActiveButton` | function | js/sidebar/speechBubble/speech-bubble-freehand.js:78 |
@@ -9731,7 +9761,7 @@
 | `settings` | var | js/local-tools/local-tools-client.js:51 |
 | `settings` | var | js/local-tools/local-tools-client.js:89 |
 | `settings` | var | js/sidebar/pen/custom-brush.js:257 |
-| `settings` | var | js/ui/task-launcher.js:622 |
+| `settings` | var | js/ui/task-launcher.js:677 |
 | `settings` | var | scripts/nai-status-format-test.cjs:14 |
 | `settings` | var | scripts/png-bit-depth-smoke-test.cjs:46 |
 | `settingsAutoSaveTimer` | var | js/project-management.js:685 |
@@ -9818,7 +9848,7 @@
 | `side` | var | js/simulator/renderers/phone-renderer.js:19 |
 | `sidebarTooltipMap` | var | js/ui/third/tippy.js:47 |
 | `sidebarValueMap` | var | js/sidebar/sidebar-ui.js:6 |
-| `sig` | var | js/ui/task-launcher.js:781 |
+| `sig` | var | js/ui/task-launcher.js:843 |
 | `signature` | var | js/ai/prompt/auto/auto-generation.js:12 |
 | `signature` | var | js/ai/prompt/auto/auto-prompt-util.js:163 |
 | `signature` | var | js/ai/prompt/auto/auto-prompt-util.js:197 |
@@ -10062,7 +10092,7 @@
 | `srcMatch` | var | scripts/gen-project-index.cjs:274 |
 | `ss` | var | js/core/util/image-util.js:654 |
 | `st` | var | js/ui/task-launcher.js:364 |
-| `st` | var | js/ui/task-launcher.js:533 |
+| `st` | var | js/ui/task-launcher.js:587 |
 | `stableSeed` | function | scripts/novelai-batch-tools.mjs:76 |
 | `stack` | var | js/core/util/image-analyzer-util.js:64 |
 | `stack` | var | js/ui/visual-ps-tools.js:282 |
@@ -10169,7 +10199,7 @@
 | `status` | var | js/core/service/service-request.js:26 |
 | `status` | var | js/simulator/chat-controller.js:48 |
 | `status` | function | js/simulator/playback-controller.js:11 |
-| `status` | function | js/ui/task-launcher.js:619 |
+| `status` | function | js/ui/task-launcher.js:674 |
 | `statusLabel` | var | js/ai/novelai-only-mode.js:77 |
 | `stem` | var | js/assets/image2-client.js:15 |
 | `step` | var | js/shortcut.js:444 |
@@ -10307,7 +10337,7 @@
 | `style` | var | js/sidebar/text/sfx-palette.js:127 |
 | `style` | var | js/sidebar/text/vertical-text.js:11 |
 | `style` | var | js/ui/font/user-font-manager.js:37 |
-| `style` | var | js/ui/task-launcher.js:610 |
+| `style` | var | js/ui/task-launcher.js:665 |
 | `styleClass` | var | js/ui/toast.js:23 |
 | `styleId` | var | js/project-management.js:166 |
 | `styleKeys` | var | js/ui/third/ag-psd/ag-psd.js:11850 |
@@ -10461,7 +10491,7 @@
 | `t` | var | js/ui/task-launcher.js:146 |
 | `t` | var | js/ui/task-launcher.js:248 |
 | `t` | var | js/ui/task-launcher.js:257 |
-| `t` | var | js/ui/task-launcher.js:707 |
+| `t` | var | js/ui/task-launcher.js:769 |
 | `t` | var | scripts/audit/round3-process-audit-repro.cjs:4 |
 | `t` | var | scripts/panel-auto-test.cjs:12 |
 | `t0` | var | js/fabric/fabric-management.js:523 |
@@ -10908,7 +10938,7 @@
 | `thumbOnly` | var | scripts/asset-library-smoke-test.cjs:107 |
 | `thumbnail` | var | js/ai/queue/generation-task-manager.js:179 |
 | `thumbnail` | function | js/assets/asset-scanner.js:39 |
-| `tick` | function | js/ui/task-launcher.js:701 |
+| `tick` | function | js/ui/task-launcher.js:763 |
 | `tid` | var | js/ai/queue/spinner.js:97 |
 | `tile` | var | scripts/image-export-integration-test.cjs:154 |
 | `tileCalls` | var | scripts/image-export-smoke-test.cjs:330 |
@@ -11242,6 +11272,7 @@
 | `union` | var | js/sidebar/speechBubble/speech-bubble-freehand.js:232 |
 | `unionGeometries` | function | js/sidebar/speechBubble/speech-bubble-freehand.js:230 |
 | `unique` | function | js/ai/prompt/novelai-composition-director.js:121 |
+| `uniqueCast` | var | js/ui/task-launcher.js:497 |
 | `uniqueCoords` | var | js/sidebar/panel/knife/knife-geometry.js:190 |
 | `uniqueIndices` | var | js/core/util/fabric-util.js:437 |
 | `uniqueName` | function | js/assets/image2-client.js:14 |
@@ -11255,6 +11286,7 @@
 | `unitsPercent` | function | js/ui/third/ag-psd/ag-psd.js:5578 |
 | `unitsPercentF` | function | js/ui/third/ag-psd/ag-psd.js:5581 |
 | `unitsValue` | function | js/ui/third/ag-psd/ag-psd.js:5584 |
+| `unknownKey` | var | scripts/manga-production-handbook-test.cjs:106 |
 | `unlocked` | var | js/dashboard/dashboard-ui.js:947 |
 | `unnecessaryPaths` | var | js/core/svg/google-icon-helper.js:173 |
 | `unnecessaryRects` | var | js/core/svg/google-icon-helper.js:175 |
@@ -11275,7 +11307,7 @@
 | `updateAiTaskStatus` | function | js/ai/queue/generation-task-manager.js:69 |
 | `updateAllPageNumbers` | function | js/ui/bottom-bar.js:214 |
 | `updateBoldToggleUI` | function | js/sidebar/text/text-effect.js:216 |
-| `updateCastPreview` | function | js/ui/task-launcher.js:514 |
+| `updateCastPreview` | function | js/ui/task-launcher.js:568 |
 | `updateClipPath` | function | js/fabric/fabric-management.js:236 |
 | `updateContent` | function | html/Minual/custom-speechBubble.html:121 |
 | `updateContent` | function | html/Minual/effect.html:138 |
@@ -11314,7 +11346,7 @@
 | `updateObjectPositionsImpl` | function | js/sidebar/speechBubble/speech-bubble-text.js:314 |
 | `updateObjectSelectability` | function | js/sidebar/speechBubble/speech-bubble-freehand.js:368 |
 | `updateOnModification` | function | js/fabric/fabric-management.js:185 |
-| `updatePageCost` | function | js/ui/task-launcher.js:537 |
+| `updatePageCost` | function | js/ui/task-launcher.js:591 |
 | `updatePageNav` | function | js/ui/task-launcher.js:120 |
 | `updatePageSizeBadge` | function | js/canvas-manager.js:52 |
 | `updatePathClipPath` | function | js/fabric/fabric-management.js:274 |
@@ -11606,6 +11638,7 @@
 | `vm` | var | scripts/manga-import-smoke-test.cjs:3 |
 | `vm` | var | scripts/manga-page-size-smoke-test.cjs:4 |
 | `vm` | var | scripts/manga-page-structure-test.cjs:4 |
+| `vm` | var | scripts/manga-production-handbook-test.cjs:2 |
 | `vm` | var | scripts/manga-smart-text-test.cjs:3 |
 | `vm` | var | scripts/manga-text-ink-mask-test.cjs:4 |
 | `vm` | var | scripts/novelai-readable-error-test.cjs:6 |
@@ -11887,9 +11920,11 @@
 | `x1` | var | js/ai/manga-importer.js:490 |
 | `x1` | var | js/ai/manga-importer.js:1320 |
 | `x1` | var | js/sidebar/panel/knife/knife-geometry.js:263 |
+| `x1Polys` | var | scripts/manga-production-handbook-test.cjs:18 |
 | `x2` | var | js/ai/manga-importer.js:214 |
 | `x2` | var | js/ai/manga-importer.js:491 |
 | `x2` | var | js/ai/manga-importer.js:1321 |
+| `x2Polys` | var | scripts/manga-production-handbook-test.cjs:24 |
 | `xBands` | var | js/ai/manga-importer.js:422 |
 | `xDiff` | var | js/sidebar/panel/panel-manager.js:304 |
 | `xPos` | var | js/sidebar/text/vertical-textbox.js:562 |
@@ -11946,6 +11981,7 @@
 | `zero` | var | js/ui/third/ag-psd/ag-psd.js:15838 |
 | `zero` | function | js/ui/third/ag-psd/ag-psd.js:20190 |
 | `zero` | var | scripts/gpt-panel-line-protect-test.cjs:42 |
+| `zeroDimRubric` | var | scripts/manga-production-handbook-test.cjs:99 |
 | `zh` | var | scripts/beginner-ux-guards-test.cjs:25 |
 | `zhSrc` | var | scripts/beginner-ux-guards-test.cjs:24 |
 | `zip` | var | js/ai/provider/novelai-provider.js:460 |

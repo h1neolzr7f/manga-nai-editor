@@ -21,16 +21,16 @@
 | 種別 | 件数 |
 |------|------|
 | .bat | 10 |
-| .cjs | 121 |
+| .cjs | 122 |
 | .css | 42 |
 | .html | 10 |
-| .js | 237 |
+| .js | 238 |
 | .mjs | 2 |
 | .ps1 | 4 |
 | .py | 49 |
-| シンボル | 11961 |
+| シンボル | 11997 |
 | DOM id 定義 | 636 |
-| script 読み込み | 250 |
+| script 読み込み | 251 |
 | stylesheet 読み込み | 43 |
 
 ## 除外ディレクトリ
@@ -65,6 +65,7 @@
 | `MangaModelRequest` | js/ai/manga-model-request.js:84 |
 | `MangaPageStructure` | js/ai/manga-page-structure.js:273 |
 | `MangaPageStructureUI` | js/ai/manga-page-structure-ui.js:390 |
+| `MangaProductionHandbook` | js/ai/manga-production-handbook.js:661 |
 | `MangaSmartTextCore` | js/ai/manga-smart-text-core.js:120 |
 | `MangaSmartTextEditor` | js/ai/manga-smart-text-editor.js:573 |
 | `MangaTextInkMask` | js/ai/manga-text-ink-mask.js:105 |
@@ -140,7 +141,7 @@
 | `ScriptPageCore` | js/ai/script-page-core.js:88 |
 | `TestRunner` | js/core/debug.js:403 |
 | `__autoSwapPrefetch` | js/ai/auto-swap.js:726, js/ai/auto-swap.js:728 |
-| `__lastScript` | js/ui/task-launcher.js:555 |
+| `__lastScript` | js/ui/task-launcher.js:609 |
 | `__naiBrushEvt` | js/ui/visual-studio.js:142 |
 | `__naiBrushRaf` | js/ui/visual-studio.js:144, js/ui/visual-studio.js:145 |
 | `_clipboard` | js/shortcut.js:102 |
@@ -200,7 +201,7 @@
 |---------|------|------|
 | js/ui/third/ag-psd/ag-psd.js | 21378 |  |
 | js/ui/third/i18next.js | 6071 | exported changeLanguage, getText, getTranslation |
-| index.html | 3100 |  |
+| index.html | 3101 |  |
 | js/ai/manga-importer.js | 2524 |  |
 | js/ai/gpt-region-editor.js | 1840 | Manga-NAI-GPT: isolated, non-destructive image editing surface. |
 | scripts/novice-task-e2e.cjs | 1801 | Novice full-task acceptance (docs/GROK_BOT_FINAL_DELIVERY.md §4): a new user, no docs, real Chromium, |
@@ -214,10 +215,10 @@
 | js/sidebar/pen/pen-tools.js | 856 | exported finalizeGroup, selectEraserTool, selectMarqueeTool |
 | js/core/util/image-util.js | 855 | exported blobUrlToDataUrl, clipCopy, createCanvasFromFabricImage, cropAndDownload, cropImage, enhanceDarkImage, estimateExportSize, exportCanvasDataURL, exportDataUrlByteLength, flipHorizontally, flipVertically, formatByteSize, getCropAndDownloadLink, getCropAndDownloadLinkByMultiplier, getHeight, getLink, getWidth, hexToRgba, imageObject2Base64ImageEffectKeep, imageObject2DataURL, imageObject2DataURLByCrop, imgFile2webpFile, normalizeExportQuality, resolveExportBackground, resolveExportBitDepth, resolveExportFormat, resolveExportMultiplier, resolveExportMultiplierForDpi, rgbToHex, rgbaToHex, sendHtmlCanvas2FabricCanvas |
 | css/ui/dashboard.css | 853 | Dashboard Modal Overlay |
+| js/ui/task-launcher.js | 852 | 新手任务: a task-first entry on top of the existing editor. Each task is a short wizard that |
 | js/core/util/fabric-util.js | 836 | exported avtive, copy, createGUIDMap, deepCopy, fitImageToCanvas, getCanvasGUID, getCenterXByFabricObject, getCenterYByFabricObject, getImageObjectList, getLastObject, getObjectCount, getObjectList, getPointAtDistance, getRandomPanel, haveClipPath, initMessage, isGroup, isHorizontalText, isLayerPreview, isLine, isPanelType, isPath, isShapes, isSpeechBubbleSVG, isSpeechBubbleText, isText, isVerticalText, removeClipPath, removeGUID, replaceGuids, setGUID |
 | js/ai/prompt/auto/auto-prompt-util.js | 817 | generatePageList(btmGetGuidsSize()); |
 | css/simulator-chat.css | 790 | simulator-chat-area .simulator-chat-panel{ |
-| js/ui/task-launcher.js | 790 | 新手任务: a task-first entry on top of the existing editor. Each task is a short wizard that |
 | js/core/font/font-manager-core.js | 747 | exported fontClassName, fontInit |
 | js/sidebar/panel/panel-manager.js | 742 | exported Edit, changePanelFillColor, changePanelOpacity, changePanelStrokeColor, changePanelStrokeWidth, initialPutImage, isWithin, loadSVGPlusReset, panelAllChange, replaceImageObject, setPanelValue |
 | js/ai/auto-swap.js | 736 | 换角色 — character swap in place. |

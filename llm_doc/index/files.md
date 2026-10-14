@@ -62,7 +62,7 @@
 | html/TermsOfService/terms-of-service.html | 120 |  |
 | html/common.css | 343 |  |
 | html/functionList.html | 321 |  |
-| index.html | 3100 |  |
+| index.html | 3101 |  |
 | js/ai/ai-fill-core.js | 99 | AI 填充 (2.0 #2) pure helpers: mask geometry, soft edges, prompt, layer metadata. No DOM. |
 | js/ai/ai-fill.js | 406 | AI 填充 (2.0 #2): paint / smart-select an area + one sentence -> up to 3 candidates -> chosen one becomes a |
 | js/ai/ai-management.js | 115 | exported I2I, T2I, apiHeartbeat, clearAllQueues, existsWaitQueue |
@@ -85,6 +85,7 @@
 | js/ai/manga-model-request.js | 85 | Shared POST helper for the optional local models (Tesseract, Manga OCR, LaMa). |
 | js/ai/manga-page-structure-ui.js | 391 | Manga page structure inspector: Fabric snapshot -> sampled pixels -> reviewable panels. |
 | js/ai/manga-page-structure.js | 276 | Manga page structure v1: deterministic, low-cost XY-cut candidates. |
+| js/ai/manga-production-handbook.js | 674 | MangaProductionHandbook: programmatic implementation of the Manga-NAI Production Manual (06 workflow). |
 | js/ai/manga-smart-text-core.js | 123 | Shared, dependency-free geometry and light-bubble erase rules. |
 | js/ai/manga-smart-text-editor.js | 591 | Smart manga lettering workflow. |
 | js/ai/manga-text-ink-mask.js | 106 | Conservative dark-ink proposal for a user-selected TEXT rectangle. |
@@ -276,7 +277,7 @@
 | js/ui/prompt-manager.js | 72 | exported openPromptChangeFloatingWindow |
 | js/ui/psd-io.js | 193 | PSD import / export (2.0) with ag-psd (MIT, https://github.com/Agamnentzar/ag-psd), loaded on first use. |
 | js/ui/service-settings.js | 388 | 服务设置: the one place for every backend service. The real inputs other modules read |
-| js/ui/task-launcher.js | 790 | 新手任务: a task-first entry on top of the existing editor. Each task is a short wizard that |
+| js/ui/task-launcher.js | 852 | 新手任务: a task-first entry on top of the existing editor. Each task is a short wizard that |
 | js/ui/third/ag-psd/ag-psd.js | 21378 |  |
 | js/ui/third/base-translation/base-de.js | 563 |  |
 | js/ui/third/base-translation/base-en.js | 578 |  |
@@ -412,6 +413,7 @@
 | scripts/manga-ocr-refiner-test.py | 94 |  |
 | scripts/manga-page-size-smoke-test.cjs | 55 |  |
 | scripts/manga-page-structure-test.cjs | 116 | Red/green contract: inspect page pixels, split only credible gutters and |
+| scripts/manga-production-handbook-test.cjs | 123 |  |
 | scripts/manga-real-model-acceptance.py | 133 | !/usr/bin/env python3 |
 | scripts/manga-real-ui-acceptance.cjs | 161 | REAL (unmocked) Chromium acceptance for the local OCR -> Manga OCR -> LaMa flow. |
 | scripts/manga-sam-select-test.py | 142 |  |

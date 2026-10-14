@@ -4,7 +4,7 @@
 
 JS/CSS を編集したら `?v=` を上げてキャッシュを更新する。現在値の一覧はここを見る。
 
-## script（250 件）
+## script（251 件）
 
 | # | src | v | 属性 | 行 |
 |---|-----|---|------|----|
@@ -255,9 +255,10 @@ JS/CSS を編集したら `?v=` を上げてキャッシュを更新する。現
 | 245 | js/core/history-labels.js | v=1 | defer | 3092 |
 | 246 | js/core/command-history.js | v=2 | defer | 3093 |
 | 247 | js/core/manga-core.js | v=1 | defer | 3094 |
-| 248 | js/ai/balloon-layout-core.js | v=2 | defer | 3095 |
-| 249 | js/ai/balloon-layout.js | v=5 | defer | 3096 |
-| 250 | js/ai/script-page-core.js | v=1 | defer | 3097 |
+| 248 | js/ai/manga-production-handbook.js | v=1 | defer | 3095 |
+| 249 | js/ai/balloon-layout-core.js | v=2 | defer | 3096 |
+| 250 | js/ai/balloon-layout.js | v=5 | defer | 3097 |
+| 251 | js/ai/script-page-core.js | v=1 | defer | 3098 |
 
 ## stylesheet（43 件）
 

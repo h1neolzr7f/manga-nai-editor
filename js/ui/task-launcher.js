@@ -436,13 +436,25 @@ function pagePrompt(style,scene){
 return (style?style+'。':'')+'只画一个完整的单幅画面（这是漫画里的一格，但画面本身不要再分格、不要画边框、不要画对白框或任何文字）。画面内容：'+scene;
 }
 function sizeFor(r){var a=r.width/r.height;return a>1.2?'1536x1024':a<.83?'1024x1536':'1024x1024';}
-var pageJob=null,pageLayout=null;
+var pageJob=null,pageLayout=null,pageLayoutCode='';
 function startPage(t){
 var body=card(t);
 markStep(0);
 body.innerHTML='<div class="svc-row" role="radiogroup" aria-label="格子数">'+
 '<button type="button" class="ui-btn" data-panels="3" id="taskPage3">3 格</button>'+
-'<button type="button" class="ui-btn" data-panels="4" id="taskPage4">4 格</button></div>'+
+'<button type="button" class="ui-btn" data-panels="4" id="taskPage4">4 格</button>'+
+'<select class="ui-input" id="taskPageLayoutCode" aria-label="版式词库（R/A/X/S）" title="按《创作手册》5.2 版式词库选择规整/错落/异形/出血版式" style="max-width:210px">'+
+'<option value="">版式词库（默认矩形）</option>'+
+'<option value="A1">A1 · 上二小+下主大格(3格)</option>'+
+'<option value="A2">A2 · 右通高+左上下格(3格)</option>'+
+'<option value="X1">X1 · 斜切梯形动势格(3格)</option>'+
+'<option value="X2">X2 · 左侧出血主画面(3格)</option>'+
+'<option value="X3">X3 · 主画面内嵌小格(3格)</option>'+
+'<option value="R1">R1 · 规整上下双格(2格)</option>'+
+'<option value="R2">R2 · 规整四格网格(4格)</option>'+
+'<option value="A3">A3 · 错位中缝四格(4格)</option>'+
+'<option value="S">S · 单格全幅强调页(1格)</option>'+
+'</select></div>'+
 '<label class="ui-field"><span>统一画风 / 角色（每格都会用）</span><input id="taskPageStyle" type="text" data-nai-prompt="style tags shared by every panel" value="黑白日式漫画，清晰线稿，网点阴影，安全健康内容"></label>'+
 '<details class="task-script" id="taskScriptBox"><summary>粘贴剧本，自动分格</summary>'+
 '<textarea class="ui-textarea" id="taskScript" rows="6" placeholder="例如：&#10;第1格：清晨的车站，小雪在等车&#10;小雪：今天也要加油！&#10;第2格：列车进站&#10;旁白：列车准时到了。&#10;（不写「第N格」时，用空行分开每一格）"></textarea>'+
@@ -457,10 +469,52 @@ body.innerHTML='<div class="svc-row" role="radiogroup" aria-label="格子数">'+
 '<p class="ui-muted" id="taskPageCost"></p>'+
 '<p class="ui-muted" id="taskPageReferences">每格「出场人物」可指定角色或选空镜。自动承接只按文字推断，请核对每格人物名单。角色档案的外观与标签会作为文字约束；当前整页 NovelAI 路径不发送角色参考图片，仍需逐格检查一致性。</p>'+
 '<div class="svc-row"><button type="button" class="ui-btn ui-btn-primary" id="taskPageGo" disabled>生成整页</button>'+
+'<button type="button" class="ui-btn ui-btn-ghost" id="taskPageCopy06Prompt" title="按《创作手册》6.2 节生成六层整页 Prompt（含 FRAME ONLY 与末尾唯一 Text: 块）">六层整页 Prompt</button>'+
 '<button type="button" class="ui-btn" id="taskPageCancel" hidden>停止</button></div>'+
 '<p id="taskPageStatus" role="status" class="ui-muted"></p>';
-body.querySelectorAll('[data-panels]').forEach(function(b){b.addEventListener('click',function(){pageLayout=null;choosePanels(Number(b.dataset.panels));});});
+body.querySelectorAll('[data-panels]').forEach(function(b){b.addEventListener('click',function(){pageLayout=null;pageLayoutCode='';var sel=$('taskPageLayoutCode');if(sel)sel.value='';choosePanels(Number(b.dataset.panels));});});
+var layoutSel=$('taskPageLayoutCode');
+if(layoutSel){
+layoutSel.addEventListener('change',function(){
+var code=layoutSel.value;
 pageLayout=null;
+pageLayoutCode=code;
+if(code&&window.MangaProductionHandbook){
+var def=window.MangaProductionHandbook.getLayout(code);
+choosePanels(def.panelCount);
+}
+});
+}
+var copy06Btn=$('taskPageCopy06Prompt');
+if(copy06Btn){
+copy06Btn.addEventListener('click',function(){
+if(!window.MangaProductionHandbook)return;
+var scenes=Array.prototype.map.call(document.querySelectorAll('#taskPagePanels [data-scene]'),function(x){return x.value.trim();});
+var lines=Array.prototype.map.call(document.querySelectorAll('#taskPagePanels [data-line]'),function(x){return x.value.trim();});
+if(!scenes.length){pageStatus('请先选择格子数或版式词库，并填写每格画面。',true);return;}
+var lib=window.CharacterLibrary&&CharacterLibrary._state&&CharacterLibrary._state.cards||[];
+var casts=pageCasts(scenes,lib,castSelections());
+var uniqueCast=[];
+casts.forEach(function(list){(list||[]).forEach(function(c){if(c&&uniqueCast.indexOf(c)<0)uniqueCast.push(c);});});
+var code=pageLayoutCode||(scenes.length===2?'R1':scenes.length===4?'R2':scenes.length===1?'S':'A1');
+var compiled=window.MangaProductionHandbook.compileWholePagePrompt({
+layoutCode:code,
+style:($('taskPageStyle').value||'').trim(),
+cast:uniqueCast.map(function(c){return {name:c.name,description:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}),
+panels:scenes.map(function(sc,idx){return {scene:sc,line:lines[idx]||''};})
+});
+if(navigator.clipboard&&navigator.clipboard.writeText){
+navigator.clipboard.writeText(compiled.prompt).then(function(){
+pageStatus('已复制《创作手册》6.2 六层整页 Prompt（版式 '+compiled.layoutCode+'，共 '+compiled.textBlockCount+' 处台词块）。');
+}).catch(function(){
+pageStatus(compiled.prompt);
+});
+}else{
+pageStatus(compiled.prompt);
+}
+});
+}
+pageLayout=null;pageLayoutCode='';
 // the open page already has panels (white gutters) → offer its layout for the new page
 if(window.PanelAuto&&canvas.getObjects().some(function(o){return o.type==='image';}))PanelAuto.get().then(function(r){
 var n=r.panels.length;if(n<2||n>8||!$('taskPage3'))return;
@@ -592,7 +646,8 @@ more.hidden=false;more.textContent='展开每格内容';
 function pageStatus(t,isError){var s=$('taskPageStatus');if(s){s.textContent=t;s.classList.toggle('is-error',!!isError);}}
 // Frames must be polygons: image clipping (updateClipPath) follows polygon points, a Rect is not clipped.
 function makePanel(r,index){
-var p=new fabric.Polygon([{x:r.left,y:r.top},{x:r.left+r.width,y:r.top},{x:r.left+r.width,y:r.top+r.height},{x:r.left,y:r.top+r.height}],{
+var pts=Array.isArray(r.points)&&r.points.length>=3?r.points:[{x:r.left,y:r.top},{x:r.left+r.width,y:r.top},{x:r.left+r.width,y:r.top+r.height},{x:r.left,y:r.top+r.height}];
+var p=new fabric.Polygon(pts,{
 fill:'#ffffff',stroke:'#000000',strokeWidth:3,strokeUniform:true,objectCaching:false,isPanel:true,name:'分镜 '+index});
 if(typeof setText2ImageInitPrompt==='function')setText2ImageInitPrompt(p);
 if(typeof setPanelValue==='function')setPanelValue(p);
@@ -643,10 +698,17 @@ job.canvas=canvas;job.guid=typeof getCanvasGUID==='function'?getCanvasGUID():nul
 if(!current())return;
 W=1200;H=1700;
 }else if(!canvas.getObjects().length&&typeof resizeCanvasToObject==='function'){W=1200;H=1700;resizeCanvasToObject(W,H);}
-var rects=layout&&layout.panels.length===scenes.length?
+var chosenLayoutCode=pageLayoutCode;
+var rects;
+if(chosenLayoutCode&&window.MangaProductionHandbook){
+var polySpecs=window.MangaProductionHandbook.buildLayoutPolygons(chosenLayoutCode,W,H);
+rects=polySpecs.map(function(sp){return {left:sp.bbox.left,top:sp.bbox.top,width:sp.bbox.width,height:sp.bbox.height,points:sp.points,slot:sp.slot};});
+}else{
+rects=layout&&layout.panels.length===scenes.length?
 layout.panels.map(function(q){var kx=W/layout.W,ky=H/layout.H;return {left:Math.round(q.x*kx),top:Math.round(q.y*ky),width:Math.round(q.w*kx),height:Math.round(q.h*ky)};}):
 layoutRects(scenes.length,W,H);
 rects=readingSorted(rects);
+}
 // the whole generated page is ONE history step: one Ctrl+Z takes it all back
 if(typeof changeDoNotSaveHistory==='function'){changeDoNotSaveHistory();job.historyPaused=true;}
 var panels=rects.map(function(r,i){var p=makePanel(r,i+1);canvas.add(p);return p;});
