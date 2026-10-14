@@ -532,6 +532,158 @@
     }
   }
 
+  // One-step Bubble Retouch Patch for NAI V5 native Chinese 06 whole-page outputs:
+  // Samples the bright paper/bubble background around & inside `rawBox`, creates a feathered cover patch,
+  // and immediately places an editable vertical/horizontal text layer on top in one Undo step.
+  async function applyQuickRetouchPatch(rawBox, textStr, opts) {
+    const o = opts || {};
+    const c = getCanvas();
+    if (!c) throw new Error('画布未就绪');
+    const box = core.normalizeBox(rawBox, c.getWidth(), c.getHeight());
+    if (!box) throw new Error('修字框选区域过小或无效');
+    const cleanText = String(textStr != null ? textStr : '输入新台词').trim() || '输入新台词';
+
+    const original = await loadImage(snapshot(c));
+    const pixelCanvas = document.createElement('canvas');
+    pixelCanvas.width = c.getWidth();
+    pixelCanvas.height = c.getHeight();
+    const px = pixelCanvas.getContext('2d', { willReadFrequently: true });
+    px.drawImage(original, 0, 0, pixelCanvas.width, pixelCanvas.height);
+
+    // Combine boundary ring samples with interior samples and estimate bright paper color
+    const ringRgba = boundarySamples(px, box, pixelCanvas.width, pixelCanvas.height);
+    const bgEst = core.computeBubblePatchColor
+      ? core.computeBubblePatchColor(ringRgba)
+      : { r: 255, g: 255, b: 255 };
+    const patch = makeErasure(pixelCanvas, box, bgEst);
+    const eraseLayer = await fabricImage(patch.dataUrl);
+    eraseLayer.set({
+      left: patch.x,
+      top: patch.y,
+      selectable: true,
+      name: '气泡修字 · 底色遮盖',
+      mangaSmartText: 'erase-patch'
+    });
+
+    const preferVert = o.vertical != null ? !!o.vertical : (box.height >= box.width * 0.9);
+    const vertical = preferVert && typeof fabric.VerticalTextbox === 'function';
+    const fit = core.fitText(cleanText, box, vertical, measureText, 0);
+    const TextClass = vertical ? fabric.VerticalTextbox : fabric.Textbox;
+    const lineHeight = 1.16;
+    const blockHeight = vertical ? box.height : fit.lines * fit.fontSize * lineHeight;
+    const textbox = new TextClass(fit.text, {
+      left: box.x,
+      top: vertical ? box.y : box.y + Math.max(0, (box.height - blockHeight) / 2),
+      width: Math.max(32, box.width),
+      fontFamily: 'Arial',
+      fontSize: fit.fontSize,
+      lineHeight,
+      fill: '#151515',
+      textAlign: 'center',
+      breakWords: false
+    });
+    if (typeof textbox.getBoundingRect === 'function') {
+      textbox.setCoords();
+      const r = textbox.getBoundingRect(true, true);
+      if (r && r.width > 0 && r.height > 0) {
+        textbox.set({
+          left: textbox.left + (box.x + box.width / 2) - (r.left + r.width / 2),
+          top: textbox.top + (box.y + box.height / 2) - (r.top + r.height / 2)
+        });
+        textbox.setCoords();
+      }
+    }
+    textbox.set('mangaSmartFit', { fontSize: fit.fontSize, wrapped: fit.wrapped, box, textBox: box });
+    textbox.set('name', '气泡修字 · 可编辑文字');
+    textbox.set('mangaSmartText', 'editable-subtitle');
+
+    if (typeof changeDoNotSaveHistory === 'function') changeDoNotSaveHistory();
+    try {
+      c.add(eraseLayer);
+      c.add(textbox);
+      c.setActiveObject(textbox);
+      c.requestRenderAll();
+    } finally {
+      if (typeof changeDoSaveHistory === 'function') changeDoSaveHistory();
+    }
+    if (typeof saveStateByManual === 'function') saveStateByManual();
+    if (typeof updateLayerPanel === 'function') updateLayerPanel();
+    state.appliedCount = (state.appliedCount || 0) + 1;
+    message('已生成气泡盖白遮罩与竖排文字图层，可直接双击修改台词（Ctrl+Z 可撤销）。');
+    return { eraseLayer, textbox, color: bgEst };
+  }
+
+  function beginQuickRetouchPatch(defaultText) {
+    const c = getCanvas();
+    if (!c || !c.upperCanvasEl) return message('请先打开一页漫画。', true);
+    stopSelection();
+    const bounds = c.upperCanvasEl.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return message('画布不可见。', true);
+    const overlay = make('div', undefined, 'manga-smart-overlay');
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const pad = {
+      left: Math.max(0, Math.min(48, bounds.left)),
+      top: Math.max(0, Math.min(48, bounds.top)),
+      right: Math.max(0, Math.min(48, vw - bounds.right)),
+      bottom: Math.max(0, Math.min(48, vh - bounds.bottom))
+    };
+    Object.assign(overlay.style, {
+      left: (bounds.left - pad.left) + 'px',
+      top: (bounds.top - pad.top) + 'px',
+      width: (bounds.width + pad.left + pad.right) + 'px',
+      height: (bounds.height + pad.top + pad.bottom) + 'px'
+    });
+    const guide = make('div', undefined, 'manga-smart-rectangle');
+    overlay.appendChild(guide);
+    document.body.appendChild(overlay);
+    let start = null;
+    const clamp = (v, max) => Math.max(0, Math.min(max, v));
+    const toPage = e => ({
+      x: clamp((e.clientX - bounds.left) / bounds.width * c.getWidth(), c.getWidth()),
+      y: clamp((e.clientY - bounds.top) / bounds.height * c.getHeight(), c.getHeight())
+    });
+    function dismiss() { stopSelection(); }
+    const keyListener = e => { if (e.key === 'Escape') dismiss(); };
+    const movement = () => { dismiss(); message('画布已移动，请重新框选。', true); };
+    window.addEventListener('resize', movement);
+    window.addEventListener('scroll', movement, true);
+    document.addEventListener('keydown', keyListener);
+    state.selection = {
+      overlay,
+      cleanup: () => {
+        window.removeEventListener('resize', movement);
+        window.removeEventListener('scroll', movement, true);
+        document.removeEventListener('keydown', keyListener);
+      }
+    };
+    overlay.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      start = toPage(e);
+      overlay.setPointerCapture(e.pointerId);
+    });
+    overlay.addEventListener('pointermove', e => {
+      if (!start) return;
+      const end = toPage(e);
+      const left = Math.min(start.x, end.x), top = Math.min(start.y, end.y);
+      Object.assign(guide.style, {
+        left: pad.left + left / c.getWidth() * bounds.width + 'px',
+        top: pad.top + top / c.getHeight() * bounds.height + 'px',
+        width: Math.abs(start.x - end.x) / c.getWidth() * bounds.width + 'px',
+        height: Math.abs(start.y - end.y) / c.getHeight() * bounds.height + 'px'
+      });
+    });
+    overlay.addEventListener('pointerup', e => {
+      if (!start) return;
+      const box = core.normalizeManualDrag(start, toPage(e), c.getWidth(), c.getHeight());
+      dismiss();
+      if (!box) return message('选区太小，请重新框选。', true);
+      applyQuickRetouchPatch(box, defaultText || '新台词').catch(err => message(err.message || String(err), true));
+    });
+    message('在需要修字的原生气泡文字上拖动框选，松开即自动盖白并放入竖排文字图层（Esc 取消）。');
+  }
+
   function render() {
     if ($('mangaSmartTextPanel')) return;
     const header = document.querySelector('#canvas-area .area-header');
@@ -552,6 +704,7 @@
       '<option value="kor+eng">韩语＋英语</option></select></label>',
       '<div class="manga-smart-line"><button id="mangaSmartDetect" type="button">检测本页文字</button>',
       '<button id="mangaSmartManual" type="button">手动框选字幕</button>',
+      '<button id="mangaSmartQuickPatch" type="button" title="框选 06 直出图里写错的原生文字区域，一键采样气泡底色盖白并生成竖排可编辑文字层">气泡盖白贴字</button>',
       '<button id="mangaSmartCancel" type="button" hidden>取消识别</button></div>',
       '<div id="mangaSmartRegions" class="manga-smart-regions"></div>',
       '<button id="mangaSmartApply" type="button" disabled>应用为可编辑图层</button>',
@@ -565,13 +718,14 @@
     $('mangaSmartDetect').addEventListener('click', detect);
     $('mangaSmartCancel').addEventListener('click', cancelRequest);
     $('mangaSmartManual').addEventListener('click', beginManual);
+    $('mangaSmartQuickPatch').addEventListener('click', () => beginQuickRetouchPatch());
     $('mangaSmartApply').addEventListener('click', apply);
     message('先检测本页文字，或手动框选区域。');
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
   else render();
   window.MangaSmartTextEditor = {
-    detect, apply, beginManual, stopSelection, ensure, prefetch, syncPage,
+    detect, apply, beginManual, beginQuickRetouchPatch, applyQuickRetouchPatch, stopSelection, ensure, prefetch, syncPage,
     open: simple => { const p = $('mangaSmartTextPanel'); if (!p) return false; p.hidden = false; p.classList.toggle('is-simple', !!simple); return true; },
     setSimple: on => { const p = $('mangaSmartTextPanel'); if (p) p.classList.toggle('is-simple', !!on); },
     progress: () => ({ page: state.pageId, drafts: state.drafts.length, busy: !!state.busy, applied: state.appliedCount || 0,

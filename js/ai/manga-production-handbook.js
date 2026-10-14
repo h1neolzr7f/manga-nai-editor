@@ -371,6 +371,12 @@
       allowsInset: !!layout.allowsInset
     });
 
+    const charCaptions = compileSpatialCharCaptions({
+      layoutCode: layout.code,
+      cast: s.cast,
+      panels
+    });
+
     return {
       prompt,
       negativePrompt: cleanedNegative.negative,
@@ -378,8 +384,334 @@
       layoutCode: layout.code,
       panelCount: layout.panelCount,
       textBlockCount: textBlocks.length,
-      textCharsTotal: textBlocks.join('').length
+      textCharsTotal: textBlocks.join('').length,
+      charCaptions
     };
+  }
+
+  function quantizeGridCenter(cx, cy) {
+    const q = v => Math.min(4, Math.max(0, Math.floor(Number(v) * 5))) * 0.2 + 0.1;
+    return { x: +q(cx).toFixed(1), y: +q(cy).toFixed(1) };
+  }
+
+  // Maps multi-character appearances across 06 whole-page panels to NovelAI V4/V5 spatial char_captions centers
+  function compileSpatialCharCaptions(spec) {
+    const s = spec || {};
+    const code = String(s.layoutCode || (s.layout && s.layout.code) || 'A1').toUpperCase();
+    const layout = getLayout(code);
+    const W = FREE_LIMITS.defaultWidth;
+    const H = FREE_LIMITS.defaultHeight;
+    const polySpecs = buildLayoutPolygons(layout.code, W, H);
+    const panels = Array.isArray(s.panels) ? s.panels : [];
+
+    // Build known cast lookup from s.cast
+    const castCatalog = [];
+    if (Array.isArray(s.cast)) {
+      s.cast.forEach(c => {
+        if (!c) return;
+        if (typeof c === 'object' && (c.description || c.prompt)) {
+          castCatalog.push({
+            name: String(c.name || '').trim(),
+            prompt: String(c.prompt || c.description || '').trim().replace(/\.$/, ''),
+            negative: String(c.negative || '').trim()
+          });
+        } else if (typeof c === 'string') {
+          const m = /^([^:：]{1,24})\s*[:：]\s*(.+)$/.exec(c.trim());
+          if (m) {
+            castCatalog.push({ name: m[1].trim(), prompt: m[2].trim().replace(/\.$/, ''), negative: '' });
+          }
+        }
+      });
+    }
+
+    const byKey = new Map();
+    const recordChar = (name, prompt, negative, gridPt) => {
+      const cleanPrompt = String(prompt || '').trim();
+      if (!cleanPrompt) return;
+      const key = (name ? name.toLowerCase() + '::' : '') + cleanPrompt.toLowerCase();
+      if (!byKey.has(key)) {
+        byKey.set(key, {
+          name: name || '',
+          prompt: cleanPrompt,
+          negative: String(negative || '').trim(),
+          centers: []
+        });
+      }
+      const entry = byKey.get(key);
+      if (gridPt && !entry.centers.some(pt => pt.x === gridPt.x && pt.y === gridPt.y)) {
+        entry.centers.push(gridPt);
+      }
+    };
+
+    for (let i = 0; i < layout.panelCount; i++) {
+      const p = panels[i] || {};
+      const poly = polySpecs[i] || polySpecs[0];
+      const bbox = poly ? poly.bbox : { left: 0, top: 0, width: W, height: H };
+      const gridPt = quantizeGridCenter((bbox.left + bbox.width / 2) / W, (bbox.top + bbox.height / 2) / H);
+
+      if (Array.isArray(p.characters) && p.characters.length > 0) {
+        p.characters.forEach(ch => {
+          if (!ch) return;
+          recordChar(ch.name || '', ch.prompt || ch.description || '', ch.negative || '', gridPt);
+        });
+      } else if (castCatalog.length > 0) {
+        const textBlob = [
+          p.visual_en, p.scene, p.visual_zh, p.line,
+          ...(Array.isArray(p.lines) ? p.lines.map(l => (l.speaker || '') + ' ' + (l.text || l.zh || '')) : [])
+        ].filter(Boolean).join(' ');
+        const matched = castCatalog.filter(c => c.name && textBlob.indexOf(c.name) >= 0);
+        const activeCast = matched.length > 0 ? matched : (castCatalog.length === 1 ? castCatalog : []);
+        activeCast.forEach(c => recordChar(c.name, c.prompt, c.negative, gridPt));
+      }
+    }
+
+    // Fallback: if castCatalog has entries that didn't match any specific panel, assign page center
+    if (byKey.size === 0 && castCatalog.length > 0) {
+      castCatalog.slice(0, 6).forEach((c, idx) => {
+        const poly = polySpecs[idx % polySpecs.length];
+        const bbox = poly ? poly.bbox : { left: 0, top: 0, width: W, height: H };
+        recordChar(c.name, c.prompt, c.negative, quantizeGridCenter((bbox.left + bbox.width / 2) / W, (bbox.top + bbox.height / 2) / H));
+      });
+    }
+
+    return Array.from(byKey.values()).slice(0, 6).map(item => ({
+      name: item.name,
+      prompt: item.prompt,
+      negative: item.negative,
+      center: item.centers[0] || { x: 0.5, y: 0.5 },
+      centers: item.centers.length ? item.centers : [{ x: 0.5, y: 0.5 }]
+    }));
+  }
+
+  // Infer closest R1-S layoutCode from panel bounding boxes on a canvas
+  function inferLayoutCodeFromPanels(panelBoxes, pageW, pageH) {
+    const W = Math.max(200, Number(pageW) || 1200);
+    const H = Math.max(200, Number(pageH) || 1700);
+    const list = Array.isArray(panelBoxes) ? panelBoxes : [];
+    const n = list.length;
+    if (n <= 1) return 'S';
+    if (n === 2) return 'R1';
+    if (n >= 4) {
+      // Check if vertical gutters are staggered (A3) vs aligned (R2)
+      const sorted = list.slice(0, 4).sort((a, b) => (a.top - b.top) || (a.left - b.left));
+      if (sorted.length === 4) {
+        const topWidths = [sorted[0].width, sorted[1].width];
+        const botWidths = [sorted[2].width, sorted[3].width];
+        if (Math.abs(topWidths[0] - topWidths[1]) > W * 0.08 || Math.abs(botWidths[0] - botWidths[1]) > W * 0.08) {
+          return 'A3';
+        }
+      }
+      return 'R2';
+    }
+    // n === 3: distinguish A1, A2, X1, X2, X3
+    // Check if one panel overlaps/insets another -> X3
+    for (let i = 0; i < list.length; i++) {
+      for (let j = i + 1; j < list.length; j++) {
+        const a = list[i], b = list[j];
+        const ix = Math.max(0, Math.min(a.left + a.width, b.left + b.width) - Math.max(a.left, b.left));
+        const iy = Math.max(0, Math.min(a.top + a.height, b.top + b.height) - Math.max(a.top, b.top));
+        const minArea = Math.min(a.width * a.height, b.width * b.height);
+        if (minArea > 0 && (ix * iy) / minArea > 0.45) return 'X3';
+      }
+    }
+    // Check if there is a tall right frame or tall left bleed frame
+    const tallPanels = list.filter(b => b.height >= H * 0.72);
+    if (tallPanels.length === 1) {
+      const tall = tallPanels[0];
+      if (tall.left <= W * 0.03) return 'X2';
+      if (tall.hasSlantedEdge) return 'X1';
+      return 'A2';
+    }
+    return 'A1';
+  }
+
+  // Extract a 06 whole-page spec from a live Fabric canvas or serialized page object list
+  function extractPageSpecFromCanvas(canvasOrState, opts) {
+    const o = opts || {};
+    const c = canvasOrState;
+    const W = (c && typeof c.getWidth === 'function' ? c.getWidth() / (typeof c.getZoom === 'function' ? c.getZoom() || 1 : 1) : (c && c.width)) || 1200;
+    const H = (c && typeof c.getHeight === 'function' ? c.getHeight() / (typeof c.getZoom === 'function' ? c.getZoom() || 1 : 1) : (c && c.height)) || 1700;
+    const objs = c && typeof c.getObjects === 'function' ? c.getObjects() : (c && Array.isArray(c.objects) ? c.objects : []);
+
+    const rawPanels = objs.filter(obj => obj && obj.isPanel);
+    const images = objs.filter(obj => obj && obj.type === 'image' && obj.visible !== false);
+    const textObjs = objs.filter(obj =>
+      obj && (obj.type === 'textbox' || obj.type === 'i-text' || obj.type === 'vertical-textbox' || obj.type === 'text') &&
+      obj.visible !== false && String(obj.text || '').trim()
+    );
+
+    const bboxOf = obj => {
+      if (Array.isArray(obj.points) && obj.points.length >= 3) {
+        const xs = obj.points.map(p => p.x + (obj.left || 0));
+        const ys = obj.points.map(p => p.y + (obj.top || 0));
+        // If fabric polygon already has bounding box properties, prefer positive coordinates
+        const minX = Math.min.apply(null, obj.points.map(p => p.x));
+        const maxX = Math.max.apply(null, obj.points.map(p => p.x));
+        const minY = Math.min.apply(null, obj.points.map(p => p.y));
+        const maxY = Math.max.apply(null, obj.points.map(p => p.y));
+        let slanted = false;
+        for (let i = 0; i < obj.points.length; i++) {
+          const p1 = obj.points[i], p2 = obj.points[(i + 1) % obj.points.length];
+          if (Math.abs(p1.x - p2.x) > 8 && Math.abs(p1.y - p2.y) > 8) slanted = true;
+        }
+        if (minX >= 0 && minY >= 0 && maxX <= W * 1.1 && maxY <= H * 1.1) {
+          return { left: minX, top: minY, width: Math.max(1, maxX - minX), height: Math.max(1, maxY - minY), hasSlantedEdge: slanted, obj, xs, ys };
+        }
+      }
+      if (typeof obj.getBoundingRect === 'function') {
+        const r = obj.getBoundingRect(true, true);
+        if (r && r.width > 0 && r.height > 0) return { left: r.left, top: r.top, width: r.width, height: r.height, obj };
+      }
+      return {
+        left: Number(obj.left) || 0,
+        top: Number(obj.top) || 0,
+        width: (Number(obj.width) || 200) * (Number(obj.scaleX) || 1),
+        height: (Number(obj.height) || 200) * (Number(obj.scaleY) || 1),
+        obj
+      };
+    };
+
+    const panelBoxes = rawPanels.map(bboxOf);
+    // Sort in manga reading order: top-to-bottom rows, right-to-left within row
+    const rowTolerance = H * 0.14;
+    panelBoxes.sort((a, b) => {
+      if (Math.abs(a.top - b.top) > rowTolerance) return a.top - b.top;
+      return (b.left + b.width / 2) - (a.left + a.width / 2);
+    });
+
+    const explicitCode = o.layoutCode || (c && c.handbookLayoutCode) || '';
+    const layoutCode = explicitCode ? getLayout(explicitCode).code : inferLayoutCodeFromPanels(panelBoxes, W, H);
+    const layout = getLayout(layoutCode);
+
+    // Map texts & images to panels
+    const panelSpecs = [];
+    const targetCount = Math.max(1, panelBoxes.length || layout.panelCount);
+    const fallbackPolys = buildLayoutPolygons(layoutCode, W, H);
+
+    for (let i = 0; i < targetCount; i++) {
+      const pb = panelBoxes[i] || fallbackPolys[i]?.bbox || { left: 0, top: 0, width: W, height: H };
+      panelSpecs.push({
+        index: i,
+        slot: layout.slots[i] || ('FRAME ' + (i + 1)),
+        bbox: { left: pb.left, top: pb.top, width: pb.width, height: pb.height },
+        scene: (pb.obj && (pb.obj.tempPrompt || pb.obj.panelScene || pb.obj.text2imgPrompt)) || '',
+        lines: []
+      });
+    }
+
+    // Match images to panels to recover tempPrompt if present
+    images.forEach(img => {
+      const ib = bboxOf(img);
+      const cx = ib.left + ib.width / 2, cy = ib.top + ib.height / 2;
+      const prompt = String(img.tempPrompt || img.panelScene || '').trim();
+      if (!prompt) return;
+      let best = panelSpecs[0], bestDist = Infinity;
+      panelSpecs.forEach(ps => {
+        const b = ps.bbox;
+        const inside = cx >= b.left && cx <= b.left + b.width && cy >= b.top && cy <= b.top + b.height;
+        const d = Math.hypot(cx - (b.left + b.width / 2), cy - (b.top + b.height / 2)) * (inside ? 0.1 : 1);
+        if (d < bestDist) { bestDist = d; best = ps; }
+      });
+      if (best && !best.scene) best.scene = prompt;
+    });
+
+    // Match text objects to nearest/enclosing panel
+    textObjs.forEach(tObj => {
+      const tb = bboxOf(tObj);
+      const cx = tb.left + tb.width / 2, cy = tb.top + tb.height / 2;
+      const cleanText = String(tObj.text || '').replace(/\s+/g, ' ').trim();
+      if (!cleanText) return;
+      let best = panelSpecs[0], bestDist = Infinity;
+      panelSpecs.forEach(ps => {
+        const b = ps.bbox;
+        const inside = cx >= b.left && cx <= b.left + b.width && cy >= b.top && cy <= b.top + b.height;
+        const d = Math.hypot(cx - (b.left + b.width / 2), cy - (b.top + b.height / 2)) * (inside ? 0.1 : 1);
+        if (d < bestDist) { bestDist = d; best = ps; }
+      });
+      if (best) {
+        best.lines.push({ speaker: tObj.speaker || '', text: cleanText });
+      }
+    });
+
+    panelSpecs.forEach((ps, idx) => {
+      if (!ps.scene) {
+        ps.scene = ps.lines.length
+          ? ('character speaking in frame ' + (idx + 1))
+          : ('manga scene in frame ' + (idx + 1));
+      }
+      ps.line = ps.lines.map(l => (l.speaker ? l.speaker + '：' + l.text : l.text)).join(' / ');
+    });
+
+    const totalChars = textObjs.reduce((acc, t) => acc + Array.from(String(t.text || '').replace(/\s+/g, '')).length, 0);
+    return {
+      layoutCode: layout.code,
+      layoutName: layout.name,
+      category: layout.category,
+      width: W,
+      height: H,
+      style: o.style || 'monochrome, greyscale, manga lineart, screentone, comic',
+      cast: o.cast || [],
+      panels: panelSpecs.slice(0, layout.panelCount),
+      bubbleCount: textObjs.length,
+      textCharsTotal: totalChars
+    };
+  }
+
+  // Automatically score a page on the 5 Handbook Rubric Dimensions (§5.4)
+  function autoScoreCanvasPage(specOrCanvas) {
+    const spec = (specOrCanvas && Array.isArray(specOrCanvas.panels) && specOrCanvas.layoutCode)
+      ? specOrCanvas
+      : extractPageSpecFromCanvas(specOrCanvas);
+    const panels = spec.panels || [];
+    const layout = getLayout(spec.layoutCode || 'A1');
+    const blockers = [];
+
+    // 1. narrative (0-2): has valid panels and purposeful progression
+    let narrative = panels.length >= layout.panelCount ? 2 : (panels.length > 0 ? 1 : 0);
+
+    // 2. cameraAction (0-2): checks if scenes have camera/shot diversity or CN->EN tags
+    const expandedScenes = panels.map(p => expandSceneToEnglishTags(p.scene || p.visual_en || ''));
+    const hasCameraVariety = expandedScenes.some(s => /\b(close-up|medium shot|wide shot|from above|from below|from behind|profile|dutch angle)\b/i.test(s));
+    let cameraAction = hasCameraVariety ? 2 : (expandedScenes.some(Boolean) ? 1 : 0);
+
+    // 3. layoutFocus (0-2): matches a valid R/A/X/S layout with clear primary frame
+    let layoutFocus = LAYOUT_VOCABULARY[layout.code] ? 2 : 1;
+
+    // 4. characterEmotion (0-2): checks emotion/action cues or dialogue presence
+    const hasEmotionOrLines = expandedScenes.some(s => /\b(smile|surprised|serious|tears|crying|running|clenched|reaching|looking)\b/i.test(s)) ||
+      panels.some(p => normalizePanelLines(p).length > 0);
+    let characterEmotion = hasEmotionOrLines ? 2 : 1;
+
+    // 5. readingFlow (0-2): checks bubble counts per panel (<=2) and char capacity (<=30)
+    let readingFlow = 2;
+    panels.forEach((p, idx) => {
+      const lines = normalizePanelLines(p);
+      if (lines.length > 2) {
+        readingFlow = Math.min(readingFlow, 1);
+      }
+      lines.forEach(l => {
+        const len = Array.from(l.text).length;
+        if (len > 30) {
+          readingFlow = Math.min(readingFlow, 1);
+          if (len > 45) blockers.push('第 ' + (idx + 1) + ' 格气泡字数严重超载（' + len + ' 字 > 30 字上限）');
+        }
+      });
+    });
+
+    const evalResult = evaluatePageRubric({
+      narrative,
+      cameraAction,
+      layoutFocus,
+      characterEmotion,
+      readingFlow
+    }, blockers);
+
+    return Object.assign({}, evalResult, {
+      layoutCode: layout.code,
+      layoutName: layout.name,
+      panelCount: panels.length,
+      textCharsTotal: spec.textCharsTotal || 0
+    });
   }
 
   const CN_SCENE_LEXICON = Object.freeze([
@@ -593,6 +925,48 @@
     };
   }
 
+  // Automatically resolves consecutive identical layouts and ensures 6-page windows include R, A, and X/S layouts
+  function optimizeSixPageRhythm(pages) {
+    const list = Array.isArray(pages) ? pages : [];
+    const cycleByPanels = {
+      1: ['S'],
+      2: ['R1'],
+      3: ['A1', 'X1', 'A2', 'X2', 'X3'],
+      4: ['R2', 'A3']
+    };
+    const defaultSixCycle = ['R2', 'A1', 'X1', 'A2', 'X2', 'A3'];
+    return list.map((p, idx) => {
+      const panels = Array.isArray(p.panels) ? p.panels : [];
+      const pCount = panels.length;
+      const curCode = String((p.layout && p.layout.code) || p.layoutCode || '').toUpperCase();
+      let nextCode = curCode && LAYOUT_VOCABULARY[curCode] ? curCode : defaultSixCycle[idx % defaultSixCycle.length];
+      if (pCount >= 1 && pCount <= 4 && cycleByPanels[pCount]) {
+        const pool = cycleByPanels[pCount];
+        nextCode = pool[idx % pool.length];
+      }
+      // Guarantee 6-page window has at least 1 R and 1 X/S if possible
+      if (list.length >= 6 && idx % 6 === 0 && !['R1', 'R2'].includes(nextCode) && (pCount === 0 || pCount >= 3)) {
+        nextCode = 'R2';
+      } else if (list.length >= 6 && idx % 6 === 2 && !['X1', 'X2', 'X3', 'S'].includes(nextCode) && (pCount === 0 || pCount === 3)) {
+        nextCode = 'X1';
+      }
+      const layout = getLayout(nextCode);
+      return Object.assign({}, p, {
+        page_id: p.page_id || ('p' + String(idx + 1).padStart(3, '0')),
+        layoutCode: layout.code,
+        layout: Object.assign({}, p.layout || {}, { code: layout.code }),
+        visual_signature: [
+          layout.code,
+          layout.slots[0] || 'UPPER-RIGHT',
+          idx % 2 === 0 ? 'medium' : 'close-up',
+          idx % 2 === 0 ? 'left-to-right' : 'front',
+          idx % 3 === 0 ? 'balanced' : 'dense',
+          'beat-' + (idx + 1)
+        ]
+      });
+    });
+  }
+
   // §5.4 5-Dimension Page Rubric Evaluator (0-2 each, total 10; passes when total >= 8, no 0-score dimension, and no blockers)
   function evaluatePageRubric(scores, blockers) {
     const dims = ['narrative', 'cameraAction', 'layoutFocus', 'characterEmotion', 'readingFlow'];
@@ -719,9 +1093,15 @@
     listLayouts,
     buildLayoutPolygons,
     expandSceneToEnglishTags,
+    quantizeGridCenter,
+    compileSpatialCharCaptions,
+    inferLayoutCodeFromPanels,
+    extractPageSpecFromCanvas,
+    autoScoreCanvasPage,
     compileWholePagePrompt,
     reconcileWholePageNegative,
     auditSixPageRhythm,
+    optimizeSixPageRhythm,
     evaluatePageRubric,
     validateNaiJob,
     convert06PagesToJobs

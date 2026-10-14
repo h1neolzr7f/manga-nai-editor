@@ -147,4 +147,82 @@ assert.equal(converted.jobs[0].negative_prompt, 'lowres, bad anatomy, extra digi
 assert.equal('page_id' in converted.jobs[0], false, 'Converted job must strip page_id into separate mapping');
 assert.equal(converted.mapping[0].page_id, 'p001');
 
+// 6. Multi-Character Spatial charCaptions for 06 Whole-Page Mode & NaiEngineCore multi-center support
+assert.equal(compiled.charCaptions.length, 2, 'Should extract spatial charCaptions for Chen Mo and Lin Wu');
+const chenMoCap = compiled.charCaptions.find(c => c.name === 'Chen Mo');
+const linWuCap = compiled.charCaptions.find(c => c.name === 'Lin Wu');
+assert(chenMoCap && chenMoCap.centers.length === 2, 'Chen Mo appears in panel 1 (upper-right) and panel 3 (large bottom)');
+assert(linWuCap && linWuCap.centers.length === 2, 'Lin Wu appears in panel 2 (upper-left) and panel 3 (large bottom)');
+assert.equal(chenMoCap.centers[0].x, 0.7, 'Upper-right panel center X should quantize to right side (0.7)');
+assert.equal(chenMoCap.centers[0].y, 0.3, 'Upper-right panel center Y should quantize to upper row (0.3)');
+
+const payloadSpatial = ctx.NaiEngineCore.payload({
+  model: 'nai-diffusion-5-full',
+  prompt: compiled.prompt,
+  characters: compiled.charCaptions,
+  width: 832,
+  height: 1216,
+  allowText: true,
+  allowMultiPanel: true
+});
+assert.equal(payloadSpatial.parameters.use_coords, true, 'Spatial charCaptions must enable use_coords');
+assert.equal(payloadSpatial.parameters.v4_prompt.use_coords, true);
+assert.equal(
+  payloadSpatial.parameters.v4_prompt.caption.char_captions[0].centers.length,
+  2,
+  'v4_prompt.caption.char_captions must preserve multi-panel centers array'
+);
+
+// 7. Canvas-Page-to-06-Spec Extractor & 5-Dimension Auto-Scorer
+const a1Polys = H.buildLayoutPolygons('A1', 1200, 1700);
+const mockCanvas = {
+  width: 1200,
+  height: 1700,
+  objects: [
+    { isPanel: true, points: a1Polys[0].points, tempPrompt: '特写：少女在车站回头' },
+    { isPanel: true, points: a1Polys[1].points, tempPrompt: '中景：少年伸出手' },
+    { isPanel: true, points: a1Polys[2].points, tempPrompt: '远景：夕阳下的列车进站，两人微笑' },
+    { type: 'vertical-textbox', left: a1Polys[0].bbox.left + 20, top: a1Polys[0].bbox.top + 20, width: 60, height: 140, text: '终于等到你了！' },
+    { type: 'vertical-textbox', left: a1Polys[2].bbox.left + 40, top: a1Polys[2].bbox.top + 40, width: 80, height: 180, text: '我们走吧。' }
+  ]
+};
+const extractedSpec = H.extractPageSpecFromCanvas(mockCanvas);
+assert.equal(extractedSpec.layoutCode, 'A1', 'Should infer A1 layout from 3-panel geometry');
+assert.equal(extractedSpec.panels.length, 3);
+assert.equal(extractedSpec.bubbleCount, 2);
+assert(extractedSpec.panels[0].line.includes('终于等到你了！'));
+
+const autoRubric = H.autoScoreCanvasPage(extractedSpec);
+assert.equal(autoRubric.passed, true, 'Complete 3-panel page with camera variety, emotion cues, and short bubbles should pass 5D rubric');
+assert(autoRubric.total >= 8);
+
+// 8. Auto-Optimize 6-Page Rhythm
+const optimizedSix = H.optimizeSixPageRhythm([
+  { page_id: 'p001', layoutCode: 'A1', panels: [{}, {}, {}] },
+  { page_id: 'p002', layoutCode: 'A1', panels: [{}, {}, {}] },
+  { page_id: 'p003', layoutCode: 'A1', panels: [{}, {}, {}] },
+  { page_id: 'p004', layoutCode: 'A1', panels: [{}, {}, {}] },
+  { page_id: 'p005', layoutCode: 'A1', panels: [{}, {}, {}] },
+  { page_id: 'p006', layoutCode: 'A1', panels: [{}, {}, {}] }
+]);
+const auditOptimized = H.auditSixPageRhythm(optimizedSix);
+assert.equal(auditOptimized.ok, true, 'optimizeSixPageRhythm must resolve consecutive layout collisions and 6-page window mix');
+
+// 9. Smart Text Bubble Patch Bright-Pixel Estimator (for covering NAI V5 native glyphs)
+vm.runInContext(fs.readFileSync(path.join(__dirname, '../js/ai/manga-smart-text-core.js'), 'utf8'), ctx);
+const mixedPixels = new Uint8ClampedArray([
+  // 3 black ink pixels (glyph stroke) + 5 bright paper pixels
+  15, 15, 15, 255,
+  20, 20, 20, 255,
+  10, 10, 10, 255,
+  252, 252, 250, 255,
+  254, 254, 252, 255,
+  255, 255, 255, 255,
+  250, 250, 248, 255,
+  253, 253, 251, 255
+]);
+const patchCol = ctx.MangaSmartTextCore.computeBubblePatchColor(mixedPixels);
+assert.equal(patchCol.safe, true);
+assert(patchCol.r >= 250 && patchCol.g >= 250 && patchCol.b >= 248, 'computeBubblePatchColor must ignore black ink strokes and return clean paper color');
+
 console.log('manga-production-handbook-test OK');

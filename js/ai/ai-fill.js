@@ -106,6 +106,7 @@
       '<div class="ai-fill-tools"><button type="button" class="ui-btn is-active" data-tool="brush">笔刷</button><button type="button" class="ui-btn" data-tool="erase">橡皮</button>' +
       '<button type="button" class="ui-btn" data-tool="box">框选</button><button type="button" class="ui-btn" data-tool="sam" title="点一下物体，自动选出轮廓">智能点选</button>' +
       '<button type="button" class="ui-btn ui-btn-ghost" id="aiFillClear">清除</button></div>' +
+      '<div class="ai-fill-tools" id="aiFillPanelQuick" style="flex-wrap:wrap;gap:4px;margin-top:4px"></div>' +
       '<label class="ai-fill-size">笔刷大小 <input type="range" id="aiFillSize" min="4" max="160" value="' + S.size + '"></label>' +
       '<p class="ui-muted">② 想怎么改？</p>' +
       '<div class="ai-fill-presets" role="radiogroup" aria-label="怎么改">' + Object.keys(PRESETS).map(k => '<button type="button" class="ui-btn" role="radio" data-preset="' + k + '" title="' + PRESETS[k].tip + '">' + PRESETS[k].label + '</button>').join('') + '</div>' +
@@ -133,8 +134,141 @@
     S.onKey = e => { if (e.key === 'Escape' && S && !(root.SamClickSelect && root.SamClickSelect.active())) close(); };
     document.addEventListener('keydown', S.onKey);
     placeOverlay(); refreshTint();
+    buildPanelQuickBar();
     status(S.engine === 'lama' || (S.engine === 'gpt' ? gptReady : root.NaiEngine && root.NaiEngine.configured()) ? '' : '「换成…」「自由修改」要用 GPT 或 NovelAI：点「生成」时会打开「服务设置」。「去掉杂物」用本机模型，不用配置。');
     return true;
+  }
+
+  function resolvePagePanelsForInpaint() {
+    const c = fc();
+    if (!c || !S) return [];
+    const objs = typeof c.getObjects === 'function' ? c.getObjects() : [];
+    // Check if there is a 06 whole-page image with layout code metadata
+    const img06 = objs.find(o => o && o.type === 'image' && (o.handbookLayoutCode || /^06整页直出\(([A-Z0-9]+)\)/.test(String(o.name || ''))));
+    if (img06 && root.MangaProductionHandbook) {
+      const m = /^06整页直出\(([A-Z0-9]+)\)/.exec(String(img06.name || ''));
+      const code = img06.handbookLayoutCode || (m && m[1]) || 'A1';
+      const polys = root.MangaProductionHandbook.buildLayoutPolygons(code, S.W, S.H);
+      const savedScenes = Array.isArray(img06.handbookPanels) ? img06.handbookPanels : [];
+      return polys.map((p, idx) => ({
+        index: idx,
+        label: '第 ' + (idx + 1) + ' 格',
+        points: p.points,
+        bbox: p.bbox,
+        scene: (savedScenes[idx] && (savedScenes[idx].scene || savedScenes[idx].visual_en)) || ''
+      }));
+    }
+    if (root.MangaProductionHandbook && objs.some(o => o && o.isPanel)) {
+      const spec = root.MangaProductionHandbook.extractPageSpecFromCanvas(c);
+      const polys = root.MangaProductionHandbook.buildLayoutPolygons(spec.layoutCode, S.W, S.H);
+      return spec.panels.map((p, idx) => ({
+        index: idx,
+        label: '第 ' + (idx + 1) + ' 格',
+        points: (polys[idx] && polys[idx].points) || null,
+        bbox: p.bbox || (polys[idx] && polys[idx].bbox) || { left: 0, top: 0, width: S.W, height: S.H },
+        scene: p.scene || ''
+      }));
+    }
+    return [];
+  }
+
+  function selectPanelMask(panelIdx) {
+    if (!S) return false;
+    const panels = S.detectedPanels || resolvePagePanelsForInpaint();
+    const p = panels[panelIdx];
+    if (!p) return false;
+    const g = S.mask.getContext('2d');
+    g.clearRect(0, 0, S.W, S.H);
+    const inset = 5;
+    g.fillStyle = '#fff';
+    if (Array.isArray(p.points) && p.points.length >= 3) {
+      const cx = p.points.reduce((a, pt) => a + pt.x, 0) / p.points.length;
+      const cy = p.points.reduce((a, pt) => a + pt.y, 0) / p.points.length;
+      g.beginPath();
+      p.points.forEach((pt, i) => {
+        const dx = pt.x - cx, dy = pt.y - cy;
+        const len = Math.hypot(dx, dy) || 1;
+        const ix = pt.x - (dx / len) * inset;
+        const iy = pt.y - (dy / len) * inset;
+        if (i === 0) g.moveTo(ix, iy);
+        else g.lineTo(ix, iy);
+      });
+      g.closePath();
+      g.fill();
+    } else if (p.bbox) {
+      g.fillRect(
+        p.bbox.left + inset,
+        p.bbox.top + inset,
+        Math.max(8, p.bbox.width - inset * 2),
+        Math.max(8, p.bbox.height - inset * 2)
+      );
+    }
+    refreshTint();
+    if (S.preset === 'remove') setPreset('free', true);
+    if (p.scene && $('aiFillPrompt')) {
+      $('aiFillPrompt').value = p.scene;
+    }
+    showCost();
+    status('已自动框选「' + p.label + '」（自动内缩保留黑框与白边），可直接修改提示词并点生成局部重绘。');
+    return true;
+  }
+
+  function buildPanelQuickBar() {
+    const bar = $('aiFillPanelQuick');
+    if (!bar || !S) return;
+    bar.innerHTML = '';
+    const renderItems = panels => {
+      if (!S || !$('aiFillPanelQuick')) return;
+      S.detectedPanels = panels;
+      bar.innerHTML = '';
+      if (panels && panels.length > 0) {
+        const tag = el('span', { class: 'ui-muted', style: 'font-size:12px;align-self:center' }, '按格重绘：');
+        bar.appendChild(tag);
+        panels.forEach((p, idx) => {
+          const btn = el('button', {
+            type: 'button',
+            class: 'ui-btn ui-btn-ghost',
+            'data-panel-mask': String(idx),
+            title: '一键选中' + p.label + '内部区域（自动保护边框）进行局部重绘'
+          }, p.label);
+          btn.addEventListener('click', () => selectPanelMask(idx));
+          bar.appendChild(btn);
+        });
+      }
+      if (root.MangaSmartTextEditor && typeof root.MangaSmartTextEditor.beginQuickRetouchPatch === 'function') {
+        const retouchBtn = el('button', {
+          type: 'button',
+          class: 'ui-btn ui-btn-ghost',
+          id: 'aiFillQuickBubblePatch',
+          title: '不花 Anlas：框选写错的原生中文字，自动采样气泡底色盖白并放上竖排可编辑文字层'
+        }, '气泡盖白贴字');
+        retouchBtn.addEventListener('click', () => {
+          close();
+          root.MangaSmartTextEditor.open(true);
+          root.MangaSmartTextEditor.beginQuickRetouchPatch();
+        });
+        bar.appendChild(retouchBtn);
+      }
+    };
+    const syncPanels = resolvePagePanelsForInpaint();
+    if (syncPanels.length > 0) {
+      renderItems(syncPanels);
+    } else if (root.PanelAuto && typeof root.PanelAuto.get === 'function') {
+      renderItems([]);
+      root.PanelAuto.get().then(res => {
+        if (res && Array.isArray(res.panels) && res.panels.length > 1 && S) {
+          const kx = S.W / (res.W || S.W), ky = S.H / (res.H || S.H);
+          renderItems(res.panels.map((q, idx) => ({
+            index: idx,
+            label: '第 ' + (idx + 1) + ' 格',
+            bbox: { left: Math.round(q.x * kx), top: Math.round(q.y * ky), width: Math.round(q.w * kx), height: Math.round(q.h * ky) },
+            scene: ''
+          })));
+        }
+      }).catch(() => {});
+    } else {
+      renderItems([]);
+    }
   }
   const PRESETS = {
     remove: { label: '去掉杂物', engine: 'lama', tip: '本机 LaMa 补背景，免费、不用配置', placeholder: '', hint: '涂出要去掉的东西就行，不用写字。用本机模型，免费。', go: '去掉' },
@@ -164,11 +298,15 @@
   }
   async function naiCandidates(r, source, mask, sentence) {
     const N = root.NaiEngineCore, size = N.sizeFor(r.w, r.h);
+    const expandedPrompt = (root.MangaProductionHandbook && typeof root.MangaProductionHandbook.expandSceneToEnglishTags === 'function')
+      ? root.MangaProductionHandbook.expandSceneToEnglishTags(sentence)
+      : sentence;
+    const allowText = /(?:text\s*:|speech bubbles?|chinese text|english text)/i.test(expandedPrompt);
     const fit = async (url, bg) => { const im = await loadImg(url), c = canvasOf(size.width, size.height), g = c.getContext('2d'); g.fillStyle = bg; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height); return c.toDataURL('image/png'); };
     const image = await fit(source, '#fff'), m = await fit(mask, '#000'); const seeds = [];
     for (let k = 0; k < S.count; k++) {
       status('NovelAI 正在生成第 ' + (k + 1) + ' / ' + S.count + ' 张…');
-      const d = await root.NaiEngine.run({ action: 'infill', prompt: sentence, image, mask: m, width: r.w, height: r.h }, S.ctrl.signal, t => status(t));
+      const d = await root.NaiEngine.run({ action: 'infill', prompt: expandedPrompt, allowText, image, mask: m, width: r.w, height: r.h }, S.ctrl.signal, t => status(t));
       const im = await loadImg(d.image), c = canvasOf(r.w, r.h); c.getContext('2d').drawImage(im, 0, 0, r.w, r.h);
       S.pending.push(c.toDataURL('image/jpeg', 0.92)); seeds.push(d.seed);
     }
@@ -402,5 +540,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(bindSelection, 0)); else setTimeout(bindSelection, 0);
   setInterval(bindSelection, 2000);   // canvas can be recreated
 
-  root.AiFill = { open, close, generate, apply: k => S && apply(k), switchCandidate, composite, isOpen: () => !!S, state: () => S && { tool: S.tool, engine: S.engine, results: S.layers ? S.layers.length : 0, ms: S.ms || 0, busy: S.busy } };
+  root.AiFill = { open, close, generate, selectPanelMask, apply: k => S && apply(k), switchCandidate, composite, isOpen: () => !!S, state: () => S && { tool: S.tool, engine: S.engine, results: S.layers ? S.layers.length : 0, ms: S.ms || 0, busy: S.busy } };
 })(typeof window !== 'undefined' ? window : globalThis);

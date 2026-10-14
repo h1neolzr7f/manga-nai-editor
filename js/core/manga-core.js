@@ -226,8 +226,195 @@
         if (typeof root.updateLayerPanel === 'function') root.updateLayerPanel();
       }
     }),
-    batch: BatchQueue
+    batch: BatchQueue,
+    openRhythmDashboard
   });
+
+  function collectActivePagesSpec(pagesOverride) {
+    const H = root.MangaProductionHandbook;
+    if (!H) return [];
+    if (Array.isArray(pagesOverride) && pagesOverride.length > 0) {
+      return pagesOverride;
+    }
+    if (root.__lastScript && Array.isArray(root.__lastScript.pages) && root.__lastScript.pages.length > 0) {
+      return root.__lastScript.pages.map((pg, idx) => {
+        const pCount = (pg.panels && pg.panels.length) || 3;
+        const defaultCode = pCount === 1 ? 'S' : pCount === 2 ? 'R1' : pCount === 4 ? (idx % 2 === 0 ? 'R2' : 'A3') : (idx % 3 === 0 ? 'A1' : idx % 3 === 1 ? 'X1' : 'A2');
+        const code = pg.layoutCode || defaultCode;
+        const panels = (pg.panels || []).map(p => {
+          if (root.ScriptPageCore && typeof root.ScriptPageCore.toWizard === 'function' && (p.lines || !p.line)) {
+            const w = root.ScriptPageCore.toWizard(p);
+            return { scene: w.scene, line: w.line };
+          }
+          return { scene: p.scene || '', line: p.line || '' };
+        });
+        const totalChars = panels.reduce((sum, p) => sum + Array.from(String(p.line || '').replace(/\s+/g, '')).length, 0);
+        return {
+          page_id: 'p' + String(idx + 1).padStart(3, '0'),
+          layoutCode: code,
+          panels,
+          textCharsTotal: totalChars
+        };
+      });
+    }
+    if (MangaCore.canvas) {
+      const spec = H.extractPageSpecFromCanvas(MangaCore.canvas);
+      return [Object.assign({ page_id: 'p001' }, spec)];
+    }
+    return [];
+  }
+
+  function openRhythmDashboard(pagesOverride) {
+    if (typeof document === 'undefined' || !document.body || !root.MangaProductionHandbook) return null;
+    const H = root.MangaProductionHandbook;
+    const old = document.getElementById('handbookRhythmModal');
+    if (old) old.remove();
+
+    let pages = collectActivePagesSpec(pagesOverride);
+    if (!pages.length) {
+      pages = [{
+        page_id: 'p001',
+        layoutCode: 'A1',
+        panels: [
+          { scene: '清晨车站特写，小雪等车', line: '小雪：今天也要加油！' },
+          { scene: '中景，列车缓缓进站', line: '' },
+          { scene: '远景，小雪微笑挥手', line: '小雪：早上好！' }
+        ],
+        textCharsTotal: 15
+      }];
+    }
+
+    const modal = document.createElement('section');
+    modal.id = 'handbookRhythmModal';
+    modal.className = 'ui-card';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-label', '创作手册 · 6页连载节奏与五维审稿看板');
+    modal.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:10050;width:min(760px,94vw);max-height:86vh;overflow-y:auto;padding:18px 20px;box-shadow:0 16px 48px rgba(0,0,0,.45)';
+
+    let selectedIdx = 0;
+
+    function renderModalContent() {
+      const audit = H.auditSixPageRhythm(pages);
+      const curPage = pages[selectedIdx] || pages[0];
+      const curRubric = H.autoScoreCanvasPage(curPage);
+      const catColor = { R: '#2563eb', A: '#059669', X: '#d97706', S: '#7c3aed' };
+      const dimLabels = {
+        narrative: '叙事推进 (Narrative)',
+        cameraAction: '镜头与动势 (Camera & Action)',
+        layoutFocus: '版式主次 (Layout Focus)',
+        characterEmotion: '人物情绪与演技 (Emotion)',
+        readingFlow: '视线与气泡容量 (Reading Flow)'
+      };
+
+      const cardsHtml = pages.map((pg, idx) => {
+        const l = H.getLayout(pg.layoutCode || 'A1');
+        const rub = H.autoScoreCanvasPage(pg);
+        const chars = pg.textCharsTotal != null
+          ? pg.textCharsTotal
+          : (pg.panels || []).reduce((s, p) => s + Array.from(String(p.line || '')).length, 0);
+        const heatBg = chars > 90 ? '#dc2626' : chars > 60 ? '#d97706' : '#16a34a';
+        const activeBorder = idx === selectedIdx ? '2px solid #38bdf8' : '1px solid rgba(148,163,184,.3)';
+        return (
+          '<button type="button" class="ui-btn" data-hb-page="' + idx + '" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:8px 10px;min-width:105px;border:' + activeBorder + ';text-align:left">' +
+          '<div style="display:flex;justify-content:space-between;width:100%;align-items:center">' +
+          '<strong>' + (pg.page_id || ('P' + (idx + 1))) + '</strong>' +
+          '<span style="background:' + (catColor[l.category] || '#334155') + ';color:#fff;padding:1px 6px;border-radius:4px;font-size:11px">' + l.code + '</span>' +
+          '</div>' +
+          '<span class="ui-muted" style="font-size:11px">' + l.panelCount + ' 格 · ' + chars + ' 字</span>' +
+          '<div style="width:100%;height:4px;background:rgba(148,163,184,.25);border-radius:2px;overflow:hidden">' +
+          '<div style="width:' + Math.min(100, Math.round((chars / 90) * 100)) + '%;height:100%;background:' + heatBg + '"></div>' +
+          '</div>' +
+          '<span style="font-size:11px;color:' + (rub.passed ? '#16a34a' : '#dc2626') + '">' + rub.total + '/10 ' + (rub.passed ? '通过' : '需微调') + '</span>' +
+          '</button>'
+        );
+      }).join('');
+
+      const dimsHtml = Object.keys(dimLabels).map(k => {
+        const sc = curRubric.scores[k] || 0;
+        const pct = sc * 50;
+        const barCol = sc === 2 ? '#16a34a' : sc === 1 ? '#d97706' : '#dc2626';
+        return (
+          '<div style="display:flex;align-items:center;gap:10px;margin:4px 0;font-size:13px">' +
+          '<span style="width:185px">' + dimLabels[k] + '</span>' +
+          '<div style="flex:1;height:8px;background:rgba(148,163,184,.2);border-radius:4px;overflow:hidden">' +
+          '<div style="width:' + pct + '%;height:100%;background:' + barCol + '"></div>' +
+          '</div>' +
+          '<strong style="width:36px;text-align:right">' + sc + ' / 2</strong>' +
+          '</div>'
+        );
+      }).join('');
+
+      const issuesHtml = audit.issues.length === 0
+        ? '<p style="color:#16a34a;margin:6px 0;font-size:13px">✓ 跨页版式节奏（R/A/X/S 交错）与每泡 30 字容量上限全部达标。</p>'
+        : '<ul style="margin:6px 0;padding-left:18px;color:#f59e0b;font-size:13px">' +
+          audit.issues.map(iss => '<li>' + iss.message + '</li>').join('') +
+          '</ul>';
+
+      modal.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
+        '<div><strong>《创作手册》6 页连载节奏与五维审稿看板</strong><span class="ui-muted" style="margin-left:8px;font-size:12px">共 ' + pages.length + ' 页</span></div>' +
+        '<button type="button" class="ui-btn ui-btn-ghost" id="handbookRhythmClose" aria-label="关闭">×</button>' +
+        '</div>' +
+        '<p class="ui-muted" style="margin:0 0 6px;font-size:12px">① 版式链条与字数热力（R=规整 / A=非对称 / X=异形出血 / S=全幅单格）：</p>' +
+        '<div id="handbookChainGrid" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px">' + cardsHtml + '</div>' +
+        '<div style="margin-top:12px;padding:10px 12px;border-radius:8px;background:rgba(148,163,184,.08)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
+        '<strong>② ' + (curPage.page_id || ('P' + (selectedIdx + 1))) + ' 五维评分详情（版式 ' + curRubric.layoutCode + ' · ' + curRubric.layoutName + '）</strong>' +
+        '<span style="font-weight:700;color:' + (curRubric.passed ? '#16a34a' : '#dc2626') + '">总分 ' + curRubric.total + ' / 10（' + (curRubric.passed ? '通过 ≥8' : '未达标 <8') + '）</span>' +
+        '</div>' +
+        '<div id="handbookRubricDetail">' + dimsHtml + '</div>' +
+        (curRubric.blockers.length ? '<p style="color:#dc2626;font-size:12px;margin:6px 0 0">阻塞项：' + curRubric.blockers.join('；') + '</p>' : '') +
+        '</div>' +
+        '<div style="margin-top:12px">' +
+        '<strong>③ 跨页节奏与 30 字气泡容量审查：</strong>' +
+        '<div id="handbookIssuesList">' + issuesHtml + '</div>' +
+        '</div>' +
+        '<div class="svc-row" style="margin-top:12px;justify-content:flex-end;gap:8px">' +
+        '<button type="button" class="ui-btn" id="handbookAutoFixRhythm" title="按《创作手册》5.3 节自动重排连续撞版并补齐 R/A/X 交错节奏">一键优化版式节奏</button>' +
+        '<button type="button" class="ui-btn ui-btn-primary" id="handbookApplyToWizard">同步当前页版式到向导</button>' +
+        '</div>';
+
+      modal.querySelectorAll('[data-hb-page]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedIdx = Number(btn.getAttribute('data-hb-page')) || 0;
+          renderModalContent();
+        });
+      });
+
+      const closeBtn = modal.querySelector('#handbookRhythmClose');
+      if (closeBtn) closeBtn.addEventListener('click', () => modal.remove());
+
+      const fixBtn = modal.querySelector('#handbookAutoFixRhythm');
+      if (fixBtn) {
+        fixBtn.addEventListener('click', () => {
+          pages = H.optimizeSixPageRhythm(pages);
+          if (root.__lastScript && Array.isArray(root.__lastScript.pages)) {
+            root.__lastScript.pages.forEach((pg, idx) => {
+              if (pages[idx]) pg.layoutCode = pages[idx].layoutCode;
+            });
+          }
+          renderModalContent();
+        });
+      }
+
+      const syncBtn = modal.querySelector('#handbookApplyToWizard');
+      if (syncBtn) {
+        syncBtn.addEventListener('click', () => {
+          const target = pages[selectedIdx] || pages[0];
+          const sel = document.getElementById('taskPageLayoutCode');
+          if (sel && target && target.layoutCode) {
+            sel.value = target.layoutCode;
+            sel.dispatchEvent(new Event('change'));
+          }
+          modal.remove();
+        });
+      }
+    }
+
+    document.body.appendChild(modal);
+    renderModalContent();
+    return modal;
+  }
 
   function registerBatchCommands() {
     if (!root.Commands || typeof root.Commands.register !== 'function') return false;
@@ -279,6 +466,14 @@
       run: () => BatchQueue.clearBadges()
     });
     root.Commands.register({
+      id: 'handbook.openDashboard',
+      label: '打开《创作手册》6页连载节奏与五维审稿看板',
+      group: '审稿',
+      keywords: 'handbook dashboard rhythm 5d 看板 五维 审稿 节奏 R1 A1 X1',
+      when: () => !!root.MangaProductionHandbook,
+      run: () => openRhythmDashboard()
+    });
+    root.Commands.register({
       id: 'batch.auditHandbookRhythm',
       label: '按《创作手册》审查多页版式节奏与台词容量',
       group: '批处理',
@@ -298,19 +493,11 @@
             doneLabel: '已采集',
             async run() {
               await MangaCore.pages.switchTo(guid, true);
-              const objs = MangaCore.layers.getObjects();
-              const panels = objs.filter(o => o && o.isPanel);
-              const texts = objs
-                .filter(o => o && (o.type === 'textbox' || o.type === 'i-text' || o.type === 'vertical-textbox') && String(o.text || '').trim())
-                .map(o => String(o.text || '').trim());
-              const pCount = panels.length || 1;
-              const code = pCount === 1 ? 'S' : pCount === 2 ? 'R1' : pCount >= 4 ? 'R2' : 'A1';
-              collected.push({
+              const spec = root.MangaProductionHandbook.extractPageSpecFromCanvas(MangaCore.canvas);
+              collected.push(Object.assign({}, spec, {
                 guid,
-                page_id: 'p' + String(idx + 1).padStart(3, '0'),
-                layoutCode: code,
-                panels: [{ line: texts.join(' / ') }]
-              });
+                page_id: 'p' + String(idx + 1).padStart(3, '0')
+              }));
             }
           });
         });
@@ -328,6 +515,7 @@
                 BatchQueue.setPageStatus(item.guid, 'done', '合格(' + item.layoutCode + ')');
               }
             });
+            openRhythmDashboard(collected);
             if (typeof root.createToast === 'function') {
               root.createToast(
                 '《创作手册》多页审稿',

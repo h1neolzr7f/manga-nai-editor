@@ -117,7 +117,37 @@
     return { fontSize: 10, text: clean, lines: lines.length, wrapped: false, overflow: true };
   }
 
+  // Robust bright-pixel estimator for NAI V5 native bubble retouching:
+  // Even when a user drags across black glyph strokes or close to a bubble border, picks the
+  // high-luminance paper/bubble fill color (75th-percentile bright pixels, fallback #ffffff).
+  function computeBubblePatchColor(rgba) {
+    if (!rgba || rgba.length < 4 || rgba.length % 4 !== 0) {
+      return { r: 255, g: 255, b: 255, safe: true };
+    }
+    const bright = [];
+    for (let i = 0; i < rgba.length; i += 4) {
+      if (rgba[i + 3] < 200) continue;
+      const lum = 0.299 * rgba[i] + 0.587 * rgba[i + 1] + 0.114 * rgba[i + 2];
+      bright.push({ lum, r: rgba[i], g: rgba[i + 1], b: rgba[i + 2] });
+    }
+    if (!bright.length) return { r: 255, g: 255, b: 255, safe: true };
+    bright.sort((a, b) => b.lum - a.lum);
+    const topCount = Math.max(1, Math.ceil(bright.length * 0.35));
+    const topSlice = bright.slice(0, topCount);
+    if (topSlice[0].lum < 175) {
+      return { r: 255, g: 255, b: 255, safe: true };
+    }
+    const sum = [0, 0, 0];
+    topSlice.forEach(p => { sum[0] += p.r; sum[1] += p.g; sum[2] += p.b; });
+    return {
+      r: Math.round(sum[0] / topSlice.length),
+      g: Math.round(sum[1] / topSlice.length),
+      b: Math.round(sum[2] / topSlice.length),
+      safe: true
+    };
+  }
+
   root.MangaSmartTextCore = Object.freeze({
-    normalizeBox, normalizeManualDrag, mapDetections, boundaryColor, fitText
+    normalizeBox, normalizeManualDrag, mapDetections, boundaryColor, computeBubblePatchColor, fitText
   });
 })(typeof window !== 'undefined' ? window : this);

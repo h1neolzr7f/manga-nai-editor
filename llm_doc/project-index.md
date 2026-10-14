@@ -28,7 +28,7 @@
 | .mjs | 2 |
 | .ps1 | 4 |
 | .py | 49 |
-| シンボル | 12015 |
+| シンボル | 12058 |
 | DOM id 定義 | 636 |
 | script 読み込み | 251 |
 | stylesheet 読み込み | 43 |
@@ -41,7 +41,7 @@
 
 | グローバル | 定義 |
 |-----------|------|
-| `AiFill` | js/ai/ai-fill.js:405 |
+| `AiFill` | js/ai/ai-fill.js:543 |
 | `AiFillCore` | js/ai/ai-fill-core.js:98 |
 | `AutoSwap` | js/ai/auto-swap.js:733 |
 | `BalloonLayout` | js/ai/balloon-layout.js:199 |
@@ -52,11 +52,11 @@
 | `Commands` | js/core/command-history.js:184 |
 | `FilePick` | js/ui/file-pick.js:29 |
 | `HistoryLabels` | js/core/history-labels.js:55 |
-| `MangaBatchQueue` | js/core/manga-core.js:356 |
+| `MangaBatchQueue` | js/core/manga-core.js:544 |
 | `MangaBubbleDetector` | js/ai/manga-bubble-detector.js:80 |
 | `MangaCharacterBibleCore` | js/ai/manga-character-bible-core.js:74 |
 | `MangaCharacterBibleUI` | js/ai/manga-character-bible-ui.js:222 |
-| `MangaCore` | js/core/manga-core.js:357 |
+| `MangaCore` | js/core/manga-core.js:545 |
 | `MangaEditPlanner` | js/ai/manga-edit-planner.js:78 |
 | `MangaEditPlannerUI` | js/ai/manga-edit-planner-ui.js:125 |
 | `MangaGPTRegionEditor` | js/ai/gpt-region-editor.js:1836 |
@@ -65,9 +65,9 @@
 | `MangaModelRequest` | js/ai/manga-model-request.js:84 |
 | `MangaPageStructure` | js/ai/manga-page-structure.js:273 |
 | `MangaPageStructureUI` | js/ai/manga-page-structure-ui.js:390 |
-| `MangaProductionHandbook` | js/ai/manga-production-handbook.js:715 |
-| `MangaSmartTextCore` | js/ai/manga-smart-text-core.js:120 |
-| `MangaSmartTextEditor` | js/ai/manga-smart-text-editor.js:573 |
+| `MangaProductionHandbook` | js/ai/manga-production-handbook.js:1089 |
+| `MangaSmartTextCore` | js/ai/manga-smart-text-core.js:150 |
+| `MangaSmartTextEditor` | js/ai/manga-smart-text-editor.js:727 |
 | `MangaTextInkMask` | js/ai/manga-text-ink-mask.js:105 |
 | `NaiBackgroundRemovalClient` | js/local-tools/background-removal-client.js:531 |
 | `NaiBeginnerGuide` | js/ui/beginner-guide.js:516 |
@@ -107,7 +107,7 @@
 | `NaiCustomBrush` | js/sidebar/pen/custom-brush.js:268 |
 | `NaiCutoutPresets` | js/local-tools/cutout-presets.js:96 |
 | `NaiEngine` | js/ai/nai-engine.js:109 |
-| `NaiEngineCore` | js/ai/nai-engine-core.js:144 |
+| `NaiEngineCore` | js/ai/nai-engine-core.js:148 |
 | `NaiFabricTextFocus` | js/core/util/fabric-text-focus.js:81 |
 | `NaiHistoryLoading` | js/layer/image-history-management.js:6, js/layer/image-history-management.js:277, js/layer/image-history-management.js:294, js/layer/image-history-management.js:327, js/layer/image-history-management.js:332 |
 | `NaiImage2Client` | js/assets/image2-client.js:92 |
@@ -141,7 +141,7 @@
 | `ScriptPageCore` | js/ai/script-page-core.js:88 |
 | `TestRunner` | js/core/debug.js:403 |
 | `__autoSwapPrefetch` | js/ai/auto-swap.js:726, js/ai/auto-swap.js:728 |
-| `__lastScript` | js/ui/task-launcher.js:626 |
+| `__lastScript` | js/ui/task-launcher.js:653 |
 | `__naiBrushEvt` | js/ui/visual-studio.js:142 |
 | `__naiBrushRaf` | js/ui/visual-studio.js:144, js/ui/visual-studio.js:145 |
 | `_clipboard` | js/shortcut.js:102 |
@@ -209,9 +209,10 @@
 | js/ai/prompt/novelai-composition-director.js | 1217 |  |
 | 99_server.py | 1206 |  |
 | js/simulator/simulator-studio.js | 1110 | 模拟器启动页与各类型单开工作区 |
+| js/ai/manga-production-handbook.js | 1109 | MangaProductionHandbook: programmatic implementation of the Manga-NAI Production Manual (06 workflow). |
 | js/canvas-manager.js | 1075 | exported aspectRatio, changeView, forcedAdjustCanvasSize, initResizeCanvas, inputImageFile, resizeCanvas, resizeCanvasToObject |
 | js/dashboard/dashboard-ui.js | 1058 | exported openDashboardModal |
-| js/ui/task-launcher.js | 902 | 新手任务: a task-first entry on top of the existing editor. Each task is a short wizard that |
+| js/ui/task-launcher.js | 997 | 新手任务: a task-first entry on top of the existing editor. Each task is a short wizard that |
 | js/sidebar/speechBubble/speech-bubble-freehand.js | 894 | exported activePoint, clearJSTSGeometry, createJSTSPolygon, createSpeechBubble, deletePoint, freehandBubbleTextChanged, isDrawing, isNearStartPoint, lastRenderTime, mergeOverlappingShapes, processPoints, sbFreehandTextChange, selectedObject, updateFreehandBubblePositions, updateJSTSGeometry, updateShape, updateTemporaryShapes |
 | js/sidebar/pen/pen-tools.js | 856 | exported finalizeGroup, selectEraserTool, selectMarqueeTool |
 | js/core/util/image-util.js | 855 | exported blobUrlToDataUrl, clipCopy, createCanvasFromFabricImage, cropAndDownload, cropImage, enhanceDarkImage, estimateExportSize, exportCanvasDataURL, exportDataUrlByteLength, flipHorizontally, flipVertically, formatByteSize, getCropAndDownloadLink, getCropAndDownloadLinkByMultiplier, getHeight, getLink, getWidth, hexToRgba, imageObject2Base64ImageEffectKeep, imageObject2DataURL, imageObject2DataURLByCrop, imgFile2webpFile, normalizeExportQuality, resolveExportBackground, resolveExportBitDepth, resolveExportFormat, resolveExportMultiplier, resolveExportMultiplierForDpi, rgbToHex, rgbaToHex, sendHtmlCanvas2FabricCanvas |
@@ -220,10 +221,9 @@
 | js/ai/prompt/auto/auto-prompt-util.js | 817 | generatePageList(btmGetGuidsSize()); |
 | css/simulator-chat.css | 790 | simulator-chat-area .simulator-chat-panel{ |
 | js/core/font/font-manager-core.js | 747 | exported fontClassName, fontInit |
+| js/ai/manga-smart-text-editor.js | 745 | Smart manga lettering workflow. |
 | js/sidebar/panel/panel-manager.js | 742 | exported Edit, changePanelFillColor, changePanelOpacity, changePanelStrokeColor, changePanelStrokeWidth, initialPutImage, isWithin, loadSVGPlusReset, panelAllChange, replaceImageObject, setPanelValue |
 | js/ai/auto-swap.js | 736 | 换角色 — character swap in place. |
-| js/project-management.js | 736 | exported findCanvasGuid, getDataByName, localSettingsData, resetAllSettings |
-| js/ai/manga-production-handbook.js | 729 | MangaProductionHandbook: programmatic implementation of the Manga-NAI Production Manual (06 workflow). |
 
 ## 再生成
 

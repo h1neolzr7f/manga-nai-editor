@@ -64,7 +64,7 @@
 | html/functionList.html | 321 |  |
 | index.html | 3101 |  |
 | js/ai/ai-fill-core.js | 99 | AI 填充 (2.0 #2) pure helpers: mask geometry, soft edges, prompt, layer metadata. No DOM. |
-| js/ai/ai-fill.js | 406 | AI 填充 (2.0 #2): paint / smart-select an area + one sentence -> up to 3 candidates -> chosen one becomes a |
+| js/ai/ai-fill.js | 544 | AI 填充 (2.0 #2): paint / smart-select an area + one sentence -> up to 3 candidates -> chosen one becomes a |
 | js/ai/ai-management.js | 115 | exported I2I, T2I, apiHeartbeat, clearAllQueues, existsWaitQueue |
 | js/ai/ai-settings.js | 428 |  |
 | js/ai/auto-swap.js | 736 | 换角色 — character swap in place. |
@@ -85,11 +85,11 @@
 | js/ai/manga-model-request.js | 85 | Shared POST helper for the optional local models (Tesseract, Manga OCR, LaMa). |
 | js/ai/manga-page-structure-ui.js | 391 | Manga page structure inspector: Fabric snapshot -> sampled pixels -> reviewable panels. |
 | js/ai/manga-page-structure.js | 276 | Manga page structure v1: deterministic, low-cost XY-cut candidates. |
-| js/ai/manga-production-handbook.js | 729 | MangaProductionHandbook: programmatic implementation of the Manga-NAI Production Manual (06 workflow). |
-| js/ai/manga-smart-text-core.js | 123 | Shared, dependency-free geometry and light-bubble erase rules. |
-| js/ai/manga-smart-text-editor.js | 591 | Smart manga lettering workflow. |
+| js/ai/manga-production-handbook.js | 1109 | MangaProductionHandbook: programmatic implementation of the Manga-NAI Production Manual (06 workflow). |
+| js/ai/manga-smart-text-core.js | 153 | Shared, dependency-free geometry and light-bubble erase rules. |
+| js/ai/manga-smart-text-editor.js | 745 | Smart manga lettering workflow. |
 | js/ai/manga-text-ink-mask.js | 106 | Conservative dark-ink proposal for a user-selected TEXT rectangle. |
-| js/ai/nai-engine-core.js | 145 | NovelAI engine core (1.6): pure helpers shared by 改一块 / 画一页 / AI 生图 NAI routes. Unit-tested in Node. |
+| js/ai/nai-engine-core.js | 149 | NovelAI engine core (1.6): pure helpers shared by 改一块 / 画一页 / AI 生图 NAI routes. Unit-tested in Node. |
 | js/ai/nai-engine.js | 110 | NovelAI engine (1.6): one queue (NovelAI allows one generation at a time per account), retries on 429/5xx, |
 | js/ai/nai-status-format.js | 25 | Human-readable NovelAI subscription status for the "检查 NAI" toast. |
 | js/ai/novelai-only-mode.js | 132 |  |
@@ -141,7 +141,7 @@
 | js/core/global-error-handler.js | 17 | グローバルエラーハンドラ（未キャッチのエラーとPromise rejectionを検知） |
 | js/core/history-labels.js | 56 | 2.0 history: name an undo step by diffing two saved canvas states (pure, unit-tested). |
 | js/core/logger.js | 198 | exported _dbgFabric, _dbgLogger, autoSaveLogger, canvasLogger, compressionLogger, dashboardLogger, dashboardPerfLogger, dashboardTagLogger, dbLogger, delegatorLogger, effectLogger, errorHandlerLogger, eventLogger, focusTrapLogger, fontLogger, freehandBubbleLogger, generationTaskLogger, imageLogger, layerLogger, logger, panelLogger, perfLogger, projectLogger, raLogger, registryLogger, serviceLogger, simulatorStudioLogger, spinnerLogger, textLogger, tutorialLogger, uiLogger, workflowLogger |
-| js/core/manga-core.js | 361 | Unified MangaCore namespace facade & non-blocking multi-page BatchQueue. |
+| js/core/manga-core.js | 549 | Unified MangaCore namespace facade & non-blocking multi-page BatchQueue. |
 | js/core/manga-page-size.js | 266 |  |
 | js/core/service/service-request.js | 98 | One request/error layer for every backend service (GPT relay, NovelAI, local OCR/LaMa, cutout): |
 | js/core/service/worker-register.js | 116 | exported clearCache |
@@ -277,7 +277,7 @@
 | js/ui/prompt-manager.js | 72 | exported openPromptChangeFloatingWindow |
 | js/ui/psd-io.js | 193 | PSD import / export (2.0) with ag-psd (MIT, https://github.com/Agamnentzar/ag-psd), loaded on first use. |
 | js/ui/service-settings.js | 388 | 服务设置: the one place for every backend service. The real inputs other modules read |
-| js/ui/task-launcher.js | 902 | 新手任务: a task-first entry on top of the existing editor. Each task is a short wizard that |
+| js/ui/task-launcher.js | 997 | 新手任务: a task-first entry on top of the existing editor. Each task is a short wizard that |
 | js/ui/third/ag-psd/ag-psd.js | 21378 |  |
 | js/ui/third/base-translation/base-de.js | 563 |  |
 | js/ui/third/base-translation/base-en.js | 578 |  |
@@ -413,7 +413,7 @@
 | scripts/manga-ocr-refiner-test.py | 94 |  |
 | scripts/manga-page-size-smoke-test.cjs | 55 |  |
 | scripts/manga-page-structure-test.cjs | 116 | Red/green contract: inspect page pixels, split only credible gutters and |
-| scripts/manga-production-handbook-test.cjs | 150 |  |
+| scripts/manga-production-handbook-test.cjs | 228 |  |
 | scripts/manga-real-model-acceptance.py | 133 | !/usr/bin/env python3 |
 | scripts/manga-real-ui-acceptance.cjs | 161 | REAL (unmocked) Chromium acceptance for the local OCR -> Manga OCR -> LaMa flow. |
 | scripts/manga-sam-select-test.py | 142 |  |

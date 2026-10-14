@@ -100,6 +100,7 @@ item('taskOpenProject','folder_open','打开项目 (Ctrl+O)',function(){var l=$(
 sep();
 item('taskServiceSettings','settings','服务设置（GPT / NovelAI / 本机）',function(){if(window.ServiceSettings)ServiceSettings.open('gpt');});
 item('taskCharacters','face','角色库 · 认出本页人物',function(){if(window.CharacterLibrary)CharacterLibrary.open();});
+item('taskHandbookAudit','fact_check','创作手册 · 6页节奏与五维审稿看板',function(){if(window.MangaCore&&window.MangaCore.openRhythmDashboard)window.MangaCore.openRhythmDashboard();});
 sep();
 item('privacyToggle','visibility_off','隐私模式（模糊缩略图）：'+(privacyOn()?'开':'关'),function(){setPrivacy(!privacyOn());var b=$('privacyToggle');if(b)b.lastChild.textContent='隐私模式（模糊缩略图）：'+(privacyOn()?'开':'关');});
 item('themeToggle','contrast','浅色 / 深色界面',function(){var box=$('mode-toggle');if(!box)return;box.checked=!box.checked;box.dispatchEvent(new Event('change'));});
@@ -454,11 +455,12 @@ body.innerHTML='<div class="svc-row" role="radiogroup" aria-label="格子数">'+
 '<option value="R2">R2 · 规整四格网格(4格)</option>'+
 '<option value="A3">A3 · 错位中缝四格(4格)</option>'+
 '<option value="S">S · 单格全幅强调页(1格)</option>'+
-'</select></div>'+
+'</select>'+
+'<button type="button" class="ui-btn ui-btn-ghost" id="taskPageFromCanvas" title="从当前画布已有的分格框与文字气泡提取 06 整页设定">读取当前页</button></div>'+
 '<label class="ui-field"><span>统一画风 / 角色（每格都会用）</span><input id="taskPageStyle" type="text" data-nai-prompt="style tags shared by every panel" value="黑白日式漫画，清晰线稿，网点阴影，安全健康内容"></label>'+
 '<details class="task-script" id="taskScriptBox"><summary>粘贴剧本，自动分格</summary>'+
 '<textarea class="ui-textarea" id="taskScript" rows="6" placeholder="例如：&#10;第1格：清晨的车站，小雪在等车&#10;小雪：今天也要加油！&#10;第2格：列车进站&#10;旁白：列车准时到了。&#10;（不写「第N格」时，用空行分开每一格）"></textarea>'+
-'<div class="svc-row"><button type="button" class="ui-btn" id="taskScriptSplit">拆成格子</button><button type="button" class="ui-btn ui-btn-ghost" id="taskScriptNext" hidden>下一页剧本</button></div>'+
+'<div class="svc-row"><button type="button" class="ui-btn" id="taskScriptSplit">拆成格子</button><button type="button" class="ui-btn ui-btn-ghost" id="taskScriptNext" hidden>下一页剧本</button><button type="button" class="ui-btn ui-btn-ghost" id="taskScriptBatch06" hidden title="把拆分出的所有剧本页排入后台队列，按 06 六层架构逐页直出">多页 06 批量直出</button><button type="button" class="ui-btn ui-btn-ghost" id="taskScriptAuditBtn" title="打开《创作手册》6页连载节奏与五维审稿看板">节奏与五维看板</button></div>'+
 '<p class="ui-muted" id="taskScriptInfo" role="status"></p></details>'+
 '<div id="taskPagePanels"></div>'+
 '<div class="task-engines" id="taskPageEngines" role="radiogroup" aria-label="用哪个 AI 画"><span class="ui-muted">用</span>'+
@@ -532,6 +534,30 @@ body.querySelectorAll('[data-eng]').forEach(function(b){b.addEventListener('clic
 setPageEngine(window.NaiEngine?NaiEngine.preferred('page',!!($('mangaGptUrl')&&$('mangaGptUrl').value.trim())):'gpt',false);
 $('taskScriptSplit').addEventListener('click',function(){applyScript($('taskScript').value);});
 $('taskScriptNext').addEventListener('click',function(){fillScriptPage(scriptQueue.shift());});
+var batch06Btn=$('taskScriptBatch06');
+if(batch06Btn)batch06Btn.addEventListener('click',function(){enqueueScriptBatch06();});
+var auditBtn=$('taskScriptAuditBtn');
+if(auditBtn)auditBtn.addEventListener('click',function(){if(window.MangaCore&&window.MangaCore.openRhythmDashboard)window.MangaCore.openRhythmDashboard();});
+var fromCanvasBtn=$('taskPageFromCanvas');
+if(fromCanvasBtn){
+fromCanvasBtn.addEventListener('click',function(){
+if(!window.MangaProductionHandbook||typeof canvas==='undefined'||!canvas)return;
+var extracted=window.MangaProductionHandbook.extractPageSpecFromCanvas(canvas);
+pageLayout=null;
+pageLayoutCode=extracted.layoutCode;
+var sel=$('taskPageLayoutCode');
+if(sel)sel.value=extracted.layoutCode;
+choosePanels(extracted.panels.length);
+extracted.panels.forEach(function(p,i){
+var a=document.querySelector('#taskPagePanels [data-scene="'+i+'"]');
+var b=document.querySelector('#taskPagePanels [data-line="'+i+'"]');
+if(a)a.value=p.scene||'';
+if(b)b.value=p.line||'';
+});
+updateCastPreview();
+pageStatus('已从当前画布提取 '+extracted.panels.length+' 个分格与台词（识别版式：'+extracted.layoutCode+'）。');
+});
+}
 $('taskPageCancel').addEventListener('click',function(){if(pageJob)pageJob.cancel=true;if(pageJob&&pageJob.ctl)pageJob.ctl.abort();});
 if(window.CharacterLibrary&&CharacterLibrary.loadCards)CharacterLibrary.loadCards().then(function(){if($('taskWizardBody')===body)refreshCastChoices();}).catch(function(){pageStatus('角色档案加载失败，请重新打开任务后重试。',true);});
 }
@@ -622,8 +648,74 @@ if(!audit.ok){
 rhythmMsg=' 【手册审稿提醒：'+audit.issues.map(function(x){return x.message;}).slice(0,2).join('；')+'】';
 }
 }
-info.textContent='拆好了：'+r.stats.pages+' 页、'+r.stats.panels+' 格、'+r.stats.lines+' 句对白。'+(r.pages.length>1?'这一页先做第 1 页，做完点「下一页剧本」。':'')+(r.warnings.length?' 注意：'+r.warnings.join(' '):'')+rhythmMsg;
+info.textContent='拆好了：'+r.stats.pages+' 页、'+r.stats.panels+' 格、'+r.stats.lines+' 句对白。'+(r.pages.length>1?'这一页先做第 1 页，做完点「下一页剧本」，或直接点「多页 06 批量直出」。':'')+(r.warnings.length?' 注意：'+r.warnings.join(' '):'')+rhythmMsg;
+var b06=$('taskScriptBatch06');if(b06)b06.hidden=!(r.pages&&r.pages.length>0);
 window.__lastScript=r;
+}
+function enqueueScriptBatch06(){
+var r=window.__lastScript;
+if(!r||!Array.isArray(r.pages)||!r.pages.length){pageStatus('请先粘贴剧本并点「拆成格子」。',true);return;}
+if(!window.MangaBatchQueue||!window.MangaProductionHandbook){pageStatus('批量队列或创作手册模块尚未就绪。',true);return;}
+var style=($('taskPageStyle')&&$('taskPageStyle').value||'').trim()||NAI_STYLE;
+var engine=pageEngine;
+if(engine==='nai'&&!(window.NaiEngine&&NaiEngine.configured())){pageStatus('NovelAI 还没配置：请先在「服务设置」填写 Token。',true);if(window.ServiceSettings)ServiceSettings.ensureReady('novelai');return;}
+var lockSeed=$('taskPageSeedLock')&&$('taskPageSeedLock').checked?pageSeriesSeed():null;
+var lib=(window.CharacterLibrary&&CharacterLibrary._state&&CharacterLibrary._state.cards)||[];
+r.pages.forEach(function(pg,idx){
+var pCount=pg.panels.length;
+var code=pCount===1?'S':pCount===2?'R1':pCount===4?(idx%2===0?'R2':'A3'):(idx%3===0?'A1':idx%3===1?'A2':'X1');
+var wizPanels=pg.panels.map(function(p){return ScriptPageCore.toWizard(p);});
+var scenes=wizPanels.map(function(w){return w.scene;});
+var lines=wizPanels.map(function(w){return w.line;});
+var casts=pageCasts(scenes,lib,{});
+var uniqueCast=[];
+casts.forEach(function(list){(list||[]).forEach(function(c){if(c&&uniqueCast.indexOf(c)<0)uniqueCast.push(c);});});
+var compiled=window.MangaProductionHandbook.compileWholePagePrompt({
+layoutCode:code,
+style:style,
+cast:uniqueCast.map(function(c){return {name:c.name,description:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}),
+panels:scenes.map(function(sc,i){
+var pChars=(casts[i]||[]).map(function(c){return {name:c.name,prompt:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}).filter(function(c){return c.prompt;});
+return {scene:sc,line:lines[i]||'',characters:pChars};
+})
+});
+window.MangaBatchQueue.enqueue({
+title:'06 整页直出 第 '+(idx+1)+' 页 ('+code+')',
+queuedLabel:'排队(06·'+code+')',
+runningLabel:'06直出中…',
+doneLabel:'06完成('+code+')',
+run:async function(ctx){
+ctx.setProgress('新建第 '+(idx+1)+' 页…');
+var W=1200,H=1700;
+if((idx>0||canvas.getObjects().length)&&typeof loadBookSize==='function'){
+await loadBookSize(W,H,false,true);
+}else if(typeof resizeCanvasToObject==='function'){
+resizeCanvasToObject(W,H);
+}
+var guid=typeof getCanvasGUID==='function'?getCanvasGUID():null;
+if(guid)window.MangaBatchQueue.setPageStatus(guid,'running','06直出('+code+')…');
+var fullPanel=makePanel({left:0,top:0,width:W,height:H,points:[{x:0,y:0},{x:W,y:0},{x:W,y:H},{x:0,y:H}]},1);
+canvas.add(fullPanel);
+var settings=engine==='nai'?{model:NaiEngine.modelId(),ucPreset:Number((($('novelaiUcPreset')||{}).value)||0),quality:!$('novelaiQualityToggle')||$('novelaiQualityToggle').checked,safeMode:NaiEngine.safeMode(),preservePositiveStyle:true}:{};
+var key=(($('mangaGptKey')||{}).value||'').trim().replace(/^Bearer\s+/i,'');
+var gptUrl=(($('mangaGptUrl')||{}).value||'').trim(),gptModel=(($('mangaGptModel')||{}).value||'').trim();
+var data=engine==='nai'?
+await NaiEngine.run(Object.assign({},settings,{prompt:compiled.prompt,characters:compiled.charCaptions,width:832,height:1216,allowText:compiled.textBlockCount>0,allowMultiPanel:compiled.panelCount>1,seed:lockSeed==null?undefined:lockSeed}),null,function(t){ctx.setProgress(t);}):
+await ServiceRequest.request('gpt','/gpt-image-proxy',{timeoutMs:300000,headers:key?{Authorization:'Bearer '+key}:{},body:{operation:'generate',baseUrl:gptUrl,model:gptModel,size:'1024x1536',prompt:compiled.prompt}});
+var img=await loadFabricImage(data.image);
+img.name='06整页直出('+compiled.layoutCode+')';
+img.handbookLayoutCode=compiled.layoutCode;
+img.handbookPanels=scenes.map(function(sc,i){return {scene:sc,line:lines[i]||''};});
+if(data.seed!=null){img.naiSeed=data.seed;img.tempSeed=data.seed;img.tempPrompt=compiled.prompt;}
+putImageInFrame(img,W/2,H/2,true,false,true,fullPanel);
+canvas.renderAll();
+if(typeof saveStateByManual==='function')saveStateByManual();
+if(typeof btmSaveProjectFile==='function'){try{await btmSaveProjectFile(null,false);}catch(e){/* ignore */}}
+if(guid)window.MangaBatchQueue.setPageStatus(guid,'done','06完成('+code+')');
+}
+});
+});
+pageStatus('已将 '+r.pages.length+' 页剧本排入后台 06 整页直出队列（含分格空间角色定位 charCaptions），底部页面栏可查看进度。');
 }
 function fillScriptPage(pg){
 if(!pg)return;
@@ -737,19 +829,22 @@ var compiled06=window.MangaProductionHandbook.compileWholePagePrompt({
 layoutCode:directCode,
 style:style,
 cast:uniqueDirectCast.map(function(c){return {name:c.name,description:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}),
-panels:scenes.map(function(sc,idx){return {scene:sc,line:lines[idx]||''};})
+panels:scenes.map(function(sc,idx){
+var pChars=(casts[idx]||[]).map(function(c){return {name:c.name,prompt:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}).filter(function(c){return c.prompt;});
+return {scene:sc,line:lines[idx]||'',characters:pChars};
+})
 });
 var fullPanel=makePanel({left:0,top:0,width:W,height:H,points:[{x:0,y:0},{x:W,y:0},{x:W,y:H},{x:0,y:H}]},1);
 canvas.add(fullPanel);job.panels=[fullPanel];canvas.renderAll();
 status('正在按 06 六层架构直出整页（版式 '+compiled06.layoutCode+'，832×1216 单次生成全页分格与原生文字）…');
 job.ctl=new AbortController();
-var directChars=uniqueDirectCast.map(function(c){return {prompt:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}).filter(function(c){return c.prompt;});
+var directChars=(compiled06.charCaptions&&compiled06.charCaptions.length)?compiled06.charCaptions:uniqueDirectCast.map(function(c){return {prompt:NaiEngineCore.joinTags(c.identity&&c.identity.tags,c.traits)};}).filter(function(c){return c.prompt;});
 var directData=engine==='nai'?await NaiEngine.run(Object.assign({},settings,{prompt:compiled06.prompt,characters:directChars,width:832,height:1216,allowText:compiled06.textBlockCount>0,allowMultiPanel:compiled06.panelCount>1,seed:lockSeed==null?undefined:lockSeed}),job.ctl.signal,status):
 await ServiceRequest.request('gpt','/gpt-image-proxy',{signal:job.ctl.signal,timeoutMs:300000,headers:key?{Authorization:'Bearer '+key}:{},body:{operation:'generate',baseUrl:gptUrl,model:gptModel,size:'1024x1536',prompt:compiled06.prompt}});
 if(!current())return;
 var directImg=await loadFabricImage(directData.image);
 if(!current())return;
-directImg.name='06整页直出('+compiled06.layoutCode+')';if(directData.seed!=null){directImg.naiSeed=directData.seed;directImg.tempSeed=directData.seed;directImg.tempPrompt=compiled06.prompt;}
+directImg.name='06整页直出('+compiled06.layoutCode+')';directImg.handbookLayoutCode=compiled06.layoutCode;directImg.handbookPanels=scenes.map(function(sc,idx){return {scene:sc,line:lines[idx]||''};});if(directData.seed!=null){directImg.naiSeed=directData.seed;directImg.tempSeed=directData.seed;directImg.tempPrompt=compiled06.prompt;}
 putImageInFrame(directImg,W/2,H/2,true,false,true,fullPanel);
 canvas.renderAll();
 if(typeof updateLayerPanel==='function')updateLayerPanel();

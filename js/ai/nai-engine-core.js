@@ -76,7 +76,11 @@
     }).join(', ');
     const negative = joinTags(presetText, opts.negative, opts.safeMode ? 'nsfw' : '');
     const chars = (opts.characters || []).filter(c => c && String(c.prompt || '').trim()).slice(0, 6);
-    const useCoords = chars.some(c => c.center);
+    const useCoords = chars.some(c => c.center || (Array.isArray(c.centers) && c.centers.length > 0));
+    const resolveCenters = c => {
+      if (Array.isArray(c.centers) && c.centers.length > 0) return c.centers.map(pt => ({ x: Number(pt.x), y: Number(pt.y) }));
+      return [c.center || { x: 0.5, y: 0.5 }];
+    };
     const seed = Number.isFinite(opts.seed) && opts.seed >= 0 ? Math.floor(opts.seed) : Math.floor(Math.random() * 4294967295);
     const steps = Math.max(1, Math.min(FREE.maxSteps, opts.steps || 28));
     const params = {
@@ -84,12 +88,12 @@
       steps, n_samples: 1, ucPreset: uc.id, qualityToggle: opts.quality !== false, seed, negative_prompt: negative,
       noise_schedule: m.v4 ? 'karras' : 'native', cfg_rescale: 0, sm: false, sm_dyn: false, dynamic_thresholding: false,
       legacy: false, legacy_v3_extend: false, prefer_brownian: true, deliberate_euler_ancestral_bug: false, add_original_image: action === 'infill',
-      characterPrompts: chars.map(c => ({ prompt: c.prompt, uc: c.negative || '', center: c.center || { x: 0.5, y: 0.5 }, enabled: true })),
+      characterPrompts: chars.map(c => { const cts = resolveCenters(c); return { prompt: c.prompt, uc: c.negative || '', center: cts[0], centers: cts, enabled: true }; }),
       use_coords: useCoords,
     };
     if (m.v4) {
-      params.v4_prompt = { caption: { base_caption: prompt, char_captions: chars.map(c => ({ char_caption: c.prompt, centers: [c.center || { x: 0.5, y: 0.5 }] })) }, use_coords: useCoords, use_order: true };
-      params.v4_negative_prompt = { caption: { base_caption: negative, char_captions: chars.map(c => ({ char_caption: c.negative || '', centers: [c.center || { x: 0.5, y: 0.5 }] })) }, legacy_uc: false };
+      params.v4_prompt = { caption: { base_caption: prompt, char_captions: chars.map(c => ({ char_caption: c.prompt, centers: resolveCenters(c) })) }, use_coords: useCoords, use_order: true };
+      params.v4_negative_prompt = { caption: { base_caption: negative, char_captions: chars.map(c => ({ char_caption: c.negative || '', centers: resolveCenters(c) })) }, legacy_uc: false };
     }
     if (action === 'infill') { params.image = strip(opts.image); params.mask = strip(opts.mask); params.strength = opts.strength == null ? 1 : opts.strength; params.noise = 0; }
     if (action === 'img2img') { params.image = strip(opts.image); params.strength = opts.strength == null ? 0.6 : opts.strength; params.noise = 0; }
