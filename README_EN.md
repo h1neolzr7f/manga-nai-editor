@@ -15,6 +15,8 @@
 
 </div>
 
+> **This is the experimental repository (manga-nai-editor).** It trials NAI V5 whole-page generation, native Chinese balloons, per-panel inpainting and multi-page rhythm review; the text below is carried over from Manga-NAI-GPT 1.6.1. For releases, downloads and current docs, see **[Manga-NAI-GPT](https://github.com/h1neolzr7f/Manga-NAI-GPT)**, and please report issues there.
+
 Manga-NAI-GPT is built on [Manga Editor Desu](https://github.com/new-sankaku/manga-editor-desu) and turns common jobs into task cards: open a page, pick a task, follow steps 1-2-3. Text detection, OCR, text removal, cutouts and panel detection run **on your own computer, CPU only**. Redrawing (character swap, drawing a page) uses **the OpenAI-compatible image service you configure**; image generation uses NovelAI. Every result lands on a new layer — the original stays untouched and `Ctrl+Z` undoes it in one step. The UI is Chinese-first (Japanese, English, Korean and others are available).
 
 ## Features

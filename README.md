@@ -15,6 +15,8 @@
 
 </div>
 
+> **这是实验线仓库（manga-nai-editor）。** 这里试验 NAI V5 整页直出、原生中文气泡、分格局部重绘和多页节奏审稿等功能；下面的说明沿用自 Manga-NAI-GPT 1.6.1。正式版本、下载和最新文档请看 **[Manga-NAI-GPT](https://github.com/h1neolzr7f/Manga-NAI-GPT)**，问题也请到那边反馈。
+
 Manga-NAI-GPT 是基于 [Manga Editor Desu](https://github.com/new-sankaku/manga-editor-desu) 的漫画编辑器，把常见工作做成「任务卡」：打开页面、点一个任务、按 1-2-3 做完。文字识别、去字、抠图、找格子都在**你自己的电脑上用 CPU 运行**；需要重画的部分（换角色、画一页）调用**你自己设置的** OpenAI 兼容图像服务，AI 生图用 NovelAI。所有结果都是新图层，原图不动，`Ctrl+Z` 一步撤销。
 
 ## 功能
